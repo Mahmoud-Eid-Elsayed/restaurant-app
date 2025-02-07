@@ -1,0 +1,99 @@
+body {
+  cursor: default;
+  scroll-behavior: smooth;
+}
+
+.navbar-brand .logo {
+  height: 80px;
+  width: auto;
+}
+
+.navbar-nav .nav-link {
+  position: relative;
+  padding: 0.5rem 1rem;
+  color: #1f0f66;
+  transition: color 0.3s ease;
+}
+
+.navbar-nav .nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background-color: #007bff;
+  transition: width 0.3s ease, left 0.3s ease;
+}
+
+.navbar-nav .nav-link:hover::after {
+  width: 100%;
+  left: 0;
+}
+
+.navbar-nav .nav-link.active {
+  color: #007bff;
+}
+
+.navbar-nav .nav-link.active::after {
+  width: 100%;
+  left: 0;
+}
+
+.navbar {
+  border-radius: 50px;
+}
+
+#logo-Elchef {
+  transition: transform 0.7s ease-in-out;
+}
+
+#logo-Elchef:hover {
+  transform: scale(1.1);
+  border-radius: 40px;
+  background: rgb(95, 90, 189);
+  background: linear-gradient(180deg, rgba(95, 90, 189, 1) 0%, rgba(33, 66, 194, 0.8016456582633054) 50%, rgba(0, 212, 255, 1) 100%);
+}
+
+
+#carouselExample {
+  height: 500px;
+
+}
+
+.d-block {
+  object-fit: cover;
+}
+
+.navbar-brand img {
+  width: 30%;
+  height: auto;
+}
+
+.card {
+  text-align: center;
+  margin-top: 20px;
+  cursor: pointer;
+  transition: transform 0.5s ease-in-out;
+}
+
+.card:hover {
+  transform: scale(1.05);
+}
+
+.card-img-top {
+  width: 100%;
+  height: auto;
+  border-radius: 5%;
+}
+
+.card {
+  margin: 10px;
+  text-align: center;
+}
+
+#reservation-pic {
+  width: 100%;
+  height: auto;
+  border-radius: 5%;
+}

@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="description" content="Restaurant Application ">
+  <meta name="author" content="ITI Team 4-2025=>(Mahmoud Eid, Ahmed haidar, somaya hassan, Eithar Wageh)">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="src/assets/libraries/fontawesome-6.7.2-web/css/all.min.css">
+  <link rel="stylesheet" href="src/assets/libraries/node_modules/bootstrap/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="src/static/css/landingpage/landing-pg.css">
+  <title>landing page</title>
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top shadow-sm">
+    <div class="container-fluid">
+
+      <a class="navbar-brand" href="#">
+        <img id="logo-Elchef" src="src/assets/images/site-logo/logo.webp" alt="Logo" class="img-fluid logo">
+      </a>
+
+      <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar"
+        aria-controls="offcanvasNavbar">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="offcanvas offcanvas-end" id="offcanvasNavbar">
+        <div class="offcanvas-header">
+          <h5 class="offcanvas-title">Menu</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+
+          <ul class="navbar-nav mx-auto mb-3 mb-lg-0">
+            <li class="nav-item"><a class="nav-link active" href="#">Home</a></li>
+            <li class="nav-item"><a class="nav-link" href="#chef-res">Chefs</a></li>
+            <li class="nav-item"><a class="nav-link" href="#">Menu</a></li>
+            <li class="nav-item"><a class="nav-link" href="#menu-offers">Special Offers</a></li>
+            <li class="nav-item"><a class="nav-link" href="#about-us">About Us</a></li>
+            <li class="nav-item"><a class="nav-link" href="#rsrv-rest">Book a Table🍽️</a></li>
+          </ul>
+
+          <div class="d-flex justify-content-center gap-2">
+            <button class="btn btn-outline-primary btn-sm">Sign Up</button>
+            <button class="btn btn-primary btn-sm">Log In</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div id="carouselExample" class="carousel slide" data-bs-ride="carousel" data-bs-interval="3000">
+    <div class="carousel-inner h-100">
+      <div class="carousel-item active h-100" data-bs-interval="2000">
+        <img src="src/assets/images/slider/rest-slider-01.webp" class="d-block w-100 h-70" alt="rest-pic01">
+      </div>
+      <div class="carousel-item h-100" data-bs-interval="1005">
+        <img src="src/assets/images/slider/rest-slider-02.webp" class="d-block w-100 h-70" alt="rest-pic02">
+      </div>
+      <div class="carousel-item h-100" data-bs-interval="1000">
+        <img src="src/assets/images/slider/rest-slider-03.webp" class="d-block w-100 h-70" alt="rest-pic03">
+      </div>
+      <div class="carousel-item h-100" data-bs-interval="2000">
+        <img src="src/assets/images/slider/rest-slider-04.webp" class="d-block w-100 h-70" alt="rest-pic04">
+      </div>
+    </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Next</span>
+    </button>
+  </div>
+
+  <div class="container" id="chef-res">
+    <div class="row text-center mt-4">
+      <div class="col-12">
+        <h1>chef</h1>
+        <h3>👩‍🍳Our Professional Chefs</h3>
+      </div>
+    </div>
+    <div class="row justify-content-center">
+      <div class="col-md-4">
+        <div class="card">
+          <img src="src/assets/images/chefs/chef-01.webp" class="card-img-top" alt="Ibrahim Omran">
+          <div class="card-body">
+            <h5 class="card-title">Ibrahim Omran</h5>
+            <p class="card-text">Master Chef<br>Quo esse repellendus quia id. Est eum et accusantium pariatur fugit
+              nillok minima suscipit corporis. Voluptate sed quas reichendis animi neque sapiente.</p>
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card">
+          <img src="src/assets/images/chefs/chef-02.webp" class="card-img-top" alt="Bosina Adham">
+          <div class="card-body">
+            <h5 class="card-title">Bosina Adham</h5>
+            <p class="card-text">Patissier<br>Quo esse repellendus quia id. Est eum et accusantium pariatur fugit nihil
+              minima suscipit corporis. Voluptate sed quas reichendis animi neque sapiente.</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card">
+          <img src="src/assets/images/chefs/chef-03.webp" class="card-img-top" alt="Said Gommah">
+          <div class="card-body">
+            <h5 class="card-title">Said Gommah</h5>
+            <p class="card-text">Cook<br>Vero omnis enim consequatur. Est eum et accusantium pariatur fugit nihil
+              minima suscipit corporis. Voluptate sed quas reichendis animi neque sapiente.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container mt-5" id="menu-offers">
+    <div class="text-center">
+      <h1>🔥 Our Special Offers 🔥</h1>
+    </div>
+    <div class="row mt-4">
+      <div class="col-md-4">
+        <div class="card">
+          <img src="src/assets/images/offers/offer-01.webp" class="card-img-top" alt="Offer1">
+          <div class="card-body">
+            <h5 class="card-title">Weekend Special</h5>
+            <p class="card-text">Get 20% off on all orders this weekend!</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card">
+          <img src="src/assets/images/offers/offer-02.webp" class="card-img-top" alt="Offer2">
+          <div class="card-body">
+            <h5 class="card-title">Happy Hour</h5>
+            <p class="card-text">New Menu Offer Buy one get one free on drinks from 5 PM to 7 PM.</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card">
+          <img src="src/assets/images/offers/offer-03.webp" class="card-img-top" alt="Offer3">
+          <div class="card-body">
+            <h5 class="card-title">Special 25</h5>
+            <p class="card-text">Enjoy a full meal for 4 at a special discounted price.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container my-5 py-5" id="about-us">
+    <div class="row align-items-center">
+      <div class="col-md-6">
+        <img src="src/assets/images/about-Us/about-us.webp" class="img-fluid rounded shadow-lg" alt="About Us Image">
+      </div>
+      <div class="col-md-6">
+        <h2 class="display-4 mb-4 fw-bold">About Us</h2>
+        <p class="lead mb-4">
+          Welcome to <strong class="text-primary">El-Chef</strong>, where culinary excellence meets a warm and inviting
+          atmosphere.
+        </p>
+        <div class="d-flex align-items-start mb-4">
+          <div class="me-3">
+            <i class="fas fa-utensils fa-2x text-primary"></i>
+          </div>
+          <div>
+            <h5 class="fw-bold">Culinary Excellence</h5>
+            <p class="text-muted">
+              Our world-class chefs craft each dish with precision and creativity, using the freshest ingredients
+              sourced locally.
+            </p>
+          </div>
+        </div>
+        <div class="d-flex align-items-start mb-4">
+          <div class="me-3">
+            <i class="fas fa-heart fa-2x text-primary"></i>
+          </div>
+          <div>
+            <h5 class="fw-bold">Unforgettable Experience</h5>
+            <p class="text-muted">
+              Dining at El-Chef is more than a meal—it's a memorable experience, perfect for casual lunches, romantic
+              dinners, or celebrations.
+            </p>
+          </div>
+        </div>
+        <div class="d-flex align-items-start mb-4">
+          <div class="me-3">
+            <i class="fas fa-smile fa-2x text-primary"></i>
+          </div>
+          <div>
+            <h5 class="fw-bold">Exceptional Service</h5>
+            <p class="text-muted">
+              From the moment you walk in, you'll be greeted with a smile and treated to unparalleled hospitality.
+            </p>
+          </div>
+        </div>
+        <a href="#rsrv-rest" class="btn btn-primary btn-lg mt-3">
+          <i class="fas fa-calendar-alt me-2"></i>Book a Table 🍽️
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="container my-5 resr">
+    <div class="row">
+      <div class="col-md-6">
+        <img src="src/assets/images/reservation/reservation-pic.png" class="img-fluid" id="reservation-pic"
+          alt="Book a Table">
+      </div>
+      <div class="col-md-6">
+        <h2 class="text-center" id="rsrv-rest">Book a Table 🍽️</h2>
+        <form id="bookingForm" action="book_table.php" method="post">
+          <div class="mb-3">
+            <label for="name" class="form-label">Name</label>
+            <input type="text" class="form-control" id="name" name="name" required>
+          </div>
+          <div class="mb-3">
+            <label for="email" class="form-label">Email</label>
+            <input type="email" class="form-control" id="email" name="email" required>
+          </div>
+          <div class="mb-3">
+            <label for="phone" class="form-label">Phone</label>
+            <input type="text" class="form-control" id="phone" name="phone" required>
+          </div>
+          <div class="mb-3">
+            <label for="date" class="form-label">Booking Date</label>
+            <input type="date" class="form-control" id="date" name="date" required>
+          </div>
+          <div class="mb-3">
+            <label for="guests" class="form-label">Number of Guests</label>
+            <input type="number" class="form-control" id="guests" name="guests" required>
+          </div>
+          <div class="mb-3">
+            <label for="message" class="form-label">Message</label>
+            <textarea class="form-control" id="message" name="message" rows="3"></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary">Book Now</button>
+        </form>
+        <div id="confirmationMessage" class="mt-3 alert alert-success d-none">
+          Thank you for your booking! Please check your email for confirmation.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="bg-dark text-light py-4 mt-5">
+    <div class="container text-center">
+      <div class="row">
+        <div class="col-md-4">
+          <h5>About Us</h5>
+          <p>We offer the best dining experience with top-quality ingredients and exceptional service.</p>
+        </div>
+        <div class="col-md-4">
+          <h5>Follow Us</h5>
+          <a href="#" class="text-light me-2"><i class="fab fa-facebook fa-lg"></i></a>
+          <a href="#" class="text-light me-2"><i class="fab fa-twitter fa-lg"></i></a>
+          <a href="#" class="text-light me-2"><i class="fab fa-instagram fa-lg"></i></a>
+        </div>
+        <div class="col-md-4">
+          <h5>Contact Us</h5>
+          <p><i class="fas fa-map-marker-alt"></i> 10 Ramadan ST, Cairo</p>
+          <p><i class="fas fa-phone"></i> +201234567890</p>
+          <p><i class="fas fa-envelope"></i>El-Chef@gmail.com</p>
+        </div>
+      </div>
+      <hr>
+      <p class="mb-0">&copy; 2025 ITI Team4. All Rights Reserved.</p>
+    </div>
+  </footer>
+
+  <script src="src/assets/libraries/node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+  <script>
+    document.getElementById('bookingForm').addEventListener('submit', function (event) {
+      event.preventDefault();
+      document.getElementById('confirmationMessage').classList.remove('d-none');
+      setTimeout(() => {
+        document.getElementById('confirmationMessage').classList.add('d-none');
+      }, 5000);
+    });
+  </script>
+</body>
+
+</html>

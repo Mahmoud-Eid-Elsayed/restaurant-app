@@ -146,34 +146,31 @@ CREATE TABLE IF NOT EXISTS `Restaurant_DB`.`Table` (
   `TableNumber` VARCHAR(50) NOT NULL,
   `Capacity` INT NOT NULL,
   `Location` VARCHAR(255) NULL,
-  PRIMARY KEY (`TableID`))
-ENGINE = InnoDB;
+  PRIMARY KEY (`TableID`)
+) ENGINE = InnoDB;
 
 -- -----------------------------------------------------
 -- Table `Restaurant_DB`.`Reservation`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `Restaurant_DB`.`Reservation` (
   `ReservationID` INT NOT NULL AUTO_INCREMENT,
-  `CustomerID` INT NOT NULL,
+  `CustomerName` VARCHAR(100) NOT NULL,
+  `CustomerEmail` VARCHAR(100) NOT NULL,
+  `CustomerPhone` VARCHAR(20) NOT NULL,
   `TableID` INT NOT NULL,
   `ReservationDate` DATE NOT NULL,
   `ReservationTime` TIME NOT NULL,
   `NumberOfGuests` INT NOT NULL,
-  `ReservationStatus` ENUM('Pending', 'Confirmed', 'Cancelled', 'Completed') NOT NULL,
+  `ReservationStatus` ENUM('Pending', 'Confirmed', 'Cancelled', 'Completed') NOT NULL DEFAULT 'Pending',
   `Notes` TEXT NULL,
   PRIMARY KEY (`ReservationID`),
-  INDEX `fk_Reservation_User1_idx` (`CustomerID` ASC),
   INDEX `fk_Reservation_Table1_idx` (`TableID` ASC),
-  CONSTRAINT `fk_Reservation_User1`
-    FOREIGN KEY (`CustomerID`)
-    REFERENCES `Restaurant_DB`.`User` (`UserID`)
-    ON DELETE RESTRICT,
   CONSTRAINT `fk_Reservation_Table1`
     FOREIGN KEY (`TableID`)
-    REFERENCES `Restaurant_DB`.`Table` (`TableID`)
+    REFERENCES `Table` (`TableID`)
     ON DELETE RESTRICT
-    ON UPDATE CASCADE)
-ENGINE = InnoDB;
+    ON UPDATE CASCADE
+) ENGINE = InnoDB;
 
 -- -----------------------------------------------------
 -- Table `Restaurant_DB`.`Supplier`

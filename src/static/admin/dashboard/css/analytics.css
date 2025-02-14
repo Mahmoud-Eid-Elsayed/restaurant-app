@@ -1,0 +1,37 @@
+/* Analytics Page Specific Styles */
+.analytics-card {
+    position: relative;
+    overflow: hidden;
+}
+
+.stat-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.chart-card {
+    background: #1e2028;
+    border-radius: 15px;
+    padding: 1.5rem;
+    height: 100%;
+}
+
+/* Menu Analytics */
+.menu-item-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.menu-analytics-item {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem;
+    background: #2d2f3b;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+}
+
+/* ... rest of analytics specific styles ... */ 

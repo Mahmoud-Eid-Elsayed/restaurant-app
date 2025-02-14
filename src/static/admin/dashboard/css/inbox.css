@@ -1,0 +1,70 @@
+/* Inbox Page Specific Styles */
+.inbox-container {
+    background: #1e2028;
+    border-radius: 15px;
+    padding: 1.5rem;
+    margin-top: 4rem;
+}
+
+.inbox-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+}
+
+.messages-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-top: 1.5rem;
+}
+
+.message-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    background: #2d2f3b;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+}
+
+.message-item:hover {
+    background: #3d4050;
+    transform: translateX(5px);
+}
+
+.message-item.unread {
+    border-left: 3px solid #ff5733;
+}
+
+.message-checkbox {
+    min-width: 24px;
+}
+
+.message-star {
+    color: #8a8d98;
+    cursor: pointer;
+    min-width: 24px;
+}
+
+.message-star.starred {
+    color: #ffc107;
+}
+
+@media (max-width: 992px) {
+    .inbox-container {
+        margin-top: 1rem;
+    }
+    
+    .inbox-actions {
+        flex-direction: column;
+    }
+    
+    .message-item {
+        flex-wrap: wrap;
+    }
+}
+
+/* ... rest of inbox specific styles ... */ 

@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Restaurant Dashboard</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
+    <link href="css/main.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/apexcharts/3.45.1/apexcharts.min.js"></script>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar - Will be loaded by JavaScript -->
+            <div class="col-lg-2 sidebar" id="sidebar"></div>
+
+            <!-- Main Content -->
+            <div class="col-lg-10 main-content" id="main-content">
+                <!-- Profile Dropdown - Will be loaded by JavaScript -->
+                <div class="profile-dropdown desktop-only"></div>
+
+                <!-- Mobile Header -->
+                <div class="mobile-header d-lg-none">
+                    <button class="navbar-toggler" type="button" onclick="toggleSidebar()">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <div class="logo">ELCHEF</div>
+                </div>
+
+                <!-- Search Bar -->
+                <div class="row mb-4">
+                    <div class="col-md-8">
+                        <input type="text" class="form-control search-bar" placeholder="Search here">
+                    </div>
+
+                </div>
+
+                <!-- Stats Cards -->
+                <div class="row mb-4">
+                    <div class="col-md-6 col-lg-3 mb-3">
+                        <div class="stat-card">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <div class="stat-label">Total Menus</div>
+                                    <div class="stat-value">459</div>
+                                </div>
+                                <div class="stat-icon">
+                                    <i class="fas fa-hamburger"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Repeat for other stat cards -->
+                    <!-- Revenue Card -->
+                    <div class="col-md-6 col-lg-3 mb-3">
+                        <div class="stat-card">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <div class="stat-label">Total Revenue</div>
+                                    <div class="stat-value">$87,561</div>
+                                </div>
+                                <div class="stat-icon">
+                                    <i class="fas fa-dollar-sign"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Orders Card -->
+                    <div class="col-md-6 col-lg-3 mb-3">
+                        <div class="stat-card">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <div class="stat-label">Total Orders</div>
+                                    <div class="stat-value">247</div>
+                                </div>
+                                <div class="stat-icon">
+                                    <i class="fas fa-shopping-cart"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Customers Card -->
+                    <div class="col-md-6 col-lg-3 mb-3">
+                        <div class="stat-card">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <div class="stat-label">Total Customers</div>
+                                    <div class="stat-value">872</div>
+                                </div>
+                                <div class="stat-icon">
+                                    <i class="fas fa-users"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Revenue Chart Section -->
+                <div class="row mb-4">
+                    <div class="col-lg-8 mb-4">
+                        <div class="revenue-chart">
+                            <div class="d-flex justify-content-between align-items-center mb-4">
+                                <h5>Today's Revenue</h5>
+                                <div class="period-selector">
+                                    <button class="active">Monthly</button>
+                                    <button>Daily</button>
+                                    <button>Today</button>
+                                </div>
+                            </div>
+                            <div id="revenueChart"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- Customer Map Section -->
+                    <div class="col-lg-4 mb-4">
+                        <div class="customer-map">
+                            <h5>Customer Map</h5>
+                            <div id="customerMapChart"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Trending and Customers Section -->
+                <div class="row">
+                    <div class="col-lg-6 mb-4">
+                        <!-- Trending Menu Items -->
+                        <div class="trending-menu mb-4">
+                            <h5>Daily Trending Menus</h5>
+                            <div class="menu-items-container">
+                                <!-- Menu items will be dynamically added here -->
+                            </div>
+                        </div>
+
+                        <!-- Trending Keywords -->
+                        <div class="trending-keywords">
+                            <h5>Trending Keywords</h5>
+                            <div class="keywords-container">
+                                <!-- Keywords will be dynamically added here -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Customers List -->
+                    <div class="col-lg-6 mb-4">
+                        <div class="customer-list">
+                            <div class="position-relative">
+                                <h5>Customers</h5>
+                                <button class="add-button">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                            </div>
+                            <div class="customers-container">
+                                <!-- Customers will be dynamically added here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/charts.js"></script>
+</body>
+</html>

@@ -1,12 +1,12 @@
 <?php
-require_once "User.php";
-
+require_once "../../php/user/user.php";
+session_start();
 if (!isset($_SESSION['user_id'])) {
-    header("Location: login.php");
+    header("Location: log.php");
     exit();
 }
 
-$user = new User($pdo);
+$user = new User($conn);
 $userData = $user->getUserById($_SESSION['user_id']);
 
 if (!$userData) {
@@ -20,7 +20,8 @@ if (!$userData) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profile</title>
-    <link rel="stylesheet" href="../../assets/libraries/node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../../assets/libraries/fontawesome-6.7.2-web/css/all.min.css">
+    <link rel="stylesheet" href="../../../assets/libraries/node_modules/bootstrap/dist/css/bootstrap.min.css">
     <style>
         body {
             background-color: #f5f5f5;
@@ -55,14 +56,13 @@ if (!$userData) {
 <body>
 
 <div class="d-flex">
-<?php include 'sidebar.php'; ?>
 
-    <!-- محتوى البروفايل -->
+    <?php include 'sidebar.php' ?>
     <div class="container mt-3">
         <div class="profile-container">
-            <img src="<?= htmlspecialchars($user['ProfilePictureURL'] ?? 'default.png') ?>" width="150" height="150" alt="Profile Picture">
-            <h2 class="mt-2"><?= htmlspecialchars($user['Username']) ?></h2>
-            <p>Email: <?= htmlspecialchars($user['Email']) ?></p>
+            <img src="<?= htmlspecialchars($userData['ProfilePictureURL'] ?? 'default.png') ?>" width="150" height="150" alt="Profile Picture">
+            <h2 class="mt-2"><?= htmlspecialchars($userData['Username']) ?></h2>
+            <p class="text-danger">Email: <?= htmlspecialchars($userData['Email']) ?></p>
         </div>
     </div>
 </div>

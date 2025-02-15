@@ -1,9 +1,10 @@
 <?php
-require 'db.php';
+require '../../connection/db.php';
 require_once 'User.php';
 session_start();
 
 $user = new User($conn);
+
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = trim($_POST['email']);
@@ -11,6 +12,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     $_SESSION['form_data'] = ['email' => $email];
     $_SESSION['form_errors'] = [];
+
 
     if (empty($email)) {
         $_SESSION['form_errors']['email'] = "Email is required.";
@@ -30,15 +32,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if ($result['role'] === 'Staff') {
             header("Location: dashboard.php");
         } else {
-            header("Location: home.php");
+            header("Location: ../../html/user/userProfile.php");
         }
         exit();
     } else {
         $_SESSION['form_errors']['email'] = $result['message'];
-        header("Location: login.php");
+        header("Location: ./../../html/user/login.php");
         exit();
     }
 }
 header("Location: login.php");
 exit();
-?>
+?> 

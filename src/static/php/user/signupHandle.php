@@ -13,12 +13,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $result = $user->addUser($_POST, $profilePic);
 
     if ($result['status']) {
-        header("Location: login.php");
+        header("Location: ../../html/user/login.php");
         exit();
     } else {
         $_SESSION['form_data'] = $_POST;
         $_SESSION['form_errors'] = $result['errors'];
-        header("Location: signup.php");
+        header("Location: ../../html/user/signup.php");
         exit();
     }
 }

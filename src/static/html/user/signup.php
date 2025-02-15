@@ -11,16 +11,16 @@ unset($_SESSION['form_errors'], $_SESSION['form_data']);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../../assets/libraries/fontawesome-6.7.2-web/css/all.min.css">
-  <link rel="stylesheet" href="../../assets/libraries/node_modules/bootstrap/dist/css/bootstrap.min.css">
-  <link rel="stylesheet" href="../css/signuppage/signup.css">
-    <title>Enhanced Form</title>
+    <link rel="stylesheet" href="../../../assets/libraries/fontawesome-6.7.2-web/css/all.min.css">
+  <link rel="stylesheet" href="../../../assets/libraries/node_modules/bootstrap/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="../../css/login&register/signup.css">
+    <title> Form</title>
    
 </head>
 <body >
 <div class="container-fluid form-container">
 <div class="avatar-container">
-        <img src="./restaurant-teamwork-avatar-vector-22535102 (1).png" width="80%" alt="Avatar">
+        <img src="../../../assets/images/login&register/chef-cash-register_18591-35958.avif" width="80%" alt="Avatar">
     </div>
     <div class="form-wrapper me-5 bg-light">
         <form method="post" action="../../php/user/signupHandle.php" enctype="multipart/form-data">

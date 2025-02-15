@@ -1,5 +1,23 @@
 <?php
+session_start();
 require_once '../../connection/db.php';
+
+// Redirect if user is not logged in
+if (!isset($_SESSION['user_id'])) {
+  header('Location: login.php');
+  exit();
+}
+
+// Fetch user details from the database
+$userID = $_SESSION['user_id'];
+$stmt = $conn->prepare("SELECT UserID, Username, ProfilePictureURL FROM User WHERE UserID = :userID");
+$stmt->execute([':userID' => $userID]);
+$user = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+if (!$user) {
+  header('Location: login.php');
+  exit();
+}
 
 // Fetch total users
 $stmt = $conn->query("SELECT COUNT(*) as total_users FROM User");
@@ -24,11 +42,9 @@ $total_menu_items = $stmt->fetch(PDO::FETCH_ASSOC)['total_menu_items'];
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Admin Dashboard - ELCHEF</title>
-  <!-- Include Bootstrap CSS and Font Awesome -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
-  <!-- Custom CSS -->
-  <link rel="stylesheet" href="css-fix-read/admin-dashboard.css">
+  <link rel="stylesheet" href="../../css/admin-dashboard/admin-dashboard.css">
 </head>
 
 <body>
@@ -73,11 +89,16 @@ $total_menu_items = $stmt->fetch(PDO::FETCH_ASSOC)['total_menu_items'];
         <div class="logo">ELCHEF</div>
         <div class="admin-dropdown">
           <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
-            <i class="fas fa-user-circle fa-2x"></i>
+            <?php if (!empty($user['ProfilePictureURL'])): ?>
+              <img src="../../<?php echo htmlspecialchars($user['ProfilePictureURL']); ?>" alt="Profile Picture"
+                class="rounded-circle" style="width: 40px; height: 40px;">
+            <?php else: ?>
+              <i class="fas fa-user-circle fa-2x"></i>
+            <?php endif; ?>
           </a>
           <ul class="dropdown-menu dropdown-menu-end">
-            <li><a class="dropdown-item" href="pages/profile.php">Profile</a></li>
-            <li><a class="dropdown-item" href="../logout.php">Logout</a></li>
+            <li><a class="dropdown-item" href="profile.php">Profile</a></li>
+            <li><a class="dropdown-item" href="logout.php">Logout</a></li>
           </ul>
         </div>
       </div>
@@ -123,10 +144,8 @@ $total_menu_items = $stmt->fetch(PDO::FETCH_ASSOC)['total_menu_items'];
     </div>
   </div>
 
-  <!-- Include Bootstrap JS and dependencies -->
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
-  <!-- Custom JS -->
   <script src="../../js/admin-dashboard.js"></script>
 </body>
 

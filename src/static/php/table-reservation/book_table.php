@@ -1,4 +1,6 @@
 <?php
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 
 require '../../../../src/static/connection/db.php';
 
@@ -55,13 +57,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $mail->Username = 'apikey';
             $mail->Password = $_ENV['SENDGRID_API_KEY'];
             $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-            $mail->Port = 587;
+            $mail->Port = 25;
             $mail->SMTPDebug = 0;
 
 
-            $mail->setFrom('macawilo@asciibinder.net', 'El Chef');
+            $mail->setFrom('derantorn@gmail.com', 'El Chef');
             $mail->addAddress($email, $name);
-            $mail->addReplyTo('macawilo@asciibinder.net', 'El-Chef');
+            $mail->addReplyTo('derantorn@gmail.com', 'El-Chef');
 
 
             $mail->isHTML(true);
@@ -224,7 +226,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 method: 'POST',
                 body: formData
             })
-                .then(response => response.json())
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
                 .then(data => {
                     if (data.status === "success") {
                         document.getElementById('confirmationMessage').classList.remove('d-none');
@@ -237,7 +244,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         alert(data.message);
                     }
                 })
-                .catch(error => console.error('Error:', error));
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert("An error occurred. Please check the console for details.");
+                });
         });
 
         fetchAvailableTables();

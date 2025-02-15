@@ -1,17 +1,19 @@
 <?php
 session_start();
-require 'db.php';
+require '../../connection/db.php';
+require '../../php/user/user.php';
 
 if (!isset($_SESSION['user_id'])) {
     header("Location: login.php");
     exit();
 }
 
-$user_id = $_SESSION['user_id'];
+$user = new User($conn);
+$userData = $user->getUserById($_SESSION['user_id']);
 
-$stmt = $conn->prepare("SELECT * FROM User WHERE UserID = ?");
-$stmt->execute([$user_id]);
-$user = $stmt->fetch(PDO::FETCH_ASSOC);
+if (!$userData) {
+    die("User not found.");
+}
 
 ?>
 <!DOCTYPE html>
@@ -20,7 +22,8 @@ $user = $stmt->fetch(PDO::FETCH_ASSOC);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Profile</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../../assets/libraries/fontawesome-6.7.2-web/css/all.min.css">
+    <link rel="stylesheet" href="../../../assets/libraries/node_modules/bootstrap/dist/css/bootstrap.min.css">
     <style>
         .profile-container {
             max-width: 600px;
@@ -54,12 +57,14 @@ $user = $stmt->fetch(PDO::FETCH_ASSOC);
         <?php include 'sidebar.php'; ?>
         <div class="container">
             <div class="profile-container">
-                <img src="<?= htmlspecialchars($user['ProfilePictureURL'] ?: 'default-avatar.png') ?>" alt="Profile Picture" class="profile-img">
+                <img src="<?= htmlspecialchars($userData['ProfilePictureURL'] ?: 'default-avatar.png') ?>" alt="Profile Picture" class="profile-img">
                 <div class="user-info">
-                    <h3><?= htmlspecialchars($user['Username']) ?></h3>
-                    <p><strong>Email:</strong> <?= htmlspecialchars($user['Email']) ?></p>
-                    <p><strong>Phone:</strong> <?= htmlspecialchars($user['PhoneNumber'] ?: 'N/A') ?></p>
-                    <p><strong>Address:</strong> <?= htmlspecialchars($user['Address'] ?: 'N/A') ?></p>
+                    <h3><?= htmlspecialchars($userData['Username']) ?></h3>
+                    <p><strong>firstname:</strong> <?= htmlspecialchars($userData['FirstName']) ?></p>
+                    <p><strong>lastname:</strong> <?= htmlspecialchars($userData['LastName']) ?></p>
+                    <p><strong>Email:</strong> <?= htmlspecialchars($userData['Email']) ?></p>
+                    <p><strong>Phone:</strong> <?= htmlspecialchars($userData['PhoneNumber'] ?: 'N/A') ?></p>
+                    <p><strong>Address:</strong> <?= htmlspecialchars($userData['Address'] ?: 'N/A') ?></p>
                 </div>
                 <div class="btn-container">
                     <a href="edit_profile.php" class="btn btn-primary">Edit Profile</a>

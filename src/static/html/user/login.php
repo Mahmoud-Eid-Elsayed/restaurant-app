@@ -1,28 +1,29 @@
 
 <?php
-require 'db.php';
+require '../../connection/db.php';
 session_start(); 
 
 $formData = $_SESSION['form_data'] ?? [];
 $formErrors = $_SESSION['form_errors'] ?? [];
 
-unset($_SESSION['form_data']);
-unset($_SESSION['form_errors']);
+if (isset($_SESSION['form_errors'])) {
+    unset($_SESSION['form_errors']);
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../../assets/libraries/fontawesome-6.7.2-web/css/all.min.css">
-    <link rel="stylesheet" href="../../assets/libraries/node_modules/bootstrap/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="../css/loginpage/login.css">
+<link rel="stylesheet" href="../../../assets/libraries/fontawesome-6.7.2-web/css/all.min.css">
+  <link rel="stylesheet" href="../../../assets/libraries/node_modules/bootstrap/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="../../css/login&register/login.css">
     <title>Login</title>
 
 </head>
 <body >
 <div class="container form-container">
     <div class="avatar-container mx-auto">
-        <img src="./chef-cash-register_18591-35958.avif" alt="Avatar">
+        <img src="../../../assets/images/login&register/chef-cash-register_18591-35958.avif" alt="Avatar">
     </div>
     <div class="form-wrapper">
         <form method="post" action="../../php/user/loginHandle.php">

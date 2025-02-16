@@ -8,7 +8,7 @@ if (!isset($_GET['id'])) {
 
 $orderId = $_GET['id'];
 
-// Fetch order details
+
 $stmt = $conn->prepare("
     SELECT `Order`.*, User.Username 
     FROM `Order` 
@@ -23,7 +23,7 @@ if (!$order) {
   exit();
 }
 
-// Fetch order items
+
 $stmt = $conn->prepare("
     SELECT OrderItem.*, MenuItem.ItemName 
     FROM OrderItem 
@@ -47,7 +47,7 @@ $orderItems = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 <body>
   <div class="wrapper">
-    <!-- Include the same sidebar and header as in index.php -->
+    
     <div id="content">
       <div class="header">
         <!-- Header content -->

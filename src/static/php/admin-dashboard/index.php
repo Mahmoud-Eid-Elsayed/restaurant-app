@@ -19,19 +19,19 @@ if (!$user) {
   exit();
 }
 
-// Fetch total users
+
 $stmt = $conn->query("SELECT COUNT(*) as total_users FROM User");
 $total_users = $stmt->fetch(PDO::FETCH_ASSOC)['total_users'];
 
-// Fetch total orders
+
 $stmt = $conn->query("SELECT COUNT(*) as total_orders FROM `Order`");
 $total_orders = $stmt->fetch(PDO::FETCH_ASSOC)['total_orders'];
 
-// Fetch total reservations
+
 $stmt = $conn->query("SELECT COUNT(*) as total_reservations FROM Reservation");
 $total_reservations = $stmt->fetch(PDO::FETCH_ASSOC)['total_reservations'];
 
-// Fetch total menu items
+
 $stmt = $conn->query("SELECT COUNT(*) as total_menu_items FROM MenuItem");
 $total_menu_items = $stmt->fetch(PDO::FETCH_ASSOC)['total_menu_items'];
 ?>
@@ -49,7 +49,7 @@ $total_menu_items = $stmt->fetch(PDO::FETCH_ASSOC)['total_menu_items'];
 
 <body>
   <div class="wrapper">
-    <!-- Sidebar -->
+   
     <nav id="sidebar" class="active">
       <div class="sidebar-header">
         <h3>ELCHEF</h3>
@@ -79,9 +79,9 @@ $total_menu_items = $stmt->fetch(PDO::FETCH_ASSOC)['total_menu_items'];
       </ul>
     </nav>
 
-    <!-- Page Content -->
+   
     <div id="content">
-      <!-- Header -->
+     
       <div class="header">
         <button id="sidebarToggle" class="btn btn-link">
           <i class="fas fa-bars"></i>
@@ -103,7 +103,7 @@ $total_menu_items = $stmt->fetch(PDO::FETCH_ASSOC)['total_menu_items'];
         </div>
       </div>
 
-      <!-- Main Content -->
+      
       <div class="main-content">
         <h2>Welcome to the Admin Dashboard</h2>
         <div class="row">

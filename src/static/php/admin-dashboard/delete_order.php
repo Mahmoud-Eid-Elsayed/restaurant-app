@@ -8,7 +8,7 @@ if (!isset($_GET['id'])) {
 
 $orderId = $_GET['id'];
 
-// Delete order
+
 $stmt = $conn->prepare("DELETE FROM `Order` WHERE OrderID = :id");
 $stmt->execute([':id' => $orderId]);
 

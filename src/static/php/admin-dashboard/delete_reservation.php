@@ -8,7 +8,7 @@ if (!isset($_GET['id'])) {
 
 $reservationId = $_GET['id'];
 
-// Delete reservation
+
 $stmt = $conn->prepare("DELETE FROM Reservation WHERE ReservationID = :id");
 $stmt->execute([':id' => $reservationId]);
 

@@ -23,10 +23,10 @@ $menuItems = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 <body>
   <div class="wrapper">
-    <!-- Include the same sidebar and header as in index.php -->
+   
     <div id="content">
       <div class="header">
-        <!-- Header content -->
+        
       </div>
       <div class="main-content">
         <h2>Manage Menu Items</h2>

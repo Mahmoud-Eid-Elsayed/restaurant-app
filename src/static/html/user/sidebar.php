@@ -14,10 +14,6 @@ $userData = $user->getUserById($_SESSION['user_id']);
 if (!$userData) {
     die("User not found.");
 }
-// $user_id = $_SESSION['user_id'];
-// $stmt = $conn->prepare("SELECT * FROM User WHERE UserID = ?");
-// $stmt->execute([$user_id]);
-// $user = $stmt->fetch(PDO::FETCH_ASSOC);
 ?>
 
 <div class="d-flex">

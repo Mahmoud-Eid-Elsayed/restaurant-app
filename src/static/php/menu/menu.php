@@ -33,15 +33,15 @@ foreach ($newItems as $item) {
     $itemName = $item[0];
     $categoryID = $item[4];
 
-    
+
     $checkQuery = "SELECT * FROM MenuItem WHERE ItemName = '$itemName'";
     $checkResult = $conn->query($checkQuery);
 
     if ($checkResult->num_rows == 0) {
-    
+
         $sqlInsert = "INSERT INTO MenuItem (ItemName, Description, Price, ImageURL, CategoryID, Availability) 
                       VALUES ('$item[0]', '$item[1]', $item[2], '$item[3]', $item[4], $item[5])";
-        
+
         if ($conn->query($sqlInsert) === TRUE) {
             echo "✅ Item '{$item[0]}' added successfully.<br>";
         } else {
@@ -76,17 +76,19 @@ if ($result->num_rows > 0) {
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Menu</title>
     <link rel="stylesheet" href="../src/assets/libraries/node_modules/bootstrap/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="test.css">
+    <link rel="stylesheet" href="../../html/user/login.php">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
 </head>
+
 <body>
     <nav class="navbar navbar-expand-lg sticky-top shadow-sm btn-success">
-     
+
     </nav>
 
     <div class="container-fluid w-75">
@@ -119,12 +121,13 @@ if ($result->num_rows > 0) {
 
     <script src="../src/assets/libraries/node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
     <script>
-    document.querySelectorAll('.btn-success').forEach(button => {
-        button.addEventListener('click', () => {
-            const itemName = button.closest('.card').querySelector('.card-title').innerText;
-            alert(`Added ${itemName} to cart!`);
+        document.querySelectorAll('.btn-success').forEach(button => {
+            button.addEventListener('click', () => {
+                const itemName = button.closest('.card').querySelector('.card-title').innerText;
+                alert(`Added ${itemName} to cart!`);
+            });
         });
-    });
     </script>
 </body>
+
 </html>

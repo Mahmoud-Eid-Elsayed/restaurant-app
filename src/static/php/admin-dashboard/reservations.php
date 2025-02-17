@@ -297,13 +297,19 @@ function formatDateTime($date, $time) {
                                                        title="Edit Reservation">
                                                         <i class="fas fa-edit"></i>
                                                     </a>
+                                                    <button type="button"
+                                                            onclick="showCancelModal(<?php echo $reservation['ReservationID']; ?>, '<?php echo htmlspecialchars(addslashes($reservation['CustomerName'])); ?>', '<?php echo htmlspecialchars(addslashes($reservation['TableNumber'])); ?>')"
+                                                            class="btn btn-danger btn-sm"
+                                                            title="Cancel Reservation">
+                                                        <i class="fas fa-times"></i>
+                                                    </button>
                                                 <?php endif; ?>
                                             </div>
-                </td>
-              </tr>
-            <?php endforeach; ?>
-          </tbody>
-        </table>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
                     </div>
                 <?php else: ?>
                     <div class="alert alert-info">
@@ -311,21 +317,74 @@ function formatDateTime($date, $time) {
                     </div>
                 <?php endif; ?>
             </div>
+        </div>
     </div>
-  </div>
+
+    <!-- Cancel Reservation Modal -->
+    <div class="modal fade" id="cancelModal" tabindex="-1" aria-labelledby="cancelModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="cancelModalLabel">Confirm Reservation Cancellation</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to cancel the reservation for:</p>
+                    <p class="mb-2">
+                        <strong>Customer:</strong> <span id="customerName"></span><br>
+                        <strong>Table:</strong> #<span id="tableNumber"></span>
+                    </p>
+                    <p class="text-danger mb-0">
+                        <i class="fas fa-exclamation-triangle"></i> This action cannot be undone.
+                    </p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Keep Reservation</button>
+                    <button type="button" class="btn btn-danger" id="confirmCancel">
+                        <i class="fas fa-times"></i> Cancel Reservation
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="../../js/admin-dashboard.js"></script>
+    <script src="../../js/admin-dashboard.js"></script>
     <script>
-        // Auto-close alerts after 5 seconds
-        setTimeout(function() {
-            document.querySelectorAll('.alert').forEach(function(alert) {
-                if (alert && typeof bootstrap !== 'undefined') {
-                    const bsAlert = new bootstrap.Alert(alert);
-                    bsAlert.close();
+        let cancelModal;
+        let reservationToCancel = null;
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize modal
+            cancelModal = new bootstrap.Modal(document.getElementById('cancelModal'));
+            
+            // Set up cancel confirmation button
+            document.getElementById('confirmCancel').addEventListener('click', function() {
+                if (reservationToCancel) {
+                    window.location.href = `delete_reservation.php?id=${reservationToCancel.id}&token=${Date.now()}`;
                 }
+                cancelModal.hide();
             });
-        }, 5000);
+
+            // Auto-close alerts after 5 seconds
+            setTimeout(function() {
+                document.querySelectorAll('.alert').forEach(function(alert) {
+                    if (alert && typeof bootstrap !== 'undefined') {
+                        const bsAlert = new bootstrap.Alert(alert);
+                        bsAlert.close();
+                    }
+                });
+            }, 5000);
+        });
+
+        function showCancelModal(reservationId, customerName, tableNumber) {
+            reservationToCancel = {
+                id: reservationId
+            };
+            document.getElementById('customerName').textContent = customerName;
+            document.getElementById('tableNumber').textContent = tableNumber;
+            cancelModal.show();
+        }
     </script>
 </body>
 </html>

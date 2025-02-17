@@ -21,7 +21,7 @@ $orderId = (int)$_GET['id'];
 
 try {
     // Fetch order details with customer information
-    $stmt = $conn->prepare("
+$stmt = $conn->prepare("
         SELECT 
             o.*,
             u.Username,
@@ -33,16 +33,16 @@ try {
         FROM `Order` o
         INNER JOIN User u ON o.CustomerID = u.UserID
         WHERE o.OrderID = ?
-    ");
+");
     $stmt->execute([$orderId]);
     $order = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    if (!$order) {
+if (!$order) {
         throw new Exception('Order not found');
-    }
+}
 
     // Fetch order items with menu item details
-    $stmt = $conn->prepare("
+$stmt = $conn->prepare("
         SELECT 
             oi.*,
             mi.ItemName,
@@ -53,9 +53,9 @@ try {
         LEFT JOIN MenuCategory mc ON mi.CategoryID = mc.CategoryID
         WHERE oi.OrderID = ?
         ORDER BY mc.CategoryName, mi.ItemName
-    ");
+");
     $stmt->execute([$orderId]);
-    $orderItems = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$orderItems = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     // Fetch order status history
     $stmt = $conn->prepare("
@@ -88,12 +88,12 @@ $statusColors = [
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>View Order #<?php echo $orderId; ?> - ELCHEF</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="../../css/admin-dashboard/admin-dashboard.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="../../css/admin-dashboard/admin-dashboard.css">
     <style>
         .status-badge {
             min-width: 100px;
@@ -128,7 +128,7 @@ $statusColors = [
 </head>
 
 <body>
-    <div class="wrapper">
+  <div class="wrapper">
         <!-- Sidebar -->
         <nav id="sidebar">
             <div class="sidebar-header">
@@ -145,7 +145,7 @@ $statusColors = [
         </nav>
 
         <!-- Page Content -->
-        <div id="content">
+    <div id="content">
             <!-- Toggle Button -->
             <button type="button" id="sidebarToggle" class="btn btn-info">
                 <i class="fas fa-bars"></i>
@@ -157,7 +157,7 @@ $statusColors = [
                         <?php echo htmlspecialchars($error); ?>
                         <br>
                         <a href="orders.php" class="btn btn-secondary mt-2">Back to Orders</a>
-                    </div>
+      </div>
                 <?php else: ?>
                     <div class="d-flex justify-content-between align-items-center mb-4">
                         <h2>
@@ -190,8 +190,8 @@ $statusColors = [
                                     <i class="fas fa-undo"></i> Refund Order
                                 </button>
                             <?php endif; ?>
-                        </div>
-                    </div>
+          </div>
+        </div>
 
                     <div class="row">
                         <!-- Order Details -->
@@ -204,22 +204,22 @@ $statusColors = [
                                     <div class="table-responsive">
                                         <table class="table table-bordered table-hover">
                                             <thead class="table-light">
-                                                <tr>
+            <tr>
                                                     <th>Item</th>
                                                     <th>Category</th>
-                                                    <th>Quantity</th>
-                                                    <th>Price</th>
-                                                    <th>Total</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
+              <th>Quantity</th>
+              <th>Price</th>
+              <th>Total</th>
+            </tr>
+          </thead>
+          <tbody>
                                                 <?php 
                                                 $subtotal = 0;
                                                 foreach ($orderItems as $item): 
                                                     $itemTotal = $item['Quantity'] * $item['PriceAtTimeOfOrder'];
                                                     $subtotal += $itemTotal;
                                                 ?>
-                                                    <tr>
+              <tr>
                                                         <td>
                                                             <strong><?php echo htmlspecialchars($item['ItemName']); ?></strong>
                                                             <?php if ($item['Description']): ?>
@@ -233,9 +233,9 @@ $statusColors = [
                                                         <td class="text-center"><?php echo (int)$item['Quantity']; ?></td>
                                                         <td class="text-end">$<?php echo number_format($item['PriceAtTimeOfOrder'], 2); ?></td>
                                                         <td class="text-end">$<?php echo number_format($itemTotal, 2); ?></td>
-                                                    </tr>
-                                                <?php endforeach; ?>
-                                            </tbody>
+              </tr>
+            <?php endforeach; ?>
+          </tbody>
                                             <tfoot class="table-light">
                                                 <tr>
                                                     <td colspan="4" class="text-end"><strong>Subtotal:</strong></td>
@@ -252,7 +252,7 @@ $statusColors = [
                                                     <td class="text-end"><strong>$<?php echo number_format($order['TotalAmount'], 2); ?></strong></td>
                                                 </tr>
                                             </tfoot>
-                                        </table>
+        </table>
                                     </div>
                                 </div>
                             </div>
@@ -376,9 +376,9 @@ $statusColors = [
                         </div>
                     </div>
                 <?php endif; ?>
-            </div>
-        </div>
+      </div>
     </div>
+  </div>
 
     <!-- Cancel Order Modal -->
     <div class="modal fade" id="cancelModal" tabindex="-1" aria-labelledby="cancelModalLabel" aria-hidden="true">
@@ -433,7 +433,7 @@ $statusColors = [
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="../../js/admin-dashboard.js"></script>
+  <script src="../../js/admin-dashboard.js"></script>
     <script>
         let cancelModal, refundModal;
         let orderToCancel = null;

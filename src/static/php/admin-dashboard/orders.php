@@ -84,7 +84,7 @@ try {
         SELECT 
             OrderStatus,
             COUNT(*) as count
-        FROM `Order`
+    FROM `Order` 
         GROUP BY OrderStatus
     ")->fetchAll(PDO::FETCH_KEY_PAIR);
     
@@ -106,12 +106,12 @@ $statusColors = [
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Manage Orders - ELCHEF</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="../../css/admin-dashboard/admin-dashboard.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Manage Orders - ELCHEF</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="../../css/admin-dashboard/admin-dashboard.css">
     <style>
         .order-details-tooltip {
             max-width: 300px;
@@ -131,7 +131,7 @@ $statusColors = [
 </head>
 
 <body>
-    <div class="wrapper">
+  <div class="wrapper">
         <!-- Sidebar -->
         <nav id="sidebar">
             <div class="sidebar-header">
@@ -148,7 +148,7 @@ $statusColors = [
         </nav>
 
         <!-- Page Content -->
-        <div id="content">
+    <div id="content">
             <!-- Toggle Button -->
             <button type="button" id="sidebarToggle" class="btn btn-info">
                 <i class="fas fa-bars"></i>
@@ -173,11 +173,11 @@ $statusColors = [
                     <div class="alert alert-success alert-dismissible fade show" role="alert">
                         <?php echo htmlspecialchars($_GET['message']); ?>
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
+      </div>
                 <?php endif; ?>
 
                 <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h2>Manage Orders</h2>
+        <h2>Manage Orders</h2>
                     <button type="button" class="btn btn-outline-secondary" onclick="window.location.reload()">
                         <i class="fas fa-sync-alt"></i> Refresh
                     </button>
@@ -239,18 +239,18 @@ $statusColors = [
                             <thead class="table-light">
                                 <tr>
                                     <th>Order ID</th>
-                                    <th>Customer</th>
+              <th>Customer</th>
                                     <th>Contact</th>
-                                    <th>Order Date</th>
+              <th>Order Date</th>
                                     <th>Items</th>
                                     <th>Total Amount</th>
-                                    <th>Status</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php foreach ($orders as $order): ?>
-                                    <tr>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <?php foreach ($orders as $order): ?>
+              <tr>
                                         <td><?php echo htmlspecialchars($order['OrderID']); ?></td>
                                         <td>
                                             <?php
@@ -325,11 +325,11 @@ $statusColors = [
                                                     </button>
                                                 <?php endif; ?>
                                             </div>
-                                        </td>
-                                    </tr>
-                                <?php endforeach; ?>
-                            </tbody>
-                        </table>
+                </td>
+              </tr>
+            <?php endforeach; ?>
+          </tbody>
+        </table>
                     </div>
                 <?php else: ?>
                     <div class="alert alert-info">
@@ -388,12 +388,12 @@ $statusColors = [
                         <i class="fas fa-undo"></i> Process Refund
                     </button>
                 </div>
-            </div>
-        </div>
+      </div>
     </div>
+  </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="../../js/admin-dashboard.js"></script>
+  <script src="../../js/admin-dashboard.js"></script>
     <script>
         let cancelModal, refundModal;
         let orderToCancel = null;

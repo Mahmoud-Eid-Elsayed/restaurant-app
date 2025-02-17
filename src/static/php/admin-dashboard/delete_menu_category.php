@@ -8,7 +8,7 @@ if (!isset($_GET['id'])) {
 
 $categoryId = $_GET['id'];
 
-// Delete category
+
 $stmt = $conn->prepare("DELETE FROM MenuCategory WHERE CategoryID = :id");
 $stmt->execute([':id' => $categoryId]);
 

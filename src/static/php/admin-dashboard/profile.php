@@ -28,7 +28,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $address = $_POST['address'];
     $password = $_POST['password'];
 
-    // Validate email
+
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $error = "Invalid email format.";
     } else {
@@ -105,7 +105,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <!-- Include the same sidebar and header as in index.php -->
         <div id="content">
             <div class="header">
-                <!-- Header content -->
+
             </div>
             <div class="main-content">
                 <h1>Profile</h1>

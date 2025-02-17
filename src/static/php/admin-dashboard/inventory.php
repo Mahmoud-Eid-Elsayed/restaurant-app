@@ -26,7 +26,7 @@ $inventoryItems = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <!-- Include the same sidebar and header as in index.php -->
     <div id="content">
       <div class="header">
-        <!-- Header content -->
+
       </div>
       <div class="main-content">
         <h2>Manage Inventory</h2>

@@ -7,7 +7,7 @@ ini_set('display_errors', 1);
 
 try {
     // Fetch all menu items with their category names and order counts
-    $stmt = $conn->query("
+$stmt = $conn->query("
         SELECT 
             mi.*,
             mc.CategoryName,
@@ -17,8 +17,8 @@ try {
         LEFT JOIN OrderItem oi ON mi.ItemID = oi.ItemID
         GROUP BY mi.ItemID, mc.CategoryName
         ORDER BY mc.CategoryName, mi.ItemName
-    ");
-    $menuItems = $stmt->fetchAll(PDO::FETCH_ASSOC);
+");
+$menuItems = $stmt->fetchAll(PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
     $error = "Database error: " . $e->getMessage();
 }
@@ -27,16 +27,16 @@ try {
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Manage Menu Items - ELCHEF</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="../../css/admin-dashboard/admin-dashboard.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Manage Menu Items - ELCHEF</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="../../css/admin-dashboard/admin-dashboard.css">
 </head>
 
 <body>
-    <div class="wrapper">
+  <div class="wrapper">
         <!-- Sidebar -->
         <nav id="sidebar">
             <div class="sidebar-header">
@@ -53,7 +53,7 @@ try {
         </nav>
 
         <!-- Page Content -->
-        <div id="content">
+    <div id="content">
             <!-- Toggle Button -->
             <button type="button" id="sidebarToggle" class="btn btn-info">
                 <i class="fas fa-bars"></i>
@@ -78,11 +78,11 @@ try {
                     <div class="alert alert-success alert-dismissible fade show" role="alert">
                         <?php echo htmlspecialchars($_GET['message']); ?>
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
+      </div>
                 <?php endif; ?>
 
                 <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h2>Manage Menu Items</h2>
+        <h2>Manage Menu Items</h2>
                     <a href="add_menu_item.php" class="btn btn-primary">
                         <i class="fas fa-plus"></i> Add New Item
                     </a>
@@ -92,31 +92,31 @@ try {
                     <div class="table-responsive">
                         <table class="table table-bordered table-hover">
                             <thead class="table-light">
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Item Name</th>
-                                    <th>Category</th>
-                                    <th>Price</th>
+            <tr>
+              <th>ID</th>
+              <th>Item Name</th>
+              <th>Category</th>
+              <th>Price</th>
                                     <th>Description</th>
-                                    <th>Availability</th>
+              <th>Availability</th>
                                     <th>Orders</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php foreach ($menuItems as $item): ?>
-                                    <tr>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <?php foreach ($menuItems as $item): ?>
+              <tr>
                                         <td><?php echo htmlspecialchars($item['ItemID']); ?></td>
                                         <td><?php echo htmlspecialchars($item['ItemName']); ?></td>
                                         <td><?php echo htmlspecialchars($item['CategoryName']); ?></td>
-                                        <td>$<?php echo number_format($item['Price'], 2); ?></td>
+                <td>$<?php echo number_format($item['Price'], 2); ?></td>
                                         <td><?php echo htmlspecialchars($item['Description'] ?? 'No description'); ?></td>
                                         <td>
                                             <span class="badge <?php echo $item['Availability'] ? 'bg-success' : 'bg-danger'; ?>">
                                                 <?php echo $item['Availability'] ? 'Available' : 'Not Available'; ?>
                                             </span>
                                         </td>
-                                        <td>
+                <td>
                                             <span class="badge bg-info">
                                                 <?php echo (int)$item['order_count']; ?> orders
                                             </span>
@@ -144,11 +144,11 @@ try {
                                                     </button>
                                                 <?php endif; ?>
                                             </div>
-                                        </td>
-                                    </tr>
-                                <?php endforeach; ?>
-                            </tbody>
-                        </table>
+                </td>
+              </tr>
+            <?php endforeach; ?>
+          </tbody>
+        </table>
                     </div>
                 <?php else: ?>
                     <div class="alert alert-info">
@@ -179,12 +179,12 @@ try {
                         <i class="fas fa-trash"></i> Delete Item
                     </button>
                 </div>
-            </div>
-        </div>
+      </div>
     </div>
+  </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="../../js/admin-dashboard.js"></script>
+  <script src="../../js/admin-dashboard.js"></script>
     <script>
         let deleteModal;
         let itemToDelete = null;

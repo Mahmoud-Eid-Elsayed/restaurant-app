@@ -49,7 +49,7 @@ $total_menu_items = $stmt->fetch(PDO::FETCH_ASSOC)['total_menu_items'];
 
 <body>
   <div class="wrapper">
-   
+
     <nav id="sidebar" class="active">
       <div class="sidebar-header">
         <h3>ELCHEF</h3>
@@ -79,9 +79,9 @@ $total_menu_items = $stmt->fetch(PDO::FETCH_ASSOC)['total_menu_items'];
       </ul>
     </nav>
 
-   
+
     <div id="content">
-     
+
       <div class="header">
         <button id="sidebarToggle" class="btn btn-link">
           <i class="fas fa-bars"></i>
@@ -103,7 +103,7 @@ $total_menu_items = $stmt->fetch(PDO::FETCH_ASSOC)['total_menu_items'];
         </div>
       </div>
 
-      
+
       <div class="main-content">
         <h2>Welcome to the Admin Dashboard</h2>
         <div class="row">

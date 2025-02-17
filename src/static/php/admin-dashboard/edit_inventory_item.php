@@ -61,10 +61,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 <body>
   <div class="wrapper">
-    
+
     <div id="content">
       <div class="header">
-       
+
       </div>
       <div class="main-content">
         <h2>Edit Inventory Item</h2>

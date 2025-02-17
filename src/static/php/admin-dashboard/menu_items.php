@@ -23,10 +23,10 @@ $menuItems = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 <body>
   <div class="wrapper">
-   
+
     <div id="content">
       <div class="header">
-        
+
       </div>
       <div class="main-content">
         <h2>Manage Menu Items</h2>

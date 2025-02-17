@@ -18,15 +18,13 @@ if (!$userData) {
 
 <div class="d-flex">
 
-    <div class="sidebar text-white p-3" style="width: 250px; height: 100vh; background-color: #87CEEB;"> 
+    <div class="sidebar text-white p-3" style="width: 250px; height: 100vh; background-color: #87CEEB;">
         <div class="text-center mb-4">
 
-            <img src="<?= $userData['ProfilePictureURL']  ?? 'default-avatar.png' ?>" 
-                 alt="Profile Picture" 
-                 class="rounded-circle border border-white" 
-                 width="100" >
+            <img src="<?= $userData['ProfilePictureURL'] ?? 'default-avatar.png' ?>" alt="Profile Picture"
+                class="rounded-circle border border-white" width="100">
 
-                 <h5 class="mt-2 text-dark"><?= $_SESSION['username'] ?? 'User' ?></h5>
+            <h5 class="mt-2 text-dark"><?= $_SESSION['username'] ?? 'User' ?></h5>
         </div>
 
         <ul class="nav flex-column">

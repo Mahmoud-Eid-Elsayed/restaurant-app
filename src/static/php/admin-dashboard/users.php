@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 <?php
 require_once '../../connection/db.php';
 
@@ -125,5 +124,4 @@ $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
   <script src="../../js/admin-dashboard.js"></script>
 </body>
 
->>>>>>> f3babee (fix admin dashboard full managament system)
 </html>

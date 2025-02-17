@@ -47,7 +47,7 @@ $orderItems = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 <body>
   <div class="wrapper">
-    
+
     <div id="content">
       <div class="header">
         <!-- Header content -->

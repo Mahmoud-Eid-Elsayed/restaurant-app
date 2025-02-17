@@ -48,10 +48,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 <body>
   <div class="wrapper">
-    
+
     <div id="content">
       <div class="header">
-        
+
       </div>
       <div class="main-content">
         <h2>Add Reservation</h2>
@@ -73,7 +73,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <select class="form-control" id="tableID" name="tableID" required>
               <?php foreach ($tables as $table): ?>
                 <option value="<?php echo $table['TableID']; ?>">Table <?php echo $table['TableNumber']; ?> (Capacity:
-                  <?php echo $table['Capacity']; ?>)</option>
+                  <?php echo $table['Capacity']; ?>)
+                </option>
               <?php endforeach; ?>
             </select>
           </div>

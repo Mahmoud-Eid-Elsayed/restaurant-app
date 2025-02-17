@@ -8,7 +8,7 @@ if (!isset($_GET['id'])) {
 
 $reservationId = $_GET['id'];
 
-// Fetch reservation details
+
 $stmt = $conn->prepare("
     SELECT Reservation.*, `Table`.TableNumber 
     FROM Reservation 

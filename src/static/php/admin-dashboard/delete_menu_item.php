@@ -8,7 +8,7 @@ if (!isset($_GET['id'])) {
 
 $itemId = $_GET['id'];
 
-// Delete item
+
 $stmt = $conn->prepare("DELETE FROM MenuItem WHERE ItemID = :id");
 $stmt->execute([':id' => $itemId]);
 

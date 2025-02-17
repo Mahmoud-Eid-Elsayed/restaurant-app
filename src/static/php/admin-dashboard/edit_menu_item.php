@@ -61,10 +61,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 <body>
   <div class="wrapper">
-    <!-- Include the same sidebar and header as in index.php -->
+
     <div id="content">
       <div class="header">
-        <!-- Header content -->
+
       </div>
       <div class="main-content">
         <h2>Edit Menu Item</h2>

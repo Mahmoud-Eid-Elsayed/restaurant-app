@@ -1,7 +1,7 @@
 <?php
 require_once '../../connection/db.php';
 
-// Fetch all categories
+// fetch all categories
 $stmt = $conn->query("SELECT * FROM MenuCategory");
 $categories = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -42,10 +42,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 <body>
   <div class="wrapper">
-    <!-- Include the same sidebar and header as in index.php -->
+
     <div id="content">
       <div class="header">
-        <!-- Header content -->
+
       </div>
       <div class="main-content">
         <h2>Add Menu Item</h2>

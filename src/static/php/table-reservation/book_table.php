@@ -238,7 +238,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         document.getElementById('confirmationMessage').textContent = data.message;
                         document.getElementById('bookingForm').reset();
 
-                        // Fetch available tables again after form reset
                         fetchAvailableTables();
                     } else {
                         alert(data.message);

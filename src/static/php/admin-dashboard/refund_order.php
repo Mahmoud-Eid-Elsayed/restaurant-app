@@ -20,7 +20,7 @@ if (!isset($_GET['reason']) || empty(trim($_GET['reason']))) {
     exit;
 }
 
-$orderId = (int)$_GET['id'];
+$orderId = (int) $_GET['id'];
 $reason = trim($_GET['reason']);
 
 try {
@@ -35,7 +35,7 @@ try {
         WHERE o.OrderID = ?
     ");
     $stmt->execute([$orderId]);
-    $order = $stmt->fetch(PDO::FETCH_ASSOC);
+    $order = $stmt->fetch();
 
     if (!$order) {
         throw new Exception('Order not found');
@@ -106,7 +106,7 @@ try {
 
         // Log email sending attempt
         error_log("Sending refund notification email to: " . $order['Email']);
-        
+
         // Send email (in production, use a proper email service)
         @mail($to, $subject, $emailMessage, $headers);
     }
@@ -118,20 +118,20 @@ try {
     if ($conn->inTransaction()) {
         $conn->rollBack();
     }
-    
+
     // Log the error for debugging
     error_log("Error refunding order (ID: $orderId): " . $e->getMessage());
-    
+
     $error = $e->getMessage();
 } catch (PDOException $e) {
     // Rollback the transaction on database error
     if ($conn->inTransaction()) {
         $conn->rollBack();
     }
-    
+
     // Log the database error for debugging
     error_log("Database error while refunding order (ID: $orderId): " . $e->getMessage());
-    
+
     // Provide a user-friendly error message
     $error = 'A database error occurred while trying to process the refund';
 }
@@ -143,4 +143,4 @@ if ($error) {
     header('Location: orders.php?message=' . urlencode($message));
 }
 exit;
-?> 
+?>

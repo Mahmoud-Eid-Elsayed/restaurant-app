@@ -14,14 +14,11 @@ if (!isset($_SESSION['user_id'])) {
 
 // Fetch user details from the database
 $userID = $_SESSION['user_id'];
-$stmt = $conn->prepare("
-    SELECT UserID, Username, FirstName, LastName, ProfilePictureURL, Role, Status,
-           DATE_FORMAT(LastLogin, '%M %d, %Y %h:%i %p') as LastLoginFormatted
-    FROM User 
-    WHERE UserID = :userID
-");
+$stmt = $conn->prepare("SELECT UserID, Username, FirstName, LastName, ProfilePictureURL, 
+Role, DATE_FORMAT(LastLogin, '%M %d, %Y %h:%i %p')
+as LastLoginFormatted FROM User WHERE UserID = :userID");
 $stmt->execute([':userID' => $userID]);
-$user = $stmt->fetch(PDO::FETCH_ASSOC);
+$user = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 if (!$user) {
     header('Location: login.php');
@@ -55,53 +52,7 @@ $total_menu_items = $stmt->fetch(PDO::FETCH_ASSOC)['total_menu_items'];
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../../css/admin-dashboard/admin-dashboard.css">
-    <style>
-        .admin-profile {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.5rem;
-            text-decoration: none;
-            color: inherit;
-        }
-        .admin-profile:hover {
-            background: rgba(0,0,0,0.05);
-            border-radius: 0.5rem;
-        }
-        .admin-profile img {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 2px solid #fff;
-        }
-        .admin-info {
-            display: flex;
-            flex-direction: column;
-        }
-        .admin-name {
-            font-weight: 600;
-            font-size: 0.9rem;
-        }
-        .admin-role {
-            font-size: 0.8rem;
-            color: #6c757d;
-        }
-        .stat-card {
-            transition: transform 0.2s;
-        }
-        .stat-card:hover {
-            transform: translateY(-5px);
-        }
-        .stat-icon {
-            font-size: 2rem;
-            margin-bottom: 1rem;
-        }
-        .stat-value {
-            font-size: 2rem;
-            font-weight: bold;
-        }
-    </style>
+
 </head>
 
 <body>
@@ -144,7 +95,8 @@ $total_menu_items = $stmt->fetch(PDO::FETCH_ASSOC)['total_menu_items'];
                 <div class="admin-dropdown">
                     <a href="#" class="admin-profile dropdown-toggle" data-bs-toggle="dropdown">
                         <?php if (!empty($user['ProfilePictureURL'])): ?>
-                            <img src="../../<?php echo htmlspecialchars($user['ProfilePictureURL']); ?>" alt="Profile Picture">
+                            <img src="../../<?php echo htmlspecialchars($user['ProfilePictureURL']); ?>"
+                                alt="Profile Picture">
                         <?php else: ?>
                             <i class="fas fa-user-circle fa-2x"></i>
                         <?php endif; ?>
@@ -163,7 +115,9 @@ $total_menu_items = $stmt->fetch(PDO::FETCH_ASSOC)['total_menu_items'];
                                 <i class="fas fa-user me-2"></i>Profile
                             </a>
                         </li>
-                        <li><hr class="dropdown-divider"></li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
                         <li>
                             <a class="dropdown-item text-danger" href="logout.php">
                                 <i class="fas fa-sign-out-alt me-2"></i>Logout

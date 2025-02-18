@@ -1,7 +1,7 @@
 <?php
 $host = 'localhost';
-$port = 'add-your-port-number';
-$dbname = 'Restaurant_DB';
+$port = '3307';
+$dbname = 'restaurant_db';
 $username = 'root';
 $password = '';
 

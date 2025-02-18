@@ -7,64 +7,64 @@ ini_set('display_errors', 1);
 
 // Check if user ID is provided
 if (!isset($_GET['id'])) {
-    header('Location: users.php?error=' . urlencode('No user ID provided'));
-    exit;
+  header('Location: users.php?error=' . urlencode('No user ID provided'));
+  exit;
 }
 
-$userId = (int)$_GET['id'];
+$userId = (int) $_GET['id'];
 $error = null;
 $success = null;
 
 // Fetch the user's current data
 try {
-    $stmt = $conn->prepare("SELECT * FROM User WHERE UserID = ?");
-    $stmt->execute([$userId]);
-    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+  $stmt = $conn->prepare("SELECT * FROM User WHERE UserID = ?");
+  $stmt->execute([$userId]);
+  $user = $stmt->fetch();
 
-    if (!$user) {
-        header('Location: users.php?error=' . urlencode('User not found'));
-        exit;
-    }
-} catch (PDOException $e) {
-    header('Location: users.php?error=' . urlencode('Error fetching user data: ' . $e->getMessage()));
+  if (!$user) {
+    header('Location: users.php?error=' . urlencode('User not found'));
     exit;
+  }
+} catch (PDOException $e) {
+  header('Location: users.php?error=' . urlencode('Error fetching user data: ' . $e->getMessage()));
+  exit;
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    try {
-        $username = trim($_POST['username']);
-        $role = $_POST['role'];
-        $firstName = trim($_POST['firstName']);
-        $lastName = trim($_POST['lastName']);
-        $email = trim($_POST['email']);
-        $phoneNumber = trim($_POST['phoneNumber']);
-        $address = trim($_POST['address']);
+  try {
+    $username = trim($_POST['username']);
+    $role = $_POST['role'];
+    $firstName = trim($_POST['firstName']);
+    $lastName = trim($_POST['lastName']);
+    $email = trim($_POST['email']);
+    $phoneNumber = trim($_POST['phoneNumber']);
+    $address = trim($_POST['address']);
 
-        // Validate username
-        if (empty($username)) {
-            throw new Exception('Username cannot be empty');
-        }
+    // Validate username
+    if (empty($username)) {
+      throw new Exception('Username cannot be empty');
+    }
 
-        // Check if username exists for any other user
-        $checkStmt = $conn->prepare("SELECT UserID FROM User WHERE Username = ? AND UserID != ?");
-        $checkStmt->execute([$username, $userId]);
-        if ($checkStmt->fetch()) {
-            throw new Exception('Username already exists. Please choose a different username.');
-        }
+    // Check if username exists for any other user
+    $checkStmt = $conn->prepare("SELECT UserID FROM User WHERE Username = ? AND UserID != ?");
+    $checkStmt->execute([$username, $userId]);
+    if ($checkStmt->fetch()) {
+      throw new Exception('Username already exists. Please choose a different username.');
+    }
 
-        // Validate role
-        $validRoles = ['Staff', 'Customer']; // Match exact database ENUM values
-        if (!in_array($role, $validRoles)) {
-            throw new Exception('Invalid role selected');
-        }
+    // Validate role
+    $validRoles = ['Staff', 'Customer']; // Match exact database ENUM values
+    if (!in_array($role, $validRoles)) {
+      throw new Exception('Invalid role selected');
+    }
 
-        // Validate email if provided
-        if (!empty($email) && !filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            throw new Exception('Invalid email format');
-        }
+    // Validate email if provided
+    if (!empty($email) && !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+      throw new Exception('Invalid email format');
+    }
 
-        // Update the user
-        $stmt = $conn->prepare("
+    // Update the user
+    $stmt = $conn->prepare("
             UPDATE User 
             SET 
                 Username = ?,
@@ -77,23 +77,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             WHERE UserID = ?
         ");
 
-        $stmt->execute([
-            $username,
-            $role,
-            $firstName ?: null,
-            $lastName ?: null,
-            $email ?: null,
-            $phoneNumber ?: null,
-            $address ?: null,
-            $userId
-        ]);
+    $stmt->execute([
+      $username,
+      $role,
+      $firstName ?: null,
+      $lastName ?: null,
+      $email ?: null,
+      $phoneNumber ?: null,
+      $address ?: null,
+      $userId
+    ]);
 
-        header('Location: users.php?message=' . urlencode('User updated successfully'));
-        exit;
+    header('Location: users.php?message=' . urlencode('User updated successfully'));
+    exit;
 
-    } catch (Exception $e) {
-        $error = $e->getMessage();
-    }
+  } catch (Exception $e) {
+    $error = $e->getMessage();
+  }
 }
 ?>
 
@@ -152,8 +152,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
               <div class="row">
                 <div class="col-md-6 mb-3">
                   <label for="username" class="form-label">Username *</label>
-                  <input type="text" class="form-control" id="username" name="username" 
-                         value="<?php echo htmlspecialchars($user['Username']); ?>" required>
+                  <input type="text" class="form-control" id="username" name="username"
+                    value="<?php echo htmlspecialchars($user['Username']); ?>" required>
                   <div class="invalid-feedback">Username is required</div>
                 </div>
 
@@ -161,38 +161,40 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                   <label for="role" class="form-label">Role *</label>
                   <select class="form-select" id="role" name="role" required>
                     <option value="Staff" <?php echo $user['Role'] === 'Staff' ? 'selected' : ''; ?>>Staff</option>
-                    <option value="Customer" <?php echo $user['Role'] === 'Customer' ? 'selected' : ''; ?>>Customer</option>
+                    <option value="Customer" <?php echo $user['Role'] === 'Customer' ? 'selected' : ''; ?>>Customer
+                    </option>
                   </select>
                 </div>
 
                 <div class="col-md-6 mb-3">
                   <label for="firstName" class="form-label">First Name</label>
-                  <input type="text" class="form-control" id="firstName" name="firstName" 
-                         value="<?php echo htmlspecialchars($user['FirstName'] ?? ''); ?>">
+                  <input type="text" class="form-control" id="firstName" name="firstName"
+                    value="<?php echo htmlspecialchars($user['FirstName'] ?? ''); ?>">
                 </div>
 
                 <div class="col-md-6 mb-3">
                   <label for="lastName" class="form-label">Last Name</label>
-                  <input type="text" class="form-control" id="lastName" name="lastName" 
-                         value="<?php echo htmlspecialchars($user['LastName'] ?? ''); ?>">
+                  <input type="text" class="form-control" id="lastName" name="lastName"
+                    value="<?php echo htmlspecialchars($user['LastName'] ?? ''); ?>">
                 </div>
 
                 <div class="col-md-6 mb-3">
                   <label for="email" class="form-label">Email</label>
-                  <input type="email" class="form-control" id="email" name="email" 
-                         value="<?php echo htmlspecialchars($user['Email'] ?? ''); ?>">
+                  <input type="email" class="form-control" id="email" name="email"
+                    value="<?php echo htmlspecialchars($user['Email'] ?? ''); ?>">
                   <div class="invalid-feedback">Please enter a valid email address</div>
                 </div>
 
                 <div class="col-md-6 mb-3">
                   <label for="phoneNumber" class="form-label">Phone Number</label>
-                  <input type="tel" class="form-control" id="phoneNumber" name="phoneNumber" 
-                         value="<?php echo htmlspecialchars($user['PhoneNumber'] ?? ''); ?>">
+                  <input type="tel" class="form-control" id="phoneNumber" name="phoneNumber"
+                    value="<?php echo htmlspecialchars($user['PhoneNumber'] ?? ''); ?>">
                 </div>
 
                 <div class="col-12 mb-3">
                   <label for="address" class="form-label">Address</label>
-                  <textarea class="form-control" id="address" name="address" rows="2"><?php echo htmlspecialchars($user['Address'] ?? ''); ?></textarea>
+                  <textarea class="form-control" id="address" name="address"
+                    rows="2"><?php echo htmlspecialchars($user['Address'] ?? ''); ?></textarea>
                 </div>
               </div>
 
@@ -213,10 +215,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <script src="../../js/admin-dashboard.js"></script>
   <script>
     // Form validation
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
       const form = document.querySelector('.needs-validation');
-      
-      form.addEventListener('submit', function(event) {
+
+      form.addEventListener('submit', function (event) {
         if (!form.checkValidity()) {
           event.preventDefault();
           event.stopPropagation();

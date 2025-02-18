@@ -15,7 +15,7 @@ if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
     exit;
 }
 
-$itemId = (int)$_GET['id'];
+$itemId = (int) $_GET['id'];
 
 try {
     // Start transaction
@@ -24,7 +24,7 @@ try {
     // Check if the item exists and get its details
     $stmt = $conn->prepare("SELECT ItemName FROM MenuItem WHERE ItemID = ?");
     $stmt->execute([$itemId]);
-    $item = $stmt->fetch(PDO::FETCH_ASSOC);
+    $item = $stmt->fetch();
 
     if (!$item) {
         throw new Exception('Menu item not found');
@@ -37,7 +37,7 @@ try {
         WHERE ItemID = ?
     ");
     $stmt->execute([$itemId]);
-    $result = $stmt->fetch(PDO::FETCH_ASSOC);
+    $result = $stmt->fetch();
 
     if ($result['order_count'] > 0) {
         throw new Exception('Cannot delete menu item: It has associated orders');
@@ -61,20 +61,20 @@ try {
     if ($conn->inTransaction()) {
         $conn->rollBack();
     }
-    
+
     // Log the error for debugging
     error_log("Error deleting menu item (ID: $itemId): " . $e->getMessage());
-    
+
     $error = $e->getMessage();
 } catch (PDOException $e) {
     // Rollback the transaction on database error
     if ($conn->inTransaction()) {
         $conn->rollBack();
     }
-    
+
     // Log the database error for debugging
     error_log("Database error while deleting menu item (ID: $itemId): " . $e->getMessage());
-    
+
     // Provide a user-friendly error message
     $error = 'A database error occurred while trying to delete the menu item';
 }

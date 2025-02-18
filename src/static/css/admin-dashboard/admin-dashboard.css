@@ -224,63 +224,118 @@ body {
 
 @media (max-width: 768px) {
   #sidebar {
-      margin-left: -250px;
+    margin-left: -250px;
   }
 
   #sidebar.active {
-      margin-left: 0;
+    margin-left: 0;
   }
 
   #content {
-      width: 100%;
+    width: 100%;
   }
 }
 
 /* Sidebar Toggle Button */
 #sidebarToggle {
-    background: transparent;
-    border: none;
-    color: #333;
-    padding: 0.5rem;
-    margin-right: 1rem;
-    border-radius: 0.5rem;
-    transition: all 0.3s ease;
+  background: transparent;
+  border: none;
+  color: #333;
+  padding: 0.5rem;
+  margin-right: 1rem;
+  border-radius: 0.5rem;
+  transition: all 0.3s ease;
 }
 
 #sidebarToggle:hover {
-    background: rgba(0, 0, 0, 0.05);
-    transform: scale(1.1);
+  background: rgba(0, 0, 0, 0.05);
+  transform: scale(1.1);
 }
 
 #sidebarToggle i {
-    font-size: 1.5rem;
+  font-size: 1.5rem;
+}
+
+.admin-profile {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  text-decoration: none;
+  color: inherit;
+}
+
+.admin-profile:hover {
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 0.5rem;
+}
+
+.admin-profile img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #fff;
+}
+
+.admin-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.admin-name {
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.admin-role {
+  font-size: 0.8rem;
+  color: #6c757d;
+}
+
+.stat-card {
+  transition: transform 0.2s;
+}
+
+.stat-card:hover {
+  transform: translateY(-5px);
+}
+
+.stat-icon {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.stat-value {
+  font-size: 2rem;
+  font-weight: bold;
 }
 
 /* Dark mode support */
 @media (prefers-color-scheme: dark) {
-    #sidebarToggle {
-        color: #fff;
-    }
-    
-    #sidebarToggle:hover {
-        background: rgba(255, 255, 255, 0.1);
-    }
+  #sidebarToggle {
+    color: #fff;
+  }
+
+  #sidebarToggle:hover {
+    background: rgba(255, 255, 255, 0.1);
+  }
 }
 
 /* Mobile styles */
 @media (max-width: 768px) {
+  #sidebarToggle {
+    color: #000;
+  }
+
+  #sidebarToggle:hover {
+    background: rgba(0, 0, 0, 0.05);
+  }
+
+  /* Override dark mode on mobile */
+  @media (prefers-color-scheme: dark) {
     #sidebarToggle {
-        color: #000;
+      color: #000;
     }
-    
-    #sidebarToggle:hover {
-        background: rgba(0, 0, 0, 0.05);
-    }
-    
-    /* Override dark mode on mobile */
-    @media (prefers-color-scheme: dark) {
-        #sidebarToggle {
-            color: #000;
-        }
-    }
+  }
 }

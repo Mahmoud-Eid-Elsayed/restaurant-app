@@ -3,16 +3,14 @@ error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
 require '../../../../src/static/connection/db.php';
+require __DIR__ . '/../../../../vendor/autoload.php';
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
-require __DIR__ . '../../../../assets/libraries/vendor/autoload.php';
-
 // Load the .env file
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
 $dotenv->load();
-
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
@@ -43,10 +41,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             ':notes' => $message
         ]);
 
-
         $reservation_id = $conn->lastInsertId();
-
-
         $mail = new PHPMailer(true);
 
         try {
@@ -54,17 +49,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $mail->isSMTP();
             $mail->Host = 'smtp.sendgrid.net';
             $mail->SMTPAuth = true;
-            $mail->Username = 'apikey';
+            $mail->Username = $_ENV['MAIL_USERNAME'];
             $mail->Password = $_ENV['SENDGRID_API_KEY'];
             $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-            $mail->Port = 25;
+            $mail->Port = 587;
             $mail->SMTPDebug = 0;
 
-
-            $mail->setFrom('derantorn@gmail.com', 'El Chef');
+            $mail->setFrom('macawilo@asciibinder.net', 'El Chef');
             $mail->addAddress($email, $name);
-            $mail->addReplyTo('derantorn@gmail.com', 'El-Chef');
-
+            $mail->addReplyTo('macawilo@asciibinder.net', 'El-Chef');
 
             $mail->isHTML(true);
             $mail->Subject = 'Reservation Confirmation';

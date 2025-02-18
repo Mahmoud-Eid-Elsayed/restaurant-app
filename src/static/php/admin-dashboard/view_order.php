@@ -17,11 +17,11 @@ if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
     exit;
 }
 
-$orderId = (int)$_GET['id'];
+$orderId = (int) $_GET['id'];
 
 try {
     // Fetch order details with customer information
-$stmt = $conn->prepare("
+    $stmt = $conn->prepare("
         SELECT 
             o.*,
             u.Username,
@@ -35,14 +35,14 @@ $stmt = $conn->prepare("
         WHERE o.OrderID = ?
 ");
     $stmt->execute([$orderId]);
-    $order = $stmt->fetch(PDO::FETCH_ASSOC);
+    $order = $stmt->fetch();
 
-if (!$order) {
+    if (!$order) {
         throw new Exception('Order not found');
-}
+    }
 
     // Fetch order items with menu item details
-$stmt = $conn->prepare("
+    $stmt = $conn->prepare("
         SELECT 
             oi.*,
             mi.ItemName,
@@ -55,7 +55,7 @@ $stmt = $conn->prepare("
         ORDER BY mc.CategoryName, mi.ItemName
 ");
     $stmt->execute([$orderId]);
-$orderItems = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $orderItems = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     // Fetch order status history
     $stmt = $conn->prepare("
@@ -88,26 +88,29 @@ $statusColors = [
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>View Order #<?php echo $orderId; ?> - ELCHEF</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="../../css/admin-dashboard/admin-dashboard.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../css/admin-dashboard/admin-dashboard.css">
     <style>
         .status-badge {
             min-width: 100px;
             text-align: center;
         }
+
         .timeline {
             border-left: 3px solid #dee2e6;
             padding-left: 20px;
             margin-left: 10px;
         }
+
         .timeline-item {
             position: relative;
             margin-bottom: 20px;
         }
+
         .timeline-item::before {
             content: '';
             position: absolute;
@@ -119,6 +122,7 @@ $statusColors = [
             background: #fff;
             border: 3px solid #007bff;
         }
+
         .order-summary {
             background-color: #f8f9fa;
             border-radius: 0.25rem;
@@ -128,7 +132,7 @@ $statusColors = [
 </head>
 
 <body>
-  <div class="wrapper">
+    <div class="wrapper">
         <!-- Sidebar -->
         <nav id="sidebar">
             <div class="sidebar-header">
@@ -145,7 +149,7 @@ $statusColors = [
         </nav>
 
         <!-- Page Content -->
-    <div id="content">
+        <div id="content">
             <!-- Toggle Button -->
             <button type="button" id="sidebarToggle" class="btn btn-info">
                 <i class="fas fa-bars"></i>
@@ -157,13 +161,13 @@ $statusColors = [
                         <?php echo htmlspecialchars($error); ?>
                         <br>
                         <a href="orders.php" class="btn btn-secondary mt-2">Back to Orders</a>
-      </div>
+                    </div>
                 <?php else: ?>
                     <div class="d-flex justify-content-between align-items-center mb-4">
                         <h2>
                             Order #<?php echo htmlspecialchars($order['OrderID']); ?>
-                            <span class="badge status-badge bg-<?php 
-                                echo $statusColors[$order['OrderStatus']] ?? 'secondary';
+                            <span class="badge status-badge bg-<?php
+                            echo $statusColors[$order['OrderStatus']] ?? 'secondary';
                             ?>">
                                 <?php echo htmlspecialchars($order['OrderStatus']); ?>
                             </span>
@@ -173,25 +177,24 @@ $statusColors = [
                                 <i class="fas fa-arrow-left"></i> Back to Orders
                             </a>
                             <?php if ($order['OrderStatus'] !== 'Completed' && $order['OrderStatus'] !== 'Cancelled'): ?>
-                                <a href="edit_order.php?id=<?php echo $order['OrderID']; ?>" 
-                                   class="btn btn-warning">
+                                <a href="edit_order.php?id=<?php echo $order['OrderID']; ?>" class="btn btn-warning">
                                     <i class="fas fa-edit"></i> Edit Order
                                 </a>
                                 <button type="button"
-                                        onclick="showCancelModal(<?php echo $order['OrderID']; ?>, '<?php echo htmlspecialchars(addslashes($order['OrderID'])); ?>')"
-                                        class="btn btn-danger">
+                                    onclick="showCancelModal(<?php echo $order['OrderID']; ?>, '<?php echo htmlspecialchars(addslashes($order['OrderID'])); ?>')"
+                                    class="btn btn-danger">
                                     <i class="fas fa-times"></i> Cancel Order
                                 </button>
                             <?php endif; ?>
                             <?php if ($order['OrderStatus'] === 'Completed'): ?>
                                 <button type="button"
-                                        onclick="showRefundModal(<?php echo $order['OrderID']; ?>, '<?php echo htmlspecialchars(addslashes($order['OrderID'])); ?>')"
-                                        class="btn btn-secondary">
+                                    onclick="showRefundModal(<?php echo $order['OrderID']; ?>, '<?php echo htmlspecialchars(addslashes($order['OrderID'])); ?>')"
+                                    class="btn btn-secondary">
                                     <i class="fas fa-undo"></i> Refund Order
                                 </button>
                             <?php endif; ?>
-          </div>
-        </div>
+                        </div>
+                    </div>
 
                     <div class="row">
                         <!-- Order Details -->
@@ -204,22 +207,22 @@ $statusColors = [
                                     <div class="table-responsive">
                                         <table class="table table-bordered table-hover">
                                             <thead class="table-light">
-            <tr>
+                                                <tr>
                                                     <th>Item</th>
                                                     <th>Category</th>
-              <th>Quantity</th>
-              <th>Price</th>
-              <th>Total</th>
-            </tr>
-          </thead>
-          <tbody>
-                                                <?php 
+                                                    <th>Quantity</th>
+                                                    <th>Price</th>
+                                                    <th>Total</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <?php
                                                 $subtotal = 0;
-                                                foreach ($orderItems as $item): 
+                                                foreach ($orderItems as $item):
                                                     $itemTotal = $item['Quantity'] * $item['PriceAtTimeOfOrder'];
                                                     $subtotal += $itemTotal;
-                                                ?>
-              <tr>
+                                                    ?>
+                                                    <tr>
                                                         <td>
                                                             <strong><?php echo htmlspecialchars($item['ItemName']); ?></strong>
                                                             <?php if ($item['Description']): ?>
@@ -230,12 +233,13 @@ $statusColors = [
                                                             <?php endif; ?>
                                                         </td>
                                                         <td><?php echo htmlspecialchars($item['CategoryName']); ?></td>
-                                                        <td class="text-center"><?php echo (int)$item['Quantity']; ?></td>
-                                                        <td class="text-end">$<?php echo number_format($item['PriceAtTimeOfOrder'], 2); ?></td>
+                                                        <td class="text-center"><?php echo (int) $item['Quantity']; ?></td>
+                                                        <td class="text-end">
+                                                            $<?php echo number_format($item['PriceAtTimeOfOrder'], 2); ?></td>
                                                         <td class="text-end">$<?php echo number_format($itemTotal, 2); ?></td>
-              </tr>
-            <?php endforeach; ?>
-          </tbody>
+                                                    </tr>
+                                                <?php endforeach; ?>
+                                            </tbody>
                                             <tfoot class="table-light">
                                                 <tr>
                                                     <td colspan="4" class="text-end"><strong>Subtotal:</strong></td>
@@ -244,15 +248,18 @@ $statusColors = [
                                                 <?php if (isset($order['TaxAmount']) && $order['TaxAmount'] > 0): ?>
                                                     <tr>
                                                         <td colspan="4" class="text-end">Tax:</td>
-                                                        <td class="text-end">$<?php echo number_format($order['TaxAmount'], 2); ?></td>
+                                                        <td class="text-end">
+                                                            $<?php echo number_format($order['TaxAmount'], 2); ?></td>
                                                     </tr>
                                                 <?php endif; ?>
                                                 <tr>
                                                     <td colspan="4" class="text-end"><strong>Total:</strong></td>
-                                                    <td class="text-end"><strong>$<?php echo number_format($order['TotalAmount'], 2); ?></strong></td>
+                                                    <td class="text-end">
+                                                        <strong>$<?php echo number_format($order['TotalAmount'], 2); ?></strong>
+                                                    </td>
                                                 </tr>
                                             </tfoot>
-        </table>
+                                        </table>
                                     </div>
                                 </div>
                             </div>
@@ -267,29 +274,32 @@ $statusColors = [
                                         <?php foreach ($orderHistory as $history): ?>
                                             <div class="timeline-item">
                                                 <small class="text-muted">
-                                                    <?php 
+                                                    <?php
                                                     $historyDate = new DateTime($history['ChangedAt']);
                                                     echo $historyDate->format('M d, Y H:i');
                                                     ?>
                                                 </small>
                                                 <p class="mb-0">
-                                                    Status changed from 
-                                                    <span class="badge bg-<?php echo $statusColors[$history['StatusFrom']] ?? 'secondary'; ?>">
+                                                    Status changed from
+                                                    <span
+                                                        class="badge bg-<?php echo $statusColors[$history['StatusFrom']] ?? 'secondary'; ?>">
                                                         <?php echo htmlspecialchars($history['StatusFrom']); ?>
                                                     </span>
                                                     to
-                                                    <span class="badge bg-<?php echo $statusColors[$history['StatusTo']] ?? 'secondary'; ?>">
+                                                    <span
+                                                        class="badge bg-<?php echo $statusColors[$history['StatusTo']] ?? 'secondary'; ?>">
                                                         <?php echo htmlspecialchars($history['StatusTo']); ?>
                                                     </span>
                                                 </p>
                                                 <?php if ($history['Notes']): ?>
-                                                    <p class="text-muted mb-0"><small><?php echo htmlspecialchars($history['Notes']); ?></small></p>
+                                                    <p class="text-muted mb-0">
+                                                        <small><?php echo htmlspecialchars($history['Notes']); ?></small></p>
                                                 <?php endif; ?>
                                             </div>
                                         <?php endforeach; ?>
                                         <div class="timeline-item">
                                             <small class="text-muted">
-                                                <?php 
+                                                <?php
                                                 $orderDate = new DateTime($order['OrderDate']);
                                                 echo $orderDate->format('M d, Y H:i');
                                                 ?>
@@ -353,15 +363,15 @@ $statusColors = [
                                         </p>
                                         <p class="mb-1">
                                             <strong>Status:</strong><br>
-                                            <span class="badge status-badge bg-<?php 
-                                                echo $statusColors[$order['OrderStatus']] ?? 'secondary';
+                                            <span class="badge status-badge bg-<?php
+                                            echo $statusColors[$order['OrderStatus']] ?? 'secondary';
                                             ?>">
                                                 <?php echo htmlspecialchars($order['OrderStatus']); ?>
                                             </span>
                                         </p>
                                         <p class="mb-1">
                                             <strong>Total Items:</strong><br>
-                                            <?php 
+                                            <?php
                                             $totalItems = array_sum(array_column($orderItems, 'Quantity'));
                                             echo $totalItems . ' items';
                                             ?>
@@ -376,9 +386,9 @@ $statusColors = [
                         </div>
                     </div>
                 <?php endif; ?>
-      </div>
+            </div>
+        </div>
     </div>
-  </div>
 
     <!-- Cancel Order Modal -->
     <div class="modal fade" id="cancelModal" tabindex="-1" aria-labelledby="cancelModalLabel" aria-hidden="true">
@@ -433,19 +443,19 @@ $statusColors = [
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="../../js/admin-dashboard.js"></script>
+    <script src="../../js/admin-dashboard.js"></script>
     <script>
         let cancelModal, refundModal;
         let orderToCancel = null;
         let orderToRefund = null;
 
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             // Initialize modals
             cancelModal = new bootstrap.Modal(document.getElementById('cancelModal'));
             refundModal = new bootstrap.Modal(document.getElementById('refundModal'));
-            
+
             // Set up cancel confirmation button
-            document.getElementById('confirmCancel').addEventListener('click', function() {
+            document.getElementById('confirmCancel').addEventListener('click', function () {
                 if (orderToCancel) {
                     window.location.href = `cancel_order.php?id=${orderToCancel.id}&token=${Date.now()}`;
                 }
@@ -453,7 +463,7 @@ $statusColors = [
             });
 
             // Set up refund confirmation button
-            document.getElementById('confirmRefund').addEventListener('click', function() {
+            document.getElementById('confirmRefund').addEventListener('click', function () {
                 if (orderToRefund) {
                     const reason = document.getElementById('refundReason').value.trim();
                     if (!reason) {
@@ -486,4 +496,5 @@ $statusColors = [
         }
     </script>
 </body>
+
 </html>

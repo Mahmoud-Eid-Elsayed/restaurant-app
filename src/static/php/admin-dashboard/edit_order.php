@@ -11,7 +11,7 @@ if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
     exit;
 }
 
-$orderId = (int)$_GET['id'];
+$orderId = (int) $_GET['id'];
 $error = null;
 $success = null;
 
@@ -24,7 +24,7 @@ try {
         WHERE o.OrderID = ?
     ");
     $stmt->execute([$orderId]);
-    $order = $stmt->fetch(PDO::FETCH_ASSOC);
+    $order = $stmt->fetch();
 
     if (!$order) {
         header('Location: orders.php?error=' . urlencode('Order not found'));
@@ -108,11 +108,12 @@ try {
             ");
 
             foreach ($_POST['items'] as $item) {
-                $itemId = (int)$item['id'];
-                $quantity = (int)$item['quantity'];
-                $price = (float)$item['price'];
+                $itemId = (int) $item['id'];
+                $quantity = (int) $item['quantity'];
+                $price = (float) $item['price'];
 
-                if ($quantity <= 0) continue;
+                if ($quantity <= 0)
+                    continue;
 
                 $stmt->execute([$orderId, $itemId, $quantity, $price]);
                 $totalAmount += $quantity * $price;
@@ -140,6 +141,7 @@ try {
 ?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -148,6 +150,7 @@ try {
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../../css/admin-dashboard/admin-dashboard.css">
 </head>
+
 <body>
     <div class="wrapper">
         <!-- Sidebar -->
@@ -199,10 +202,13 @@ try {
                                 <h5 class="card-title mb-0">Customer Information</h5>
                             </div>
                             <div class="card-body">
-                                <p><strong>Name:</strong> <?php echo htmlspecialchars(trim($order['FirstName'] . ' ' . $order['LastName'])); ?></p>
+                                <p><strong>Name:</strong>
+                                    <?php echo htmlspecialchars(trim($order['FirstName'] . ' ' . $order['LastName'])); ?>
+                                </p>
                                 <p><strong>Username:</strong> <?php echo htmlspecialchars($order['Username']); ?></p>
                                 <p><strong>Email:</strong> <?php echo htmlspecialchars($order['Email'] ?? 'N/A'); ?></p>
-                                <p><strong>Phone:</strong> <?php echo htmlspecialchars($order['PhoneNumber'] ?? 'N/A'); ?></p>
+                                <p><strong>Phone:</strong>
+                                    <?php echo htmlspecialchars($order['PhoneNumber'] ?? 'N/A'); ?></p>
                             </div>
                         </div>
                     </div>
@@ -213,7 +219,8 @@ try {
                                 <div class="card-header d-flex justify-content-between align-items-center">
                                     <h5 class="card-title mb-0">Order Details</h5>
                                     <?php if ($canEdit): ?>
-                                        <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addItemModal">
+                                        <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal"
+                                            data-bs-target="#addItemModal">
                                             <i class="fas fa-plus"></i> Add Item
                                         </button>
                                     <?php endif; ?>
@@ -247,22 +254,26 @@ try {
                                                 <?php foreach ($orderItems as $item): ?>
                                                     <tr>
                                                         <td><?php echo htmlspecialchars($item['ItemName']); ?></td>
-                                                        <td>$<?php echo number_format($item['PriceAtTimeOfOrder'], 2); ?></td>
+                                                        <td>$<?php echo number_format($item['PriceAtTimeOfOrder'], 2); ?>
+                                                        </td>
                                                         <td>
                                                             <?php if ($canEdit): ?>
-                                                                <input type="number" class="form-control quantity-input" 
-                                                                       name="items[<?php echo $item['ItemID']; ?>][quantity]"
-                                                                       value="<?php echo $item['Quantity']; ?>" 
-                                                                       min="1" required>
-                                                                <input type="hidden" name="items[<?php echo $item['ItemID']; ?>][id]" 
-                                                                       value="<?php echo $item['ItemID']; ?>">
-                                                                <input type="hidden" name="items[<?php echo $item['ItemID']; ?>][price]" 
-                                                                       value="<?php echo $item['PriceAtTimeOfOrder']; ?>">
+                                                                <input type="number" class="form-control quantity-input"
+                                                                    name="items[<?php echo $item['ItemID']; ?>][quantity]"
+                                                                    value="<?php echo $item['Quantity']; ?>" min="1" required>
+                                                                <input type="hidden"
+                                                                    name="items[<?php echo $item['ItemID']; ?>][id]"
+                                                                    value="<?php echo $item['ItemID']; ?>">
+                                                                <input type="hidden"
+                                                                    name="items[<?php echo $item['ItemID']; ?>][price]"
+                                                                    value="<?php echo $item['PriceAtTimeOfOrder']; ?>">
                                                             <?php else: ?>
                                                                 <?php echo $item['Quantity']; ?>
                                                             <?php endif; ?>
                                                         </td>
-                                                        <td class="item-total">$<?php echo number_format($item['Quantity'] * $item['PriceAtTimeOfOrder'], 2); ?></td>
+                                                        <td class="item-total">
+                                                            $<?php echo number_format($item['Quantity'] * $item['PriceAtTimeOfOrder'], 2); ?>
+                                                        </td>
                                                         <?php if ($canEdit): ?>
                                                             <td>
                                                                 <button type="button" class="btn btn-danger btn-sm remove-item">
@@ -275,8 +286,10 @@ try {
                                             </tbody>
                                             <tfoot>
                                                 <tr>
-                                                    <td colspan="<?php echo $canEdit ? '3' : '2'; ?>" class="text-end"><strong>Total:</strong></td>
-                                                    <td colspan="<?php echo $canEdit ? '2' : '1'; ?>" class="order-total">
+                                                    <td colspan="<?php echo $canEdit ? '3' : '2'; ?>" class="text-end">
+                                                        <strong>Total:</strong></td>
+                                                    <td colspan="<?php echo $canEdit ? '2' : '1'; ?>"
+                                                        class="order-total">
                                                         $<?php echo number_format($order['TotalAmount'], 2); ?>
                                                     </td>
                                                 </tr>
@@ -321,7 +334,8 @@ try {
                                     All Categories
                                 </a>
                                 <?php foreach (array_keys($menuItemsByCategory) as $category): ?>
-                                    <a href="#" class="list-group-item list-group-item-action" data-category="<?php echo htmlspecialchars($category); ?>">
+                                    <a href="#" class="list-group-item list-group-item-action"
+                                        data-category="<?php echo htmlspecialchars($category); ?>">
                                         <?php echo htmlspecialchars($category); ?>
                                     </a>
                                 <?php endforeach; ?>
@@ -330,17 +344,19 @@ try {
                         <div class="col-md-8">
                             <div class="list-group" id="itemList">
                                 <?php foreach ($menuItems as $item): ?>
-                                    <a href="#" class="list-group-item list-group-item-action item-entry" 
-                                       data-id="<?php echo $item['ItemID']; ?>"
-                                       data-name="<?php echo htmlspecialchars($item['ItemName']); ?>"
-                                       data-price="<?php echo $item['Price']; ?>"
-                                       data-category="<?php echo htmlspecialchars($item['CategoryName']); ?>">
+                                    <a href="#" class="list-group-item list-group-item-action item-entry"
+                                        data-id="<?php echo $item['ItemID']; ?>"
+                                        data-name="<?php echo htmlspecialchars($item['ItemName']); ?>"
+                                        data-price="<?php echo $item['Price']; ?>"
+                                        data-category="<?php echo htmlspecialchars($item['CategoryName']); ?>">
                                         <div class="d-flex justify-content-between align-items-center">
                                             <div>
                                                 <h6 class="mb-0"><?php echo htmlspecialchars($item['ItemName']); ?></h6>
-                                                <small class="text-muted"><?php echo htmlspecialchars($item['CategoryName']); ?></small>
+                                                <small
+                                                    class="text-muted"><?php echo htmlspecialchars($item['CategoryName']); ?></small>
                                             </div>
-                                            <span class="badge bg-primary">$<?php echo number_format($item['Price'], 2); ?></span>
+                                            <span
+                                                class="badge bg-primary">$<?php echo number_format($item['Price'], 2); ?></span>
                                         </div>
                                     </a>
                                 <?php endforeach; ?>
@@ -358,101 +374,101 @@ try {
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script src="../../js/admin-dashboard.js"></script>
     <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const orderForm = document.getElementById('orderForm');
-        const itemSearch = document.getElementById('itemSearch');
-        const categoryList = document.getElementById('categoryList');
-        const itemList = document.getElementById('itemList');
-        const orderItemsTable = document.getElementById('orderItemsTable');
-        const addItemModal = new bootstrap.Modal(document.getElementById('addItemModal'));
-        
-        // Function to update order total
-        function updateOrderTotal() {
-            let total = 0;
-            document.querySelectorAll('.item-total').forEach(cell => {
-                total += parseFloat(cell.textContent.replace('$', ''));
-            });
-            document.querySelector('.order-total').textContent = '$' + total.toFixed(2);
-        }
+        document.addEventListener('DOMContentLoaded', function () {
+            const orderForm = document.getElementById('orderForm');
+            const itemSearch = document.getElementById('itemSearch');
+            const categoryList = document.getElementById('categoryList');
+            const itemList = document.getElementById('itemList');
+            const orderItemsTable = document.getElementById('orderItemsTable');
+            const addItemModal = new bootstrap.Modal(document.getElementById('addItemModal'));
 
-        // Function to update item total
-        function updateItemTotal(row) {
-            const quantity = parseInt(row.querySelector('.quantity-input').value);
-            const price = parseFloat(row.querySelector('input[name$="[price]"]').value);
-            const total = quantity * price;
-            row.querySelector('.item-total').textContent = '$' + total.toFixed(2);
-            updateOrderTotal();
-        }
-
-        // Handle quantity changes
-        orderItemsTable.addEventListener('change', function(e) {
-            if (e.target.classList.contains('quantity-input')) {
-                updateItemTotal(e.target.closest('tr'));
+            // Function to update order total
+            function updateOrderTotal() {
+                let total = 0;
+                document.querySelectorAll('.item-total').forEach(cell => {
+                    total += parseFloat(cell.textContent.replace('$', ''));
+                });
+                document.querySelector('.order-total').textContent = '$' + total.toFixed(2);
             }
-        });
 
-        // Handle item removal
-        orderItemsTable.addEventListener('click', function(e) {
-            if (e.target.closest('.remove-item')) {
-                e.target.closest('tr').remove();
+            // Function to update item total
+            function updateItemTotal(row) {
+                const quantity = parseInt(row.querySelector('.quantity-input').value);
+                const price = parseFloat(row.querySelector('input[name$="[price]"]').value);
+                const total = quantity * price;
+                row.querySelector('.item-total').textContent = '$' + total.toFixed(2);
                 updateOrderTotal();
             }
-        });
 
-        // Handle category selection
-        categoryList.addEventListener('click', function(e) {
-            if (e.target.classList.contains('list-group-item')) {
-                e.preventDefault();
-                document.querySelectorAll('#categoryList .list-group-item').forEach(item => {
-                    item.classList.remove('active');
-                });
-                e.target.classList.add('active');
-                
-                const selectedCategory = e.target.dataset.category;
+            // Handle quantity changes
+            orderItemsTable.addEventListener('change', function (e) {
+                if (e.target.classList.contains('quantity-input')) {
+                    updateItemTotal(e.target.closest('tr'));
+                }
+            });
+
+            // Handle item removal
+            orderItemsTable.addEventListener('click', function (e) {
+                if (e.target.closest('.remove-item')) {
+                    e.target.closest('tr').remove();
+                    updateOrderTotal();
+                }
+            });
+
+            // Handle category selection
+            categoryList.addEventListener('click', function (e) {
+                if (e.target.classList.contains('list-group-item')) {
+                    e.preventDefault();
+                    document.querySelectorAll('#categoryList .list-group-item').forEach(item => {
+                        item.classList.remove('active');
+                    });
+                    e.target.classList.add('active');
+
+                    const selectedCategory = e.target.dataset.category;
+                    document.querySelectorAll('#itemList .item-entry').forEach(item => {
+                        if (selectedCategory === 'all' || item.dataset.category === selectedCategory) {
+                            item.style.display = '';
+                        } else {
+                            item.style.display = 'none';
+                        }
+                    });
+                }
+            });
+
+            // Handle item search
+            itemSearch.addEventListener('input', function (e) {
+                const searchTerm = e.target.value.toLowerCase();
                 document.querySelectorAll('#itemList .item-entry').forEach(item => {
-                    if (selectedCategory === 'all' || item.dataset.category === selectedCategory) {
+                    const itemName = item.dataset.name.toLowerCase();
+                    const itemCategory = item.dataset.category.toLowerCase();
+                    if (itemName.includes(searchTerm) || itemCategory.includes(searchTerm)) {
                         item.style.display = '';
                     } else {
                         item.style.display = 'none';
                     }
                 });
-            }
-        });
-
-        // Handle item search
-        itemSearch.addEventListener('input', function(e) {
-            const searchTerm = e.target.value.toLowerCase();
-            document.querySelectorAll('#itemList .item-entry').forEach(item => {
-                const itemName = item.dataset.name.toLowerCase();
-                const itemCategory = item.dataset.category.toLowerCase();
-                if (itemName.includes(searchTerm) || itemCategory.includes(searchTerm)) {
-                    item.style.display = '';
-                } else {
-                    item.style.display = 'none';
-                }
             });
-        });
 
-        // Handle item selection
-        itemList.addEventListener('click', function(e) {
-            e.preventDefault();
-            const item = e.target.closest('.item-entry');
-            if (!item) return;
+            // Handle item selection
+            itemList.addEventListener('click', function (e) {
+                e.preventDefault();
+                const item = e.target.closest('.item-entry');
+                if (!item) return;
 
-            // Check if item already exists in order
-            const existingItem = document.querySelector(`input[name="items[${item.dataset.id}][id]"]`);
-            if (existingItem) {
-                const row = existingItem.closest('tr');
-                const quantityInput = row.querySelector('.quantity-input');
-                quantityInput.value = parseInt(quantityInput.value) + 1;
-                updateItemTotal(row);
-                addItemModal.hide();
-                return;
-            }
+                // Check if item already exists in order
+                const existingItem = document.querySelector(`input[name="items[${item.dataset.id}][id]"]`);
+                if (existingItem) {
+                    const row = existingItem.closest('tr');
+                    const quantityInput = row.querySelector('.quantity-input');
+                    quantityInput.value = parseInt(quantityInput.value) + 1;
+                    updateItemTotal(row);
+                    addItemModal.hide();
+                    return;
+                }
 
-            // Add new item to order
-            const newRow = document.createElement('tr');
-            newRow.innerHTML = `
+                // Add new item to order
+                const newRow = document.createElement('tr');
+                newRow.innerHTML = `
                 <td>${item.dataset.name}</td>
                 <td>$${parseFloat(item.dataset.price).toFixed(2)}</td>
                 <td>
@@ -471,21 +487,22 @@ try {
                     </button>
                 </td>
             `;
-            
-            orderItemsTable.querySelector('tbody').appendChild(newRow);
-            updateOrderTotal();
-            addItemModal.hide();
-        });
 
-        // Form validation
-        orderForm.addEventListener('submit', function(e) {
-            if (!this.checkValidity()) {
-                e.preventDefault();
-                e.stopPropagation();
-            }
-            this.classList.add('was-validated');
+                orderItemsTable.querySelector('tbody').appendChild(newRow);
+                updateOrderTotal();
+                addItemModal.hide();
+            });
+
+            // Form validation
+            orderForm.addEventListener('submit', function (e) {
+                if (!this.checkValidity()) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                }
+                this.classList.add('was-validated');
+            });
         });
-    });
     </script>
 </body>
+
 </html>

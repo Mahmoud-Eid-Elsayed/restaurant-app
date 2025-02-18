@@ -144,6 +144,7 @@ $statusColors = [
                 <li><a href="menu_items.php"><i class="fas fa-utensils"></i> Menu Items</a></li>
                 <li class="active"><a href="orders.php"><i class="fas fa-shopping-cart"></i> Orders</a></li>
                 <li><a href="reservations.php"><i class="fas fa-calendar-alt"></i> Reservations</a></li>
+                <li><a href="inventory.php"><i class="fas fa-box"></i> Inventory</a></li>
             </ul>
         </nav>
 

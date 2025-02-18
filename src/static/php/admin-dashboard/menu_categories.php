@@ -41,19 +41,34 @@ try {
         <h3>ELCHEF Admin</h3>
       </div>
       <ul class="list-unstyled components">
-        <li><a href="index.php"><i class="fas fa-home"></i> Dashboard</a></li>
-        <li><a href="users.php"><i class="fas fa-users"></i> Users</a></li>
-        <li class="active"><a href="menu_categories.php"><i class="fas fa-list"></i> Categories</a></li>
-        <li><a href="menu_items.php"><i class="fas fa-utensils"></i> Menu Items</a></li>
-        <li><a href="orders.php"><i class="fas fa-shopping-cart"></i> Orders</a></li>
-        <li><a href="reservations.php"><i class="fas fa-calendar-alt"></i> Reservations</a></li>
+        <li>
+          <a href="index.php"><i class="fas fa-home"></i> Dashboard</a>
+        </li>
+        <li>
+          <a href="users.php"><i class="fas fa-users"></i> Users</a>
+        </li>
+        <li class="active">
+          <a href="menu_categories.php"><i class="fas fa-list"></i> Categories</a>
+        </li>
+        <li>
+          <a href="menu_items.php"><i class="fas fa-utensils"></i> Menu Items</a>
+        </li>
+        <li>
+          <a href="orders.php"><i class="fas fa-shopping-cart"></i> Orders</a>
+        </li>
+        <li>
+          <a href="reservations.php"><i class="fas fa-calendar-alt"></i> Reservations</a>
+        </li>
+        <li>
+          <a href="inventory.php"><i class="fas fa-box"></i> Inventory</a>
+        </li>
       </ul>
     </nav>
 
     <!-- Page Content -->
     <div id="content">
       <!-- Toggle Button -->
-      <button type="button" id="sidebarToggle" class="btn btn-info">
+      <button type="button" id="sidebarToggle">
         <i class="fas fa-bars"></i>
       </button>
 

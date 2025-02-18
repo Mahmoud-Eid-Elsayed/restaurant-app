@@ -250,13 +250,14 @@ try {
                                                         <td>$<?php echo number_format($item['PriceAtTimeOfOrder'], 2); ?></td>
                                                         <td>
                                                             <?php if ($canEdit): ?>
-                                                                <input type="number" class="form-control form-control-sm quantity-input" 
-                                                                       value="<?php echo $item['Quantity']; ?>" min="1"
-                                                                       onchange="updateItemTotal(this)"
-                                                                       data-price="<?php echo $item['PriceAtTimeOfOrder']; ?>">
-                                                                <input type="hidden" name="items[][id]" value="<?php echo $item['ItemID']; ?>">
-                                                                <input type="hidden" name="items[][quantity]" value="<?php echo $item['Quantity']; ?>">
-                                                                <input type="hidden" name="items[][price]" value="<?php echo $item['PriceAtTimeOfOrder']; ?>">
+                                                                <input type="number" class="form-control quantity-input" 
+                                                                       name="items[<?php echo $item['ItemID']; ?>][quantity]"
+                                                                       value="<?php echo $item['Quantity']; ?>" 
+                                                                       min="1" required>
+                                                                <input type="hidden" name="items[<?php echo $item['ItemID']; ?>][id]" 
+                                                                       value="<?php echo $item['ItemID']; ?>">
+                                                                <input type="hidden" name="items[<?php echo $item['ItemID']; ?>][price]" 
+                                                                       value="<?php echo $item['PriceAtTimeOfOrder']; ?>">
                                                             <?php else: ?>
                                                                 <?php echo $item['Quantity']; ?>
                                                             <?php endif; ?>
@@ -264,7 +265,7 @@ try {
                                                         <td class="item-total">$<?php echo number_format($item['Quantity'] * $item['PriceAtTimeOfOrder'], 2); ?></td>
                                                         <?php if ($canEdit): ?>
                                                             <td>
-                                                                <button type="button" class="btn btn-danger btn-sm" onclick="removeItem(this)">
+                                                                <button type="button" class="btn btn-danger btn-sm remove-item">
                                                                     <i class="fas fa-trash"></i>
                                                                 </button>
                                                             </td>
@@ -275,7 +276,7 @@ try {
                                             <tfoot>
                                                 <tr>
                                                     <td colspan="<?php echo $canEdit ? '3' : '2'; ?>" class="text-end"><strong>Total:</strong></td>
-                                                    <td colspan="<?php echo $canEdit ? '2' : '1'; ?>" id="orderTotal">
+                                                    <td colspan="<?php echo $canEdit ? '2' : '1'; ?>" class="order-total">
                                                         $<?php echo number_format($order['TotalAmount'], 2); ?>
                                                     </td>
                                                 </tr>
@@ -286,9 +287,11 @@ try {
                                 <div class="card-footer">
                                     <div class="d-flex justify-content-end">
                                         <a href="orders.php" class="btn btn-secondary me-2">Cancel</a>
-                                        <button type="submit" class="btn btn-primary">
-                                            <i class="fas fa-save"></i> Save Changes
-                                        </button>
+                                        <?php if ($canEdit): ?>
+                                            <button type="submit" class="btn btn-primary">
+                                                <i class="fas fa-save"></i> Save Changes
+                                            </button>
+                                        <?php endif; ?>
                                     </div>
                                 </div>
                             </div>
@@ -304,47 +307,49 @@ try {
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="addItemModalLabel">Add Menu Item</h5>
+                    <h5 class="modal-title" id="addItemModalLabel">Add Item to Order</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <div class="mb-3">
                         <input type="text" class="form-control" id="itemSearch" placeholder="Search items...">
                     </div>
-                    <div class="accordion" id="menuItemsAccordion">
-                        <?php foreach ($menuItemsByCategory as $category => $items): ?>
-                            <div class="accordion-item">
-                                <h2 class="accordion-header">
-                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" 
-                                            data-bs-target="#category<?php echo md5($category); ?>">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="list-group" id="categoryList">
+                                <a href="#" class="list-group-item list-group-item-action active" data-category="all">
+                                    All Categories
+                                </a>
+                                <?php foreach (array_keys($menuItemsByCategory) as $category): ?>
+                                    <a href="#" class="list-group-item list-group-item-action" data-category="<?php echo htmlspecialchars($category); ?>">
                                         <?php echo htmlspecialchars($category); ?>
-                                    </button>
-                                </h2>
-                                <div id="category<?php echo md5($category); ?>" class="accordion-collapse collapse" data-bs-parent="#menuItemsAccordion">
-                                    <div class="accordion-body">
-                                        <div class="list-group">
-                                            <?php foreach ($items as $item): ?>
-                                                <button type="button" class="list-group-item list-group-item-action menu-item"
-                                                        onclick="addMenuItem(<?php echo htmlspecialchars(json_encode([
-                                                            'id' => $item['ItemID'],
-                                                            'name' => $item['ItemName'],
-                                                            'price' => $item['Price']
-                                                        ])); ?>)">
-                                                    <div class="d-flex justify-content-between align-items-center">
-                                                        <h6 class="mb-0"><?php echo htmlspecialchars($item['ItemName']); ?></h6>
-                                                        <span class="badge bg-primary">$<?php echo number_format($item['Price'], 2); ?></span>
-                                                    </div>
-                                                    <?php if ($item['Description']): ?>
-                                                        <small class="text-muted"><?php echo htmlspecialchars($item['Description']); ?></small>
-                                                    <?php endif; ?>
-                                                </button>
-                                            <?php endforeach; ?>
-                                        </div>
-                                    </div>
-                                </div>
+                                    </a>
+                                <?php endforeach; ?>
                             </div>
-                        <?php endforeach; ?>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="list-group" id="itemList">
+                                <?php foreach ($menuItems as $item): ?>
+                                    <a href="#" class="list-group-item list-group-item-action item-entry" 
+                                       data-id="<?php echo $item['ItemID']; ?>"
+                                       data-name="<?php echo htmlspecialchars($item['ItemName']); ?>"
+                                       data-price="<?php echo $item['Price']; ?>"
+                                       data-category="<?php echo htmlspecialchars($item['CategoryName']); ?>">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <h6 class="mb-0"><?php echo htmlspecialchars($item['ItemName']); ?></h6>
+                                                <small class="text-muted"><?php echo htmlspecialchars($item['CategoryName']); ?></small>
+                                            </div>
+                                            <span class="badge bg-primary">$<?php echo number_format($item['Price'], 2); ?></span>
+                                        </div>
+                                    </a>
+                                <?php endforeach; ?>
+                            </div>
+                        </div>
                     </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>
@@ -353,98 +358,134 @@ try {
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script src="../../js/admin-dashboard.js"></script>
     <script>
-        // Function to escape HTML content
-        function escapeHtml(unsafe) {
-            return unsafe
-                .replace(/&/g, "&amp;")
-                .replace(/</g, "&lt;")
-                .replace(/>/g, "&gt;")
-                .replace(/"/g, "&quot;")
-                .replace(/'/g, "&#039;");
+    document.addEventListener('DOMContentLoaded', function() {
+        const orderForm = document.getElementById('orderForm');
+        const itemSearch = document.getElementById('itemSearch');
+        const categoryList = document.getElementById('categoryList');
+        const itemList = document.getElementById('itemList');
+        const orderItemsTable = document.getElementById('orderItemsTable');
+        const addItemModal = new bootstrap.Modal(document.getElementById('addItemModal'));
+        
+        // Function to update order total
+        function updateOrderTotal() {
+            let total = 0;
+            document.querySelectorAll('.item-total').forEach(cell => {
+                total += parseFloat(cell.textContent.replace('$', ''));
+            });
+            document.querySelector('.order-total').textContent = '$' + total.toFixed(2);
         }
 
-        // Function to add a menu item to the order
-        function addMenuItem(item) {
-            const tbody = document.querySelector('#orderItemsTable tbody');
-            const tr = document.createElement('tr');
-            tr.innerHTML = `
-                <td>${escapeHtml(item.name)}</td>
-                <td>$${item.price.toFixed(2)}</td>
+        // Function to update item total
+        function updateItemTotal(row) {
+            const quantity = parseInt(row.querySelector('.quantity-input').value);
+            const price = parseFloat(row.querySelector('input[name$="[price]"]').value);
+            const total = quantity * price;
+            row.querySelector('.item-total').textContent = '$' + total.toFixed(2);
+            updateOrderTotal();
+        }
+
+        // Handle quantity changes
+        orderItemsTable.addEventListener('change', function(e) {
+            if (e.target.classList.contains('quantity-input')) {
+                updateItemTotal(e.target.closest('tr'));
+            }
+        });
+
+        // Handle item removal
+        orderItemsTable.addEventListener('click', function(e) {
+            if (e.target.closest('.remove-item')) {
+                e.target.closest('tr').remove();
+                updateOrderTotal();
+            }
+        });
+
+        // Handle category selection
+        categoryList.addEventListener('click', function(e) {
+            if (e.target.classList.contains('list-group-item')) {
+                e.preventDefault();
+                document.querySelectorAll('#categoryList .list-group-item').forEach(item => {
+                    item.classList.remove('active');
+                });
+                e.target.classList.add('active');
+                
+                const selectedCategory = e.target.dataset.category;
+                document.querySelectorAll('#itemList .item-entry').forEach(item => {
+                    if (selectedCategory === 'all' || item.dataset.category === selectedCategory) {
+                        item.style.display = '';
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+            }
+        });
+
+        // Handle item search
+        itemSearch.addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            document.querySelectorAll('#itemList .item-entry').forEach(item => {
+                const itemName = item.dataset.name.toLowerCase();
+                const itemCategory = item.dataset.category.toLowerCase();
+                if (itemName.includes(searchTerm) || itemCategory.includes(searchTerm)) {
+                    item.style.display = '';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        });
+
+        // Handle item selection
+        itemList.addEventListener('click', function(e) {
+            e.preventDefault();
+            const item = e.target.closest('.item-entry');
+            if (!item) return;
+
+            // Check if item already exists in order
+            const existingItem = document.querySelector(`input[name="items[${item.dataset.id}][id]"]`);
+            if (existingItem) {
+                const row = existingItem.closest('tr');
+                const quantityInput = row.querySelector('.quantity-input');
+                quantityInput.value = parseInt(quantityInput.value) + 1;
+                updateItemTotal(row);
+                addItemModal.hide();
+                return;
+            }
+
+            // Add new item to order
+            const newRow = document.createElement('tr');
+            newRow.innerHTML = `
+                <td>${item.dataset.name}</td>
+                <td>$${parseFloat(item.dataset.price).toFixed(2)}</td>
                 <td>
-                    <input type="number" class="form-control form-control-sm quantity-input" 
-                           value="1" min="1" onchange="updateItemTotal(this)"
-                           data-price="${item.price}">
-                    <input type="hidden" name="items[][id]" value="${item.id}">
-                    <input type="hidden" name="items[][quantity]" value="1">
-                    <input type="hidden" name="items[][price]" value="${item.price}">
+                    <input type="number" class="form-control quantity-input" 
+                           name="items[${item.dataset.id}][quantity]"
+                           value="1" min="1" required>
+                    <input type="hidden" name="items[${item.dataset.id}][id]" 
+                           value="${item.dataset.id}">
+                    <input type="hidden" name="items[${item.dataset.id}][price]" 
+                           value="${item.dataset.price}">
                 </td>
-                <td class="item-total">$${item.price.toFixed(2)}</td>
+                <td class="item-total">$${parseFloat(item.dataset.price).toFixed(2)}</td>
                 <td>
-                    <button type="button" class="btn btn-danger btn-sm" onclick="removeItem(this)">
+                    <button type="button" class="btn btn-danger btn-sm remove-item">
                         <i class="fas fa-trash"></i>
                     </button>
                 </td>
             `;
-            tbody.appendChild(tr);
-            updateOrderTotal();
             
-            // Close the modal
-            const modal = bootstrap.Modal.getInstance(document.getElementById('addItemModal'));
-            if (modal) {
-                modal.hide();
-            }
-        }
-
-        // Function to update an item's total when quantity changes
-        function updateItemTotal(input) {
-            const quantity = parseInt(input.value) || 0;
-            const price = parseFloat(input.dataset.price);
-            const tr = input.closest('tr');
-            const totalCell = tr.querySelector('.item-total');
-            const quantityInput = tr.querySelector('input[name="items[][quantity]"]');
-            
-            totalCell.textContent = `$${(quantity * price).toFixed(2)}`;
-            quantityInput.value = quantity;
-            
+            orderItemsTable.querySelector('tbody').appendChild(newRow);
             updateOrderTotal();
-        }
-
-        // Function to remove an item from the order
-        function removeItem(button) {
-            button.closest('tr').remove();
-            updateOrderTotal();
-        }
-
-        // Function to update the order total
-        function updateOrderTotal() {
-            const totals = Array.from(document.querySelectorAll('.item-total'))
-                .map(cell => parseFloat(cell.textContent.replace('$', '')));
-            const total = totals.reduce((sum, value) => sum + value, 0);
-            document.getElementById('orderTotal').textContent = `$${total.toFixed(2)}`;
-        }
-
-        // Item search functionality
-        document.getElementById('itemSearch').addEventListener('input', function(e) {
-            const searchTerm = e.target.value.toLowerCase();
-            document.querySelectorAll('.menu-item').forEach(item => {
-                const text = item.textContent.toLowerCase();
-                item.style.display = text.includes(searchTerm) ? '' : 'none';
-            });
+            addItemModal.hide();
         });
 
         // Form validation
-        document.getElementById('orderForm').addEventListener('submit', function(e) {
-            const items = document.querySelectorAll('input[name="items[][id]"]');
-            if (items.length === 0) {
+        orderForm.addEventListener('submit', function(e) {
+            if (!this.checkValidity()) {
                 e.preventDefault();
-                alert('Order must contain at least one item');
+                e.stopPropagation();
             }
+            this.classList.add('was-validated');
         });
-
-        // Auto-focus search input when modal opens
-        document.getElementById('addItemModal').addEventListener('shown.bs.modal', function () {
-            document.getElementById('itemSearch').focus();
-        });
+    });
     </script>
 </body>
 </html>

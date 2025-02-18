@@ -266,3 +266,21 @@ body {
         background: rgba(255, 255, 255, 0.1);
     }
 }
+
+/* Mobile styles */
+@media (max-width: 768px) {
+    #sidebarToggle {
+        color: #000;
+    }
+    
+    #sidebarToggle:hover {
+        background: rgba(0, 0, 0, 0.05);
+    }
+    
+    /* Override dark mode on mobile */
+    @media (prefers-color-scheme: dark) {
+        #sidebarToggle {
+            color: #000;
+        }
+    }
+}

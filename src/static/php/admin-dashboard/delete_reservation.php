@@ -15,7 +15,7 @@ if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
     exit;
 }
 
-$reservationId = (int)$_GET['id'];
+$reservationId = (int) $_GET['id'];
 
 try {
     // Start transaction
@@ -29,7 +29,7 @@ try {
         WHERE r.ReservationID = ?
     ");
     $stmt->execute([$reservationId]);
-    $reservation = $stmt->fetch(PDO::FETCH_ASSOC);
+    $reservation = $stmt->fetch();
 
     if (!$reservation) {
         throw new Exception('Reservation not found');
@@ -81,20 +81,20 @@ try {
     if ($conn->inTransaction()) {
         $conn->rollBack();
     }
-    
+
     // Log the error for debugging
     error_log("Error cancelling reservation (ID: $reservationId): " . $e->getMessage());
-    
+
     $error = $e->getMessage();
 } catch (PDOException $e) {
     // Rollback the transaction on database error
     if ($conn->inTransaction()) {
         $conn->rollBack();
     }
-    
+
     // Log the database error for debugging
     error_log("Database error while cancelling reservation (ID: $reservationId): " . $e->getMessage());
-    
+
     $error = 'A database error occurred while trying to cancel the reservation';
 }
 

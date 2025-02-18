@@ -15,7 +15,7 @@ if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
     exit;
 }
 
-$orderId = (int)$_GET['id'];
+$orderId = (int) $_GET['id'];
 
 try {
     // Start transaction
@@ -29,7 +29,7 @@ try {
         WHERE o.OrderID = ?
     ");
     $stmt->execute([$orderId]);
-    $order = $stmt->fetch(PDO::FETCH_ASSOC);
+    $order = $stmt->fetch();
 
     if (!$order) {
         throw new Exception('Order not found');
@@ -79,20 +79,20 @@ try {
     if ($conn->inTransaction()) {
         $conn->rollBack();
     }
-    
+
     // Log the error for debugging
     error_log("Error cancelling order (ID: $orderId): " . $e->getMessage());
-    
+
     $error = $e->getMessage();
 } catch (PDOException $e) {
     // Rollback the transaction on database error
     if ($conn->inTransaction()) {
         $conn->rollBack();
     }
-    
+
     // Log the database error for debugging
     error_log("Database error while cancelling order (ID: $orderId): " . $e->getMessage());
-    
+
     // Provide a user-friendly error message
     $error = 'A database error occurred while trying to cancel the order';
 }
@@ -104,4 +104,4 @@ if ($error) {
     header('Location: orders.php?message=' . urlencode($message));
 }
 exit;
-?> 
+?>

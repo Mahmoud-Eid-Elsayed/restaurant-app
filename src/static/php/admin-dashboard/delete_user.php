@@ -12,38 +12,38 @@ if (!isset($_GET['id']) || empty($_GET['id'])) {
 }
 
 try {
-    $userId = (int)$_GET['id'];
+    $userId = (int) $_GET['id'];
     $action = $_GET['action'] ?? 'deactivate';
-    
+
     // First check if the user exists
     $checkStmt = $conn->prepare("SELECT UserID, Username, Role, COALESCE(Status, 'active') as Status FROM User WHERE UserID = ?");
     $checkStmt->execute([$userId]);
-    $user = $checkStmt->fetch(PDO::FETCH_ASSOC);
-    
+    $user = $checkStmt->fetch();
+
     if (!$user) {
         header('Location: users.php?error=' . urlencode('User not found'));
         exit;
     }
-    
+
     if ($action === 'deactivate') {
         // Don't allow deactivation if it's the last active admin
         if ($user['Role'] === 'admin') {
             $adminCheckStmt = $conn->prepare("SELECT COUNT(*) as admin_count FROM User WHERE Role = 'admin' AND (Status = 'active' OR Status IS NULL) AND UserID != ?");
             $adminCheckStmt->execute([$userId]);
-            $adminCount = (int)$adminCheckStmt->fetch(PDO::FETCH_ASSOC)['admin_count'];
-            
+            $adminCount = (int) $adminCheckStmt->fetch()['admin_count'];
+
             if ($adminCount === 0) {
                 header('Location: users.php?error=' . urlencode('Cannot deactivate the last active admin user'));
                 exit;
             }
         }
-        
+
         // Soft delete by setting status to inactive
         $updateStmt = $conn->prepare("UPDATE User SET Status = 'inactive' WHERE UserID = ?");
         if (!$updateStmt->execute([$userId])) {
             throw new PDOException("Failed to execute update statement");
         }
-        
+
         if ($updateStmt->rowCount() > 0) {
             header('Location: users.php?message=' . urlencode('User "' . $user['Username'] . '" has been deactivated'));
         } else {
@@ -55,7 +55,7 @@ try {
         if (!$updateStmt->execute([$userId])) {
             throw new PDOException("Failed to execute update statement");
         }
-        
+
         if ($updateStmt->rowCount() > 0) {
             header('Location: users.php?message=' . urlencode('User "' . $user['Username'] . '" has been reactivated'));
         } else {
@@ -70,4 +70,4 @@ try {
     header('Location: users.php?error=' . urlencode('Database error: ' . $e->getMessage()));
 }
 exit;
-?> 
+?>

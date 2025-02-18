@@ -26,7 +26,7 @@ $stmt = $conn->prepare("
     WHERE UserID = :userID
 ");
 $stmt->execute([':userID' => $userID]);
-$user = $stmt->fetch(PDO::FETCH_ASSOC);
+$user = $stmt->fetch();
 
 if (!$user) {
     header('Location: login.php?error=' . urlencode('User not found'));
@@ -108,7 +108,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 LastModified = CURRENT_TIMESTAMP
             WHERE UserID = :userID
         ");
-        
+
         $stmt->execute([
             ':firstName' => $firstName,
             ':lastName' => $lastName,
@@ -139,7 +139,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             WHERE UserID = :userID
         ");
         $stmt->execute([':userID' => $userID]);
-        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+        $user = $stmt->fetch();
 
     } catch (Exception $e) {
         if ($conn->inTransaction()) {
@@ -166,28 +166,33 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             border-radius: 0.5rem;
             margin-bottom: 2rem;
         }
+
         .profile-picture {
             width: 150px;
             height: 150px;
             object-fit: cover;
             border-radius: 50%;
             border: 4px solid #fff;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
+
         .profile-name {
             font-size: 1.5rem;
             margin: 1rem 0 0.5rem;
         }
+
         .profile-role {
             font-size: 1rem;
             color: #6c757d;
         }
+
         .profile-stats {
             padding: 1rem;
             background: #fff;
             border-radius: 0.5rem;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
         }
+
         .preview-image {
             max-width: 150px;
             max-height: 150px;
@@ -240,7 +245,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <!-- Profile Header -->
                 <div class="profile-header text-center">
                     <img src="../../<?php echo !empty($user['ProfilePictureURL']) ? htmlspecialchars($user['ProfilePictureURL']) : 'uploads/profile_pictures/default.jpg'; ?>"
-                         alt="Profile Picture" class="profile-picture">
+                        alt="Profile Picture" class="profile-picture">
                     <h2 class="profile-name">
                         <?php echo htmlspecialchars(trim($user['FirstName'] . ' ' . $user['LastName'])) ?: htmlspecialchars($user['Username']); ?>
                     </h2>
@@ -270,14 +275,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                 <div class="col-md-6 mb-3">
                                     <label for="username" class="form-label">Username</label>
                                     <input type="text" class="form-control" id="username" name="username"
-                                           value="<?php echo htmlspecialchars($user['Username']); ?>" readonly>
+                                        value="<?php echo htmlspecialchars($user['Username']); ?>" readonly>
                                     <small class="text-muted">Username cannot be changed</small>
                                 </div>
 
                                 <div class="col-md-6 mb-3">
                                     <label for="profilePicture" class="form-label">Profile Picture</label>
-                                    <input type="file" class="form-control" id="profilePicture" name="profilePicture" 
-                                           accept="image/jpeg,image/png,image/gif">
+                                    <input type="file" class="form-control" id="profilePicture" name="profilePicture"
+                                        accept="image/jpeg,image/png,image/gif">
                                     <small class="text-muted">Max file size: 5MB. Allowed formats: JPG, PNG, GIF</small>
                                     <img id="picturePreview" src="#" alt="Preview" class="preview-image">
                                 </div>
@@ -285,43 +290,44 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                 <div class="col-md-6 mb-3">
                                     <label for="firstName" class="form-label">First Name</label>
                                     <input type="text" class="form-control" id="firstName" name="firstName"
-                                           value="<?php echo htmlspecialchars($user['FirstName']); ?>">
+                                        value="<?php echo htmlspecialchars($user['FirstName']); ?>">
                                 </div>
 
                                 <div class="col-md-6 mb-3">
                                     <label for="lastName" class="form-label">Last Name</label>
                                     <input type="text" class="form-control" id="lastName" name="lastName"
-                                           value="<?php echo htmlspecialchars($user['LastName']); ?>">
+                                        value="<?php echo htmlspecialchars($user['LastName']); ?>">
                                 </div>
 
                                 <div class="col-md-6 mb-3">
                                     <label for="email" class="form-label">Email</label>
                                     <input type="email" class="form-control" id="email" name="email"
-                                           value="<?php echo htmlspecialchars($user['Email']); ?>">
+                                        value="<?php echo htmlspecialchars($user['Email']); ?>">
                                 </div>
 
                                 <div class="col-md-6 mb-3">
                                     <label for="phoneNumber" class="form-label">Phone Number</label>
                                     <input type="tel" class="form-control" id="phoneNumber" name="phoneNumber"
-                                           value="<?php echo htmlspecialchars($user['PhoneNumber']); ?>">
+                                        value="<?php echo htmlspecialchars($user['PhoneNumber']); ?>">
                                 </div>
 
                                 <div class="col-12 mb-3">
                                     <label for="address" class="form-label">Address</label>
-                                    <textarea class="form-control" id="address" name="address" rows="3"><?php echo htmlspecialchars($user['Address']); ?></textarea>
+                                    <textarea class="form-control" id="address" name="address"
+                                        rows="3"><?php echo htmlspecialchars($user['Address']); ?></textarea>
                                 </div>
 
                                 <div class="col-md-6 mb-3">
                                     <label for="password" class="form-label">New Password</label>
                                     <input type="password" class="form-control" id="password" name="password"
-                                           minlength="8">
+                                        minlength="8">
                                     <small class="text-muted">Leave blank to keep current password</small>
                                 </div>
 
                                 <div class="col-md-6 mb-3">
                                     <label for="confirmPassword" class="form-label">Confirm New Password</label>
-                                    <input type="password" class="form-control" id="confirmPassword" name="confirmPassword"
-                                           minlength="8">
+                                    <input type="password" class="form-control" id="confirmPassword"
+                                        name="confirmPassword" minlength="8">
                                 </div>
                             </div>
 
@@ -340,15 +346,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script src="../../js/admin-dashboard.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             // Profile picture preview
             const profilePicture = document.getElementById('profilePicture');
             const picturePreview = document.getElementById('picturePreview');
 
-            profilePicture.addEventListener('change', function(e) {
+            profilePicture.addEventListener('change', function (e) {
                 if (e.target.files && e.target.files[0]) {
                     const reader = new FileReader();
-                    reader.onload = function(e) {
+                    reader.onload = function (e) {
                         picturePreview.style.display = 'block';
                         picturePreview.src = e.target.result;
                     }
@@ -357,8 +363,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             });
 
             // Auto-close alerts after 5 seconds
-            setTimeout(function() {
-                document.querySelectorAll('.alert').forEach(function(alert) {
+            setTimeout(function () {
+                document.querySelectorAll('.alert').forEach(function (alert) {
                     if (alert && typeof bootstrap !== 'undefined') {
                         const bsAlert = new bootstrap.Alert(alert);
                         bsAlert.close();
@@ -368,7 +374,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             // Form validation
             const form = document.querySelector('.needs-validation');
-            form.addEventListener('submit', function(event) {
+            form.addEventListener('submit', function (event) {
                 if (!form.checkValidity()) {
                     event.preventDefault();
                     event.stopPropagation();
@@ -388,7 +394,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             // Password match validation on input
             const password = document.getElementById('password');
             const confirmPassword = document.getElementById('confirmPassword');
-            confirmPassword.addEventListener('input', function() {
+            confirmPassword.addEventListener('input', function () {
                 if (password.value !== confirmPassword.value) {
                     confirmPassword.setCustomValidity("Passwords don't match");
                 } else {
@@ -398,4 +404,5 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         });
     </script>
 </body>
+
 </html>

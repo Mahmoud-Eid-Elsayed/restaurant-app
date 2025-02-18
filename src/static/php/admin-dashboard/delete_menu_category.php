@@ -11,7 +11,7 @@ if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
     exit;
 }
 
-$categoryId = (int)$_GET['id'];
+$categoryId = (int) $_GET['id'];
 
 try {
     // Begin transaction
@@ -20,7 +20,7 @@ try {
     // First check if the category exists and get its name
     $checkStmt = $conn->prepare("SELECT CategoryName FROM MenuCategory WHERE CategoryID = ?");
     $checkStmt->execute([$categoryId]);
-    $category = $checkStmt->fetch(PDO::FETCH_ASSOC);
+    $category = $checkStmt->fetch();
 
     if (!$category) {
         throw new Exception('Category not found');
@@ -29,7 +29,7 @@ try {
     // Check if there are any menu items in this category
     $itemCheckStmt = $conn->prepare("SELECT COUNT(*) as count FROM MenuItem WHERE CategoryID = ?");
     $itemCheckStmt->execute([$categoryId]);
-    $itemCount = (int)$itemCheckStmt->fetch(PDO::FETCH_ASSOC)['count'];
+    $itemCount = (int) $itemCheckStmt->fetch()['count'];
 
     if ($itemCount > 0) {
         throw new Exception(

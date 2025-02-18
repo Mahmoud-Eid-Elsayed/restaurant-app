@@ -1,105 +1,74 @@
-## **Reservation System Overview**
+# Reservation System - Installation Guide
 
-This system allows users to book, modify, and cancel table reservations at a restaurant. It includes the following key files:
-
-1. **`book_table.php`**
-2. **`get_available_tables.php`**
-3. **`cancel_reservation.php`**
-4. **`modify_reservation.php`**
+Welcome to the **Reservation System** project! This system allows users to book, modify, and cancel table reservations at a restaurant. Follow the steps below to set up the project on your local machine.
 
 ---
 
-### **1. `book_table.php`**
+## **Requirements**
 
-This file handles the booking of a table. It includes:
+Before starting, make sure you have the following installed:
 
-- **Form Submission**: Users fill out a form with their details (name, email, phone, date, time, number of guests, table selection, and message).
-- **Database Insertion**: The reservation details are inserted into the `Reservation` table in the database.
-- **Email Confirmation**: A confirmation email is sent to the user using **PHPMailer** and **SendGrid**.
-- **Dynamic Table Fetching**: The available tables are fetched dynamically based on the selected date, time, and number of guests.
-
-#### **Key Functions:**
-
-- **`fetchAvailableTables()`**: Fetches available tables from the database based on the selected date, time, and number of guests.
-- **Form Submission**: Submits the form data to `book_table.php` using `fetch()` (AJAX).
-- **Email Sending**: Sends a confirmation email with links to modify or cancel the reservation.
+1. **PHP** (7.4 or higher)
+2. **Composer** (for managing PHP dependencies)
+3. **MySQL** (for database)
+4. **Git** (for cloning the repository)
 
 ---
 
-### **2. `get_available_tables.php`**
+## **Steps for Installation**
 
-This file fetches the available tables based on the selected date, time, and number of guests.
+### 1. **Clone the Repository**
 
-#### **Key Features:**
+Clone the repository to your local machine using Git:
 
-- **Overlap Checking**: Ensures that tables are not double-booked by checking for overlapping reservations.
-- **SQL Query**: Filters tables that are not reserved during the requested time slot.
-- **Response**: Returns a JSON response with the list of available tables.
-
-#### **Example Query:**
-
-```sql
-SELECT t.TableID, t.TableNumber, t.Capacity, t.Location
-FROM `Table` t
-WHERE t.Capacity >= :guests
-AND t.TableID NOT IN (
-    SELECT r.TableID
-    FROM Reservation r
-    WHERE r.ReservationDate = :date
-    AND (
-        (r.ReservationTime >= :start_time AND r.ReservationTime < :end_time) OR
-        (ADDTIME(r.ReservationTime, '02:00:00') > :start_time AND r.ReservationTime <= :start_time)
-    )
-    AND r.ReservationStatus IN ('Pending', 'Confirmed')
-)
+```bash
+git clone https://github.com/Mahmoud-Eid-Elsayed/restaurant-app.git
+cd restaurant-app
 ```
 
----
+### 2. **Install PHP Dependencies**
 
-### **3. `cancel_reservation.php`**
+Install the required PHP libraries using Composer:
 
-This file allows users to cancel their reservation.
+```bash
+composer install
+```
+```bash
+composer require phpmailer/phpmailer
+```
+### To start using .env files and the Dotenv class
+Install the vlucas/phpdotenv package via Composer:
 
-#### **Key Features:**
-
-- **Reservation ID**: The reservation ID is passed as a query parameter (`?id=123`).
-- **Status Update**: Updates the `ReservationStatus` to `Cancelled` in the database.
-- **Response**: Displays a success or error message.
-
-#### **Example Query:**
-
-```sql
-UPDATE Reservation
-SET ReservationStatus = 'Cancelled'
-WHERE ReservationID = :reservation_id
+```bash
+composer require vlucas/phpdotenv
 ```
 
----
+This will download all the necessary dependencies, including PHPMailer, and create a `vendor/` folder.
 
-### **4. `modify_reservation.php`**
+### 3. **Set Up Environment Variables**
 
-This file allows users to modify their reservation.
+Create a `.env` file in the project root directory to store sensitive data (e.g., SendGrid API key):
 
-#### **Key Features:**
+```
+SENDGRID_API_KEY=your_sendgrid_api_key
+```
 
-- **Form Submission**: Users can update their reservation details (name, email, phone, date, time, number of guests, table selection, and message).
-- **Database Insertion**: Inserts the updated reservation details into the `Reservation` table.
-- **Email Confirmation**: Sends a confirmation email with the updated reservation details.
+This will keep your API keys and other sensitive data secure.
 
-#### **Key Functions:**
+### 4. **Set Up the Database**
 
-- **`fetchAvailableTables()`**: Fetches available tables dynamically.
-- **Form Submission**: Submits the updated reservation details to `modify_reservation.php`.
+Make sure your MySQL database is set up with the following schema:
 
----
+1. **Create the database** (if not already created):
+   
+   ```sql
+   CREATE DATABASE restaurant_reservation;
+   ```
 
-### **Database Schema**
-
-The system uses the following tables:
-
-#### **`Reservation` Table**
+2. **Create the tables** using the provided SQL schema files. You can import these from the project if available, or manually run the following commands to create the tables:
 
 ```sql
+-- Reservation table
 CREATE TABLE IF NOT EXISTS `Reservation` (
   `ReservationID` INT NOT NULL AUTO_INCREMENT,
   `CustomerName` VARCHAR(100) NOT NULL,
@@ -119,11 +88,8 @@ CREATE TABLE IF NOT EXISTS `Reservation` (
     ON DELETE RESTRICT
     ON UPDATE CASCADE
 ) ENGINE = InnoDB;
-```
 
-#### **`Table` Table**
-
-```sql
+-- Table table
 CREATE TABLE IF NOT EXISTS `Table` (
   `TableID` INT NOT NULL AUTO_INCREMENT,
   `TableNumber` VARCHAR(10) NOT NULL,
@@ -133,47 +99,71 @@ CREATE TABLE IF NOT EXISTS `Table` (
 ) ENGINE = InnoDB;
 ```
 
----
+### 5. **Configure Your Web Server**
 
-### **Key Dependencies**
+Ensure that you have a web server (like **XAMPP** or **Apache**) running PHP and can serve the files in the `src/` folder. Ensure PHP is set up to work with the database (MySQL).
 
-- **PHPMailer**: Used for sending confirmation emails.
-- **Dotenv**: Loads environment variables (e.g., SendGrid API key) from a `.env` file.
-- **Bootstrap**: Used for styling the frontend.
+### 6. **Configure SendGrid for Email**
 
----
+PHPMailer is used to send emails through SendGrid. To enable this, create a SendGrid account and get your API key:
 
-### **Workflow**
-
-1. **Book a Table**:
-
-   - User fills out the booking form.
-   - The system checks for available tables and inserts the reservation into the database.
-   - A confirmation email is sent to the user.
-
-2. **Modify a Reservation**:
-
-   - User updates their reservation details.
-   - The system updates the reservation in the database and sends a confirmation email.
-
-3. **Cancel a Reservation**:
-
-   - User clicks the "Cancel Reservation" link in the confirmation email.
-   - The system updates the reservation status to `Cancelled`.
-
-4. **Fetch Available Tables**:
-   - The system dynamically fetches available tables based on the selected date, time, and number of guests.
+- Go to [SendGrid](https://sendgrid.com/), create an account, and get your API key.
+- Add the SendGrid API key to the `.env` file as mentioned in step 3.
 
 ---
 
-### **Error Handling**
+## **Running the Project Locally**
 
-- **Database Errors**: Logged and displayed to the user in a user-friendly manner.
-- **Email Errors**: Logged and displayed if the confirmation email fails to send.
+Once everything is set up:
+
+1. **Start your web server** (e.g., Apache or XAMPP).
+2. **Navigate to the project directory** and open the file `book_table.php` (or any other file) through the browser:
+   
+   ```bash
+   http://localhost/restaurant-reservation/src/static/php/table-reservation/book_table.php
+   ```
 
 ---
 
-### **Frontend**
+## **File Structure Overview**
 
-- The frontend is built using **Bootstrap** for responsive design.
-- JavaScript handles form submission and dynamic table fetching.
+Here is an overview of the project's key directories and files:
+
+```
+restaurant-reservation/
+├── src/
+│   └── static/
+│       └── php/
+│           └── table-reservation/
+│               ├── book_table.php
+│               ├── cancel_reservation.php
+│               ├── get_available_tables.php
+│               └── modify_reservation.php
+├── vendor/                 # Composer dependencies
+├── .env                    # Environment variables (SendGrid API key)
+├── composer.json           # Composer configuration file
+└── README.md               # Project documentation
+```
+
+---
+
+## **Important Notes**
+
+- **Do not push the `vendor/` folder to GitHub.** The `vendor/` folder contains external libraries and can be regenerated by running `composer install`.
+- Ensure **PHP** and **MySQL** are properly configured in your local development environment.
+
+---
+
+## **Troubleshooting**
+
+1. **Composer issues**: If you have issues running `composer install`, make sure **Composer** is installed and in your system’s PATH. You can verify by running `composer -v` in the terminal.
+   
+2. **SendGrid issues**: Ensure the correct SendGrid API key is added to the `.env` file and that your SendGrid account is active.
+
+---
+
+## **Contributing**
+
+1. **Fork** the repository.
+2. Make changes to your forked version.
+3. **Create a pull request** for review.

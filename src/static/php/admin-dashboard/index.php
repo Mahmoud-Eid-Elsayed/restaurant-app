@@ -63,10 +63,11 @@ $total_menu_items = $stmt->fetch(PDO::FETCH_ASSOC)['total_menu_items'];
             padding: 0.5rem;
             text-decoration: none;
             color: inherit;
+            border-radius: 0.5rem;
+            transition: all 0.3s ease;
         }
         .admin-profile:hover {
             background: rgba(0,0,0,0.05);
-            border-radius: 0.5rem;
         }
         .admin-profile img {
             width: 40px;
@@ -74,6 +75,7 @@ $total_menu_items = $stmt->fetch(PDO::FETCH_ASSOC)['total_menu_items'];
             border-radius: 50%;
             object-fit: cover;
             border: 2px solid #fff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
         .admin-info {
             display: flex;
@@ -82,24 +84,88 @@ $total_menu_items = $stmt->fetch(PDO::FETCH_ASSOC)['total_menu_items'];
         .admin-name {
             font-weight: 600;
             font-size: 0.9rem;
+            color: #2c3e50;
         }
         .admin-role {
             font-size: 0.8rem;
             color: #6c757d;
         }
+        .welcome-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 1rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .welcome-section h2 {
+            margin: 0;
+            font-size: 2rem;
+            font-weight: 700;
+            color: white;
+        }
+        .welcome-section p {
+            margin: 0.5rem 0 0;
+            opacity: 0.9;
+        }
         .stat-card {
-            transition: transform 0.2s;
+            border-radius: 1rem;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            margin-bottom: 1.5rem;
         }
         .stat-card:hover {
             transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
         }
         .stat-icon {
-            font-size: 2rem;
+            font-size: 2.5rem;
             margin-bottom: 1rem;
+            opacity: 0.9;
         }
         .stat-value {
-            font-size: 2rem;
-            font-weight: bold;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        .stat-label {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            margin: 0;
+        }
+        .quick-actions {
+            margin-top: 2rem;
+        }
+        .quick-action-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            color: #495057;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        .quick-action-btn:hover {
+            background: #e9ecef;
+            transform: translateY(-2px);
+        }
+        .quick-action-btn i {
+            font-size: 1.2rem;
+        }
+        @media (max-width: 768px) {
+            .stat-card {
+                margin-bottom: 1rem;
+            }
+            .welcome-section {
+                padding: 1.5rem;
+                margin-bottom: 1.5rem;
+            }
+            .stat-value {
+                font-size: 2rem;
+            }
         }
     </style>
 </head>
@@ -174,50 +240,82 @@ $total_menu_items = $stmt->fetch(PDO::FETCH_ASSOC)['total_menu_items'];
             </div>
 
             <div class="main-content">
-                <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h2>Welcome, <?php echo htmlspecialchars($user['FirstName'] ?: $user['Username']); ?>!</h2>
-                    <?php if ($user['LastLoginFormatted']): ?>
-                        <small class="text-muted">
-                            Last login: <?php echo htmlspecialchars($user['LastLoginFormatted']); ?>
-                        </small>
-                    <?php endif; ?>
+                <div class="welcome-section">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <h2>Welcome back, <?php echo htmlspecialchars($user['FirstName'] ?: $user['Username']); ?>!</h2>
+                            <?php if ($user['LastLoginFormatted']): ?>
+                                <p><i class="fas fa-clock me-2"></i>Last login: <?php echo htmlspecialchars($user['LastLoginFormatted']); ?></p>
+                            <?php endif; ?>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="row">
-                    <div class="col-md-3">
-                        <div class="card text-white bg-primary mb-3 stat-card">
+                    <div class="col-md-3 col-sm-6">
+                        <div class="card text-white bg-primary stat-card">
                             <div class="card-body text-center">
                                 <i class="fas fa-users stat-icon"></i>
-                                <h5 class="card-title">Total Users</h5>
-                                <p class="stat-value"><?php echo $total_users; ?></p>
+                                <h3 class="stat-value"><?php echo $total_users; ?></h3>
+                                <p class="stat-label">Total Users</p>
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-3">
-                        <div class="card text-white bg-success mb-3 stat-card">
+                    <div class="col-md-3 col-sm-6">
+                        <div class="card text-white bg-success stat-card">
                             <div class="card-body text-center">
                                 <i class="fas fa-shopping-cart stat-icon"></i>
-                                <h5 class="card-title">Total Orders</h5>
-                                <p class="stat-value"><?php echo $total_orders; ?></p>
+                                <h3 class="stat-value"><?php echo $total_orders; ?></h3>
+                                <p class="stat-label">Total Orders</p>
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-3">
-                        <div class="card text-white bg-warning mb-3 stat-card">
+                    <div class="col-md-3 col-sm-6">
+                        <div class="card text-white bg-warning stat-card">
                             <div class="card-body text-center">
                                 <i class="fas fa-calendar-alt stat-icon"></i>
-                                <h5 class="card-title">Total Reservations</h5>
-                                <p class="stat-value"><?php echo $total_reservations; ?></p>
+                                <h3 class="stat-value"><?php echo $total_reservations; ?></h3>
+                                <p class="stat-label">Total Reservations</p>
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-3">
-                        <div class="card text-white bg-danger mb-3 stat-card">
+                    <div class="col-md-3 col-sm-6">
+                        <div class="card text-white bg-danger stat-card">
                             <div class="card-body text-center">
                                 <i class="fas fa-utensils stat-icon"></i>
-                                <h5 class="card-title">Total Menu Items</h5>
-                                <p class="stat-value"><?php echo $total_menu_items; ?></p>
+                                <h3 class="stat-value"><?php echo $total_menu_items; ?></h3>
+                                <p class="stat-label">Menu Items</p>
                             </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="quick-actions">
+                    <h4 class="mb-3">Quick Actions</h4>
+                    <div class="row">
+                        <div class="col-md-3 col-sm-6 mb-3">
+                            <a href="orders.php" class="quick-action-btn">
+                                <i class="fas fa-clipboard-list"></i>
+                                View Recent Orders
+                            </a>
+                        </div>
+                        <div class="col-md-3 col-sm-6 mb-3">
+                            <a href="reservations.php" class="quick-action-btn">
+                                <i class="fas fa-calendar-plus"></i>
+                                Manage Reservations
+                            </a>
+                        </div>
+                        <div class="col-md-3 col-sm-6 mb-3">
+                            <a href="menu_items.php" class="quick-action-btn">
+                                <i class="fas fa-plus-circle"></i>
+                                Add Menu Item
+                            </a>
+                        </div>
+                        <div class="col-md-3 col-sm-6 mb-3">
+                            <a href="users.php" class="quick-action-btn">
+                                <i class="fas fa-user-plus"></i>
+                                Add New User
+                            </a>
                         </div>
                     </div>
                 </div>

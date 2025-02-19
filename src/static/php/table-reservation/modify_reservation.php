@@ -4,7 +4,7 @@ require '../../../../src/static/connection/db.php';
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
-require __DIR__ . '../../../../assets/libraries/vendor/autoload.php';
+require __DIR__ . '/../../../../vendor/autoload.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $name = $_POST['name'];

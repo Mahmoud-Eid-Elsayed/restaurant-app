@@ -30,7 +30,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if ($result['status']) {
         if ($result['role'] === 'Staff') {
-            header("Location: dashboard.php");
+            header("Location: ../../html/admin-dashboard/index.php");
         } else {
             header("Location: ../../html/user/userProfile.php");
         }
@@ -43,4 +43,4 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 }
 header("Location: login.php");
 exit();
-?> 
+?>

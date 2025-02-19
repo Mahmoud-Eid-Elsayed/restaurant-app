@@ -34,7 +34,7 @@ $cart_count = isset($_SESSION['cart']) ? count($_SESSION['cart']) : 0;
 <body>
 <?php require '../includes/navbar.php'; ?>
 
-<!-- أيقونة عربة التسوق -->
+
 <div class="icon-container position-relative">
     <a href="cart.php" class="text-white"><i class="bi bi-cart"></i></a>
     <?php if ($cart_count > 0): ?>

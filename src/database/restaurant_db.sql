@@ -182,8 +182,24 @@ CREATE TABLE IF NOT EXISTS `Restaurant_DB`.`Supplier` (
   `Email` VARCHAR(100) NULL,
   `PhoneNumber` VARCHAR(20) NULL,
   `Address` VARCHAR(255) NULL,
-  PRIMARY KEY (`SupplierID`))
-ENGINE = InnoDB;
+  PRIMARY KEY (`SupplierID`)
+) ENGINE = InnoDB;
+
+-- -----------------------------------------------------
+-- Table `Restaurant_DB`.`SupplierOrders`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `Restaurant_DB`.`SupplierOrders` (
+    `OrderID` INT NOT NULL AUTO_INCREMENT,
+    `SupplierID` INT NOT NULL,
+    `OrderDate` DATE NOT NULL,
+    `TotalAmount` DECIMAL(10, 2) NOT NULL,
+    `Status` ENUM('Pending', 'Shipped', 'Delivered') DEFAULT 'Pending',
+    PRIMARY KEY (`OrderID`),
+    CONSTRAINT `fk_SupplierOrders_Supplier`
+        FOREIGN KEY (`SupplierID`)
+        REFERENCES `Supplier` (`SupplierID`)
+        ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- -----------------------------------------------------
 -- Table `Restaurant_DB`.`InventoryItem`
@@ -201,7 +217,7 @@ CREATE TABLE IF NOT EXISTS `Restaurant_DB`.`InventoryItem` (
   CONSTRAINT `fk_InventoryItem_Supplier1`
     FOREIGN KEY (`SupplierID`)
     REFERENCES `Restaurant_DB`.`Supplier` (`SupplierID`)
-    ON DELETE RESTRICT  -- Prevent deleting suppliers if items exist
+    ON DELETE CASCADE  -- Delete inventory items when supplier is deleted
     ON UPDATE CASCADE)
 ENGINE = InnoDB;
 

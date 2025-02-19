@@ -7,17 +7,17 @@ if (isset($_GET['id'])) {
     // Check if the user confirmed the cancellation
     if (isset($_GET['confirm']) && $_GET['confirm'] === 'yes') {
         try {
-            // Start a transaction to ensure atomicity
+
             $conn->beginTransaction();
 
-            // get the table ID and reservation details before cancelling
             $stmt = $conn->prepare("
                 SELECT TableID, ReservationDate, ReservationTime
                 FROM Reservation
                 WHERE ReservationID = :reservation_id
             ");
             $stmt->execute([':reservation_id' => $reservation_id]);
-            $reservation = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            $reservation = $stmt->fetch();
 
             if ($reservation) {
                 $table_id = $reservation['TableID'];
@@ -40,12 +40,12 @@ if (isset($_GET['id'])) {
                 echo "Reservation not found.";
             }
         } catch (PDOException $e) {
-
+            // Rollback if an error occurs
             $conn->rollBack();
             echo "Failed to cancel the reservation. Please try again later.";
         }
     } else {
-
+        // Confirmation prompt if not confirmed
         echo '
         <!DOCTYPE html>
         <html lang="en">
@@ -75,7 +75,6 @@ if (isset($_GET['id'])) {
             <div class="confirmation-box">
                 <h2>Are you sure you want to cancel this reservation?</h2>
                 <a href="cancel_reservation.php?id=' . $reservation_id . '&confirm=yes" class="btn btn-danger">Yes, Cancel</a>
-                
             </div>
         </body>
         </html>

@@ -17,7 +17,7 @@ $cartItemCount = isset($_SESSION['cart']) ? count($_SESSION['cart']) : 0;
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Navbar with Profile, Cart & Notification</title>
+    <title> Cart </title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
@@ -80,7 +80,7 @@ $cartItemCount = isset($_SESSION['cart']) ? count($_SESSION['cart']) : 0;
 
     <nav class="navbar navbar-expand-lg navbar-light bg-dark sticky-top shadow-sm">
         <div class="container-fluid">
-            <a class="navbar-brand text-white" href="#">MySite</a>
+            <a class="navbar-brand text-white" href="#">THE CHEF</a>
 
             <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar"
                 aria-controls="offcanvasNavbar">
@@ -95,8 +95,8 @@ $cartItemCount = isset($_SESSION['cart']) ? count($_SESSION['cart']) : 0;
                 </div>
                 <div class="offcanvas-body">
                     <ul class="navbar-nav mx-auto mb-3 mb-lg-0">
-                        <li class="nav-item"><a class="nav-link text-white" href="#">Home</a></li>
-                        <li class="nav-item"><a class="nav-link text-white" href="#">Menu</a></li>
+                        <li class="nav-item"><a class="nav-link text-white" href="../../../../index.html">Home</a></li>
+                        <li class="nav-item"><a class="nav-link text-white" href="/src/static/php/menu/menu.php">Menu</a></li>
                         <li class="nav-item"><a class="nav-link text-white" href="#">Offers</a></li>
                         <li class="nav-item"><a class="nav-link text-white" href="#">About Us</a></li>
                         <li class="nav-item"><a class="nav-link text-white" href="#">Contact</a></li>
@@ -113,7 +113,7 @@ $cartItemCount = isset($_SESSION['cart']) ? count($_SESSION['cart']) : 0;
 
                         <div class="icon-container position-relative">
                             <a href="notifications.php" class="text-white"><i class="bi bi-bell"></i></a>
-                            <span class="badge">3</span>
+                            <span class="badge"></span>
                         </div>
 
                         <?php if (!$isLoggedIn): ?>

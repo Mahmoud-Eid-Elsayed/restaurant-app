@@ -2,9 +2,9 @@
 session_start();
 require_once '../../connection/db.php';
 
-// Disable error display in production
-error_reporting(0);
-ini_set('display_errors', 0);
+// Enable error reporting for debugging
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 
 // Redirect if user is not logged in
 if (!isset($_SESSION['user_id'])) {
@@ -15,10 +15,9 @@ if (!isset($_SESSION['user_id'])) {
 // Fetch user details from the database
 $userID = $_SESSION['user_id'];
 $stmt = $conn->prepare("SELECT UserID, Username, FirstName, LastName, ProfilePictureURL, 
-Role, DATE_FORMAT(LastLogin, '%M %d, %Y %h:%i %p')
-as LastLoginFormatted FROM User WHERE UserID = :userID");
+Role, DATE_FORMAT(LastLogin, '%M %d, %Y %h:%i %p') as LastLoginFormatted FROM User WHERE UserID = :userID");
 $stmt->execute([':userID' => $userID]);
-$user = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$user = $stmt->fetch(); // Use fetch() instead of fetchAll() since we expect a single row
 
 if (!$user) {
     header('Location: login.php');
@@ -64,30 +63,36 @@ $total_menu_items = $stmt->fetch(PDO::FETCH_ASSOC)['total_menu_items'];
             border-radius: 0.5rem;
             transition: all 0.3s ease;
         }
+
         .admin-profile:hover {
-            background: rgba(0,0,0,0.05);
+            background: rgba(0, 0, 0, 0.05);
         }
+
         .admin-profile img {
             width: 40px;
             height: 40px;
             border-radius: 50%;
             object-fit: cover;
             border: 2px solid #fff;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
+
         .admin-info {
             display: flex;
             flex-direction: column;
         }
+
         .admin-name {
             font-weight: 600;
             font-size: 0.9rem;
             color: #2c3e50;
         }
+
         .admin-role {
             font-size: 0.8rem;
             color: #6c757d;
         }
+
         .welcome-section {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
@@ -96,44 +101,53 @@ $total_menu_items = $stmt->fetch(PDO::FETCH_ASSOC)['total_menu_items'];
             margin-bottom: 2rem;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
+
         .welcome-section h2 {
             margin: 0;
             font-size: 2rem;
             font-weight: 700;
             color: white;
         }
+
         .welcome-section p {
             margin: 0.5rem 0 0;
             opacity: 0.9;
         }
+
         .stat-card {
             border-radius: 1rem;
             overflow: hidden;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
             margin-bottom: 1.5rem;
         }
+
         .stat-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
         }
+
         .stat-icon {
             font-size: 2.5rem;
             margin-bottom: 1rem;
             opacity: 0.9;
         }
+
         .stat-value {
             font-size: 2.5rem;
             font-weight: 700;
             margin-bottom: 0.5rem;
         }
+
         .stat-label {
             font-size: 1.1rem;
             opacity: 0.9;
             margin: 0;
         }
+
         .quick-actions {
             margin-top: 2rem;
         }
+
         .quick-action-btn {
             display: flex;
             align-items: center;
@@ -146,21 +160,26 @@ $total_menu_items = $stmt->fetch(PDO::FETCH_ASSOC)['total_menu_items'];
             text-decoration: none;
             transition: all 0.3s ease;
         }
+
         .quick-action-btn:hover {
             background: #e9ecef;
             transform: translateY(-2px);
         }
+
         .quick-action-btn i {
             font-size: 1.2rem;
         }
+
         @media (max-width: 768px) {
             .stat-card {
                 margin-bottom: 1rem;
             }
+
             .welcome-section {
                 padding: 1.5rem;
                 margin-bottom: 1.5rem;
             }
+
             .stat-value {
                 font-size: 2rem;
             }
@@ -244,9 +263,12 @@ $total_menu_items = $stmt->fetch(PDO::FETCH_ASSOC)['total_menu_items'];
                 <div class="welcome-section">
                     <div class="d-flex justify-content-between align-items-start">
                         <div>
-                            <h2>Welcome back, <?php echo htmlspecialchars($user['FirstName'] ?: $user['Username']); ?>!</h2>
+                            <h2>Welcome back, <?php echo htmlspecialchars($user['FirstName'] ?: $user['Username']); ?>!
+                            </h2>
                             <?php if ($user['LastLoginFormatted']): ?>
-                                <p><i class="fas fa-clock me-2"></i>Last login: <?php echo htmlspecialchars($user['LastLoginFormatted']); ?></p>
+                                <p><i class="fas fa-clock me-2"></i>Last login:
+                                    <?php echo htmlspecialchars($user['LastLoginFormatted']); ?>
+                                </p>
                             <?php endif; ?>
                         </div>
                     </div>

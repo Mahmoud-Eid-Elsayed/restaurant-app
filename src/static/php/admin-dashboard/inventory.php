@@ -28,57 +28,70 @@ $inventoryItems = $stmt->fetchAll(PDO::FETCH_ASSOC);
       margin-bottom: 2rem;
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     }
+
     .inventory-header h2 {
       margin: 0;
       color: white;
     }
+
     .table-responsive {
       background: white;
       border-radius: 0.5rem;
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
       padding: 1rem;
     }
+
     .table th {
       white-space: nowrap;
       background: #f8f9fa;
     }
+
     .table td {
       vertical-align: middle;
     }
+
     .status-badge {
       padding: 0.5rem 1rem;
       border-radius: 2rem;
       font-weight: 500;
     }
-    .btn-group-sm > .btn {
+
+    .btn-group-sm>.btn {
       padding: 0.25rem 0.5rem;
       font-size: 0.875rem;
       border-radius: 0.2rem;
     }
+
     .low-stock {
       color: #dc3545;
       font-weight: 500;
     }
+
     @media (max-width: 768px) {
       .inventory-header {
         padding: 1.5rem;
         margin-bottom: 1.5rem;
       }
+
       .table-responsive {
         padding: 0.5rem;
       }
-      .btn-group-sm > .btn {
+
+      .btn-group-sm>.btn {
         padding: 0.375rem 0.75rem;
       }
+
       .mobile-stack {
         display: flex;
         flex-direction: column;
         gap: 0.5rem;
       }
+
       .table td {
         white-space: normal;
         min-width: 100px;
       }
+
       .table td:last-child {
         min-width: 120px;
       }
@@ -101,6 +114,7 @@ $inventoryItems = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <li><a href="orders.php"><i class="fas fa-shopping-cart"></i> Orders</a></li>
         <li><a href="reservations.php"><i class="fas fa-calendar-alt"></i> Reservations</a></li>
         <li class="active"><a href="inventory.php"><i class="fas fa-box"></i> Inventory</a></li>
+        <li><a href="suppliers.php"><i class="fa-solid fa-truck"></i></i> Suppliers</a></li>
       </ul>
     </nav>
 
@@ -113,7 +127,7 @@ $inventoryItems = $stmt->fetchAll(PDO::FETCH_ASSOC);
       <div class="main-content">
         <div class="inventory-header d-flex justify-content-between align-items-center">
           <h2><i class="fas fa-box me-2"></i>Manage Inventory</h2>
-          <a href="add_inventory_item.php" class="btn btn-light">
+          <a href="/restaurant-app/src/static/php/admin-dashboard/add_inventory_item.php" class="btn btn-light">
             <i class="fas fa-plus me-2"></i>Add New Item
           </a>
         </div>
@@ -164,13 +178,13 @@ $inventoryItems = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     <td><?php echo htmlspecialchars($item['ReorderLevel']); ?></td>
                     <td>
                       <div class="btn-group btn-group-sm">
-                        <a href="edit_inventory_item.php?id=<?php echo $item['InventoryItemID']; ?>" 
-                           class="btn btn-warning" title="Edit Item">
+                        <a href="edit_inventory_item.php?id=<?php echo $item['InventoryItemID']; ?>" class="btn btn-warning"
+                          title="Edit Item">
                           <i class="fas fa-edit"></i>
                         </a>
-                        <button type="button" 
-                                onclick="confirmDelete(<?php echo $item['InventoryItemID']; ?>, '<?php echo htmlspecialchars(addslashes($item['ItemName'])); ?>')"
-                                class="btn btn-danger" title="Delete Item">
+                        <button type="button"
+                          onclick="confirmDelete(<?php echo $item['InventoryItemID']; ?>, '<?php echo htmlspecialchars(addslashes($item['ItemName'])); ?>')"
+                          class="btn btn-danger" title="Delete Item">
                           <i class="fas fa-trash"></i>
                         </button>
                       </div>
@@ -219,10 +233,10 @@ $inventoryItems = $stmt->fetchAll(PDO::FETCH_ASSOC);
     let deleteModal;
     let itemToDelete = null;
 
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
       deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
-      
-      document.getElementById('confirmDelete').addEventListener('click', function() {
+
+      document.getElementById('confirmDelete').addEventListener('click', function () {
         if (itemToDelete) {
           window.location.href = `delete_inventory_item.php?id=${itemToDelete.id}&token=${Date.now()}`;
         }
@@ -230,8 +244,8 @@ $inventoryItems = $stmt->fetchAll(PDO::FETCH_ASSOC);
       });
 
       // Auto-close alerts after 5 seconds
-      setTimeout(function() {
-        document.querySelectorAll('.alert').forEach(function(alert) {
+      setTimeout(function () {
+        document.querySelectorAll('.alert').forEach(function (alert) {
           if (alert && typeof bootstrap !== 'undefined') {
             const bsAlert = new bootstrap.Alert(alert);
             bsAlert.close();
@@ -250,4 +264,5 @@ $inventoryItems = $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
   </script>
 </body>
+
 </html>

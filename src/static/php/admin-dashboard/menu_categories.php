@@ -6,8 +6,8 @@ error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
 try {
-    // Fetch all menu categories with their item counts
-    $stmt = $conn->query("
+  // Fetch all menu categories with their item counts
+  $stmt = $conn->query("
         SELECT 
             mc.*,
             COUNT(mi.ItemID) as item_count
@@ -16,9 +16,9 @@ try {
         GROUP BY mc.CategoryID
         ORDER BY mc.CategoryName ASC
     ");
-    $categories = $stmt->fetchAll(PDO::FETCH_ASSOC);
+  $categories = $stmt->fetchAll(PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
-    $error = "Database error: " . $e->getMessage();
+  $error = "Database error: " . $e->getMessage();
 }
 ?>
 <!DOCTYPE html>
@@ -61,6 +61,9 @@ try {
         </li>
         <li>
           <a href="inventory.php"><i class="fas fa-box"></i> Inventory</a>
+        </li>
+        <li>
+          <a href="suppliers.php"><i class="fa-solid fa-truck"></i></i> Suppliers</a>
         </li>
       </ul>
     </nav>
@@ -114,28 +117,24 @@ try {
                     <td><?php echo htmlspecialchars($category['Description'] ?? 'No description'); ?></td>
                     <td>
                       <span class="badge bg-info">
-                        <?php echo (int)$category['item_count']; ?> items
+                        <?php echo (int) $category['item_count']; ?> items
                       </span>
                     </td>
                     <td>
                       <div class="btn-group" role="group">
-                        <a href="edit_menu_category.php?id=<?php echo $category['CategoryID']; ?>" 
-                           class="btn btn-warning btn-sm" 
-                           title="Edit Category">
+                        <a href="edit_menu_category.php?id=<?php echo $category['CategoryID']; ?>"
+                          class="btn btn-warning btn-sm" title="Edit Category">
                           <i class="fas fa-edit"></i>
                         </a>
                         <?php if ($category['item_count'] > 0): ?>
-                          <button type="button" 
-                                  class="btn btn-danger btn-sm" 
-                                  title="Cannot delete: Category has items"
-                                  disabled>
+                          <button type="button" class="btn btn-danger btn-sm" title="Cannot delete: Category has items"
+                            disabled>
                             <i class="fas fa-trash"></i>
                           </button>
                         <?php else: ?>
                           <button type="button"
-                                  onclick="showDeleteModal(<?php echo $category['CategoryID']; ?>, '<?php echo htmlspecialchars(addslashes($category['CategoryName'])); ?>')"
-                                  class="btn btn-danger btn-sm"
-                                  title="Delete Category">
+                            onclick="showDeleteModal(<?php echo $category['CategoryID']; ?>, '<?php echo htmlspecialchars(addslashes($category['CategoryName'])); ?>')"
+                            class="btn btn-danger btn-sm" title="Delete Category">
                             <i class="fas fa-trash"></i>
                           </button>
                         <?php endif; ?>
@@ -185,35 +184,35 @@ try {
     let deleteModal;
     let categoryToDelete = null;
 
-    document.addEventListener('DOMContentLoaded', function() {
-        deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
-        
-        // Set up delete confirmation button
-        document.getElementById('confirmDelete').addEventListener('click', function() {
-            if (categoryToDelete) {
-                window.location.href = `delete_menu_category.php?id=${categoryToDelete.id}&token=${Date.now()}`;
-            }
-            deleteModal.hide();
-        });
+    document.addEventListener('DOMContentLoaded', function () {
+      deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
 
-        // Auto-close alerts after 5 seconds
-        setTimeout(function() {
-            document.querySelectorAll('.alert').forEach(function(alert) {
-                if (alert && typeof bootstrap !== 'undefined') {
-                    const bsAlert = new bootstrap.Alert(alert);
-                    bsAlert.close();
-                }
-            });
-        }, 5000);
+      // Set up delete confirmation button
+      document.getElementById('confirmDelete').addEventListener('click', function () {
+        if (categoryToDelete) {
+          window.location.href = `delete_menu_category.php?id=${categoryToDelete.id}&token=${Date.now()}`;
+        }
+        deleteModal.hide();
+      });
+
+      // Auto-close alerts after 5 seconds
+      setTimeout(function () {
+        document.querySelectorAll('.alert').forEach(function (alert) {
+          if (alert && typeof bootstrap !== 'undefined') {
+            const bsAlert = new bootstrap.Alert(alert);
+            bsAlert.close();
+          }
+        });
+      }, 5000);
     });
 
     function showDeleteModal(categoryId, categoryName) {
-        categoryToDelete = {
-            id: categoryId,
-            name: categoryName
-        };
-        document.getElementById('categoryName').textContent = categoryName;
-        deleteModal.show();
+      categoryToDelete = {
+        id: categoryId,
+        name: categoryName
+      };
+      document.getElementById('categoryName').textContent = categoryName;
+      deleteModal.show();
     }
   </script>
 </body>

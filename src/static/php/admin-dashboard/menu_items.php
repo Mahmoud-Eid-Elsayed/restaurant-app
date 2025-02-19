@@ -7,7 +7,7 @@ ini_set('display_errors', 1);
 
 try {
     // Fetch all menu items with their category names and order counts
-$stmt = $conn->query("
+    $stmt = $conn->query("
         SELECT 
             mi.*,
             mc.CategoryName,
@@ -18,7 +18,7 @@ $stmt = $conn->query("
         GROUP BY mi.ItemID, mc.CategoryName
         ORDER BY mc.CategoryName, mi.ItemName
 ");
-$menuItems = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $menuItems = $stmt->fetchAll(PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
     $error = "Database error: " . $e->getMessage();
 }
@@ -27,16 +27,16 @@ $menuItems = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Manage Menu Items - ELCHEF</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="../../css/admin-dashboard/admin-dashboard.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Menu Items - ELCHEF</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../css/admin-dashboard/admin-dashboard.css">
 </head>
 
 <body>
-  <div class="wrapper">
+    <div class="wrapper">
         <!-- Sidebar -->
         <nav id="sidebar">
             <div class="sidebar-header">
@@ -50,11 +50,12 @@ $menuItems = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <li><a href="orders.php"><i class="fas fa-shopping-cart"></i> Orders</a></li>
                 <li><a href="reservations.php"><i class="fas fa-calendar-alt"></i> Reservations</a></li>
                 <li><a href="inventory.php"><i class="fas fa-box"></i> Inventory</a></li>
+                <li><a href="suppliers.php"><i class="fa-solid fa-truck"></i></i> Suppliers</a></li>
             </ul>
         </nav>
 
         <!-- Page Content -->
-    <div id="content">
+        <div id="content">
             <button type="button" id="sidebarToggle">
                 <i class="fas fa-bars"></i>
             </button>
@@ -78,11 +79,11 @@ $menuItems = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     <div class="alert alert-success alert-dismissible fade show" role="alert">
                         <?php echo htmlspecialchars($_GET['message']); ?>
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-      </div>
+                    </div>
                 <?php endif; ?>
 
                 <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2>Manage Menu Items</h2>
+                    <h2>Manage Menu Items</h2>
                     <a href="add_menu_item.php" class="btn btn-primary">
                         <i class="fas fa-plus"></i> Add New Item
                     </a>
@@ -92,63 +93,60 @@ $menuItems = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     <div class="table-responsive">
                         <table class="table table-bordered table-hover">
                             <thead class="table-light">
-            <tr>
-              <th>ID</th>
-              <th>Item Name</th>
-              <th>Category</th>
-              <th>Price</th>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Item Name</th>
+                                    <th>Category</th>
+                                    <th>Price</th>
                                     <th>Description</th>
-              <th>Availability</th>
+                                    <th>Availability</th>
                                     <th>Orders</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            <?php foreach ($menuItems as $item): ?>
-              <tr>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php foreach ($menuItems as $item): ?>
+                                    <tr>
                                         <td><?php echo htmlspecialchars($item['ItemID']); ?></td>
                                         <td><?php echo htmlspecialchars($item['ItemName']); ?></td>
                                         <td><?php echo htmlspecialchars($item['CategoryName']); ?></td>
-                <td>$<?php echo number_format($item['Price'], 2); ?></td>
+                                        <td>$<?php echo number_format($item['Price'], 2); ?></td>
                                         <td><?php echo htmlspecialchars($item['Description'] ?? 'No description'); ?></td>
                                         <td>
-                                            <span class="badge <?php echo $item['Availability'] ? 'bg-success' : 'bg-danger'; ?>">
+                                            <span
+                                                class="badge <?php echo $item['Availability'] ? 'bg-success' : 'bg-danger'; ?>">
                                                 <?php echo $item['Availability'] ? 'Available' : 'Not Available'; ?>
                                             </span>
                                         </td>
-                <td>
+                                        <td>
                                             <span class="badge bg-info">
-                                                <?php echo (int)$item['order_count']; ?> orders
+                                                <?php echo (int) $item['order_count']; ?> orders
                                             </span>
                                         </td>
                                         <td>
                                             <div class="btn-group" role="group">
-                                                <a href="edit_menu_item.php?id=<?php echo $item['ItemID']; ?>" 
-                                                   class="btn btn-warning btn-sm" 
-                                                   title="Edit Item">
+                                                <a href="edit_menu_item.php?id=<?php echo $item['ItemID']; ?>"
+                                                    class="btn btn-warning btn-sm" title="Edit Item">
                                                     <i class="fas fa-edit"></i>
                                                 </a>
                                                 <?php if ($item['order_count'] > 0): ?>
-                                                    <button type="button" 
-                                                            class="btn btn-danger btn-sm" 
-                                                            title="Cannot delete: Item has orders"
-                                                            disabled>
+                                                    <button type="button" class="btn btn-danger btn-sm"
+                                                        title="Cannot delete: Item has orders" disabled>
                                                         <i class="fas fa-trash"></i>
                                                     </button>
                                                 <?php else: ?>
                                                     <button type="button"
-                                                            onclick="showDeleteModal(<?php echo $item['ItemID']; ?>, '<?php echo htmlspecialchars(addslashes($item['ItemName'])); ?>')"
-                                                            class="btn btn-danger btn-sm"
-                                                            title="Delete Item">
+                                                        onclick="showDeleteModal(<?php echo $item['ItemID']; ?>, '<?php echo htmlspecialchars(addslashes($item['ItemName'])); ?>')"
+                                                        class="btn btn-danger btn-sm" title="Delete Item">
                                                         <i class="fas fa-trash"></i>
                                                     </button>
                                                 <?php endif; ?>
                                             </div>
-                </td>
-              </tr>
-            <?php endforeach; ?>
-          </tbody>
-        </table>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
                     </div>
                 <?php else: ?>
                     <div class="alert alert-info">
@@ -179,21 +177,21 @@ $menuItems = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         <i class="fas fa-trash"></i> Delete Item
                     </button>
                 </div>
-      </div>
+            </div>
+        </div>
     </div>
-  </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="../../js/admin-dashboard.js"></script>
+    <script src="../../js/admin-dashboard.js"></script>
     <script>
         let deleteModal;
         let itemToDelete = null;
 
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
-            
+
             // Set up delete confirmation button
-            document.getElementById('confirmDelete').addEventListener('click', function() {
+            document.getElementById('confirmDelete').addEventListener('click', function () {
                 if (itemToDelete) {
                     window.location.href = `delete_menu_item.php?id=${itemToDelete.id}&token=${Date.now()}`;
                 }
@@ -201,8 +199,8 @@ $menuItems = $stmt->fetchAll(PDO::FETCH_ASSOC);
             });
 
             // Auto-close alerts after 5 seconds
-            setTimeout(function() {
-                document.querySelectorAll('.alert').forEach(function(alert) {
+            setTimeout(function () {
+                document.querySelectorAll('.alert').forEach(function (alert) {
                     if (alert && typeof bootstrap !== 'undefined') {
                         const bsAlert = new bootstrap.Alert(alert);
                         bsAlert.close();
@@ -221,4 +219,5 @@ $menuItems = $stmt->fetchAll(PDO::FETCH_ASSOC);
         }
     </script>
 </body>
+
 </html>

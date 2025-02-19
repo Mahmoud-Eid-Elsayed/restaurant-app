@@ -37,15 +37,15 @@ try {
         LEFT JOIN MenuItem mi ON oi.ItemID = mi.ItemID
         WHERE 1=1
     ";
-    
+
     $params = [];
-    
+
     // Apply status filter
     if ($status_filter !== 'all') {
         $query .= " AND o.OrderStatus = ?";
         $params[] = $status_filter;
     }
-    
+
     // Apply search filter
     if ($search_query) {
         $query .= " AND (
@@ -59,7 +59,7 @@ try {
         $search_term = "%$search_query%";
         $params = array_merge($params, array_fill(0, 6, $search_term));
     }
-    
+
     // Apply date range filter
     if ($date_from) {
         $query .= " AND o.OrderDate >= ?";
@@ -69,16 +69,16 @@ try {
         $query .= " AND o.OrderDate <= ?";
         $params[] = $date_to . ' 23:59:59';
     }
-    
+
     $query .= "
         GROUP BY o.OrderID, u.Username, u.FirstName, u.LastName, u.Email, u.PhoneNumber
         ORDER BY o.OrderDate DESC
     ";
-    
+
     $stmt = $conn->prepare($query);
     $stmt->execute($params);
     $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    
+
     // Get order status counts for the filter buttons
     $statusCounts = $conn->query("
         SELECT 
@@ -87,7 +87,7 @@ try {
     FROM `Order` 
         GROUP BY OrderStatus
     ")->fetchAll(PDO::FETCH_KEY_PAIR);
-    
+
 } catch (PDOException $e) {
     $error = "Database error: " . $e->getMessage();
     error_log("Error in orders.php: " . $e->getMessage());
@@ -106,21 +106,23 @@ $statusColors = [
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Manage Orders - ELCHEF</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="../../css/admin-dashboard/admin-dashboard.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Orders - ELCHEF</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../css/admin-dashboard/admin-dashboard.css">
     <style>
         .order-details-tooltip {
             max-width: 300px;
             white-space: normal;
         }
+
         .status-badge {
             min-width: 100px;
             text-align: center;
         }
+
         .filter-section {
             background-color: #f8f9fa;
             padding: 1rem;
@@ -131,7 +133,7 @@ $statusColors = [
 </head>
 
 <body>
-  <div class="wrapper">
+    <div class="wrapper">
         <!-- Sidebar -->
         <nav id="sidebar">
             <div class="sidebar-header">
@@ -145,11 +147,12 @@ $statusColors = [
                 <li class="active"><a href="orders.php"><i class="fas fa-shopping-cart"></i> Orders</a></li>
                 <li><a href="reservations.php"><i class="fas fa-calendar-alt"></i> Reservations</a></li>
                 <li><a href="inventory.php"><i class="fas fa-box"></i> Inventory</a></li>
+                <li><a href="suppliers.php"><i class="fa-solid fa-truck"></i></i> Suppliers</a></li>
             </ul>
         </nav>
 
         <!-- Page Content -->
-    <div id="content">
+        <div id="content">
             <!-- Toggle Button -->
             <button type="button" id="sidebarToggle" class="btn btn-info">
                 <i class="fas fa-bars"></i>
@@ -174,11 +177,11 @@ $statusColors = [
                     <div class="alert alert-success alert-dismissible fade show" role="alert">
                         <?php echo htmlspecialchars($_GET['message']); ?>
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-      </div>
+                    </div>
                 <?php endif; ?>
 
                 <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2>Manage Orders</h2>
+                    <h2>Manage Orders</h2>
                     <button type="button" class="btn btn-outline-secondary" onclick="window.location.reload()">
                         <i class="fas fa-sync-alt"></i> Refresh
                     </button>
@@ -190,25 +193,23 @@ $statusColors = [
                         <div class="col-md-4">
                             <div class="input-group">
                                 <span class="input-group-text"><i class="fas fa-search"></i></span>
-                                <input type="text" class="form-control" name="search" 
-                                       value="<?php echo htmlspecialchars($search_query); ?>"
-                                       placeholder="Search orders...">
+                                <input type="text" class="form-control" name="search"
+                                    value="<?php echo htmlspecialchars($search_query); ?>"
+                                    placeholder="Search orders...">
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div class="input-group">
                                 <span class="input-group-text"><i class="fas fa-calendar"></i></span>
-                                <input type="date" class="form-control" name="date_from" 
-                                       value="<?php echo $date_from; ?>"
-                                       placeholder="From date">
+                                <input type="date" class="form-control" name="date_from"
+                                    value="<?php echo $date_from; ?>" placeholder="From date">
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div class="input-group">
                                 <span class="input-group-text"><i class="fas fa-calendar"></i></span>
-                                <input type="date" class="form-control" name="date_to" 
-                                       value="<?php echo $date_to; ?>"
-                                       placeholder="To date">
+                                <input type="date" class="form-control" name="date_to" value="<?php echo $date_to; ?>"
+                                    placeholder="To date">
                             </div>
                         </div>
                         <div class="col-md-2">
@@ -217,16 +218,17 @@ $statusColors = [
                             </button>
                         </div>
                     </form>
-                    
+
                     <!-- Status Filter Buttons -->
                     <div class="mt-3">
                         <div class="btn-group">
-                            <a href="?status=all" class="btn btn-outline-secondary <?php echo $status_filter === 'all' ? 'active' : ''; ?>">
+                            <a href="?status=all"
+                                class="btn btn-outline-secondary <?php echo $status_filter === 'all' ? 'active' : ''; ?>">
                                 All (<?php echo array_sum($statusCounts); ?>)
                             </a>
                             <?php foreach ($statusColors as $status => $color): ?>
-                                <a href="?status=<?php echo $status; ?>" 
-                                   class="btn btn-outline-<?php echo $color; ?> <?php echo $status_filter === $status ? 'active' : ''; ?>">
+                                <a href="?status=<?php echo $status; ?>"
+                                    class="btn btn-outline-<?php echo $color; ?> <?php echo $status_filter === $status ? 'active' : ''; ?>">
                                     <?php echo $status; ?> (<?php echo $statusCounts[$status] ?? 0; ?>)
                                 </a>
                             <?php endforeach; ?>
@@ -240,18 +242,18 @@ $statusColors = [
                             <thead class="table-light">
                                 <tr>
                                     <th>Order ID</th>
-              <th>Customer</th>
+                                    <th>Customer</th>
                                     <th>Contact</th>
-              <th>Order Date</th>
+                                    <th>Order Date</th>
                                     <th>Items</th>
                                     <th>Total Amount</th>
-              <th>Status</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            <?php foreach ($orders as $order): ?>
-              <tr>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php foreach ($orders as $order): ?>
+                                    <tr>
                                         <td><?php echo htmlspecialchars($order['OrderID']); ?></td>
                                         <td>
                                             <?php
@@ -262,27 +264,27 @@ $statusColors = [
                                         <td>
                                             <small>
                                                 <?php if ($order['Email']): ?>
-                                                    <div><i class="fas fa-envelope"></i> <?php echo htmlspecialchars($order['Email']); ?></div>
+                                                    <div><i class="fas fa-envelope"></i>
+                                                        <?php echo htmlspecialchars($order['Email']); ?></div>
                                                 <?php endif; ?>
                                                 <?php if ($order['PhoneNumber']): ?>
-                                                    <div><i class="fas fa-phone"></i> <?php echo htmlspecialchars($order['PhoneNumber']); ?></div>
+                                                    <div><i class="fas fa-phone"></i>
+                                                        <?php echo htmlspecialchars($order['PhoneNumber']); ?></div>
                                                 <?php endif; ?>
                                             </small>
                                         </td>
                                         <td>
-                                            <?php 
+                                            <?php
                                             $orderDate = new DateTime($order['OrderDate']);
                                             echo $orderDate->format('M d, Y H:i');
                                             ?>
                                         </td>
                                         <td>
-                                            <span class="badge bg-info" 
-                                                  data-bs-toggle="tooltip" 
-                                                  data-bs-placement="top"
-                                                  data-bs-custom-class="order-details-tooltip"
-                                                  title="<?php echo htmlspecialchars($order['order_details']); ?>">
-                                                <?php echo (int)$order['total_items']; ?> items
-                                                (<?php echo (int)$order['unique_items']; ?> unique)
+                                            <span class="badge bg-info" data-bs-toggle="tooltip" data-bs-placement="top"
+                                                data-bs-custom-class="order-details-tooltip"
+                                                title="<?php echo htmlspecialchars($order['order_details']); ?>">
+                                                <?php echo (int) $order['total_items']; ?> items
+                                                (<?php echo (int) $order['unique_items']; ?> unique)
                                             </span>
                                         </td>
                                         <td>
@@ -291,46 +293,42 @@ $statusColors = [
                                             </span>
                                         </td>
                                         <td>
-                                            <span class="badge status-badge bg-<?php 
-                                                echo $statusColors[$order['OrderStatus']] ?? 'secondary';
+                                            <span class="badge status-badge bg-<?php
+                                            echo $statusColors[$order['OrderStatus']] ?? 'secondary';
                                             ?>">
                                                 <?php echo htmlspecialchars($order['OrderStatus']); ?>
                                             </span>
                                         </td>
                                         <td>
                                             <div class="btn-group" role="group">
-                                                <a href="view_order.php?id=<?php echo $order['OrderID']; ?>" 
-                                                   class="btn btn-info btn-sm"
-                                                   title="View Order Details">
+                                                <a href="view_order.php?id=<?php echo $order['OrderID']; ?>"
+                                                    class="btn btn-info btn-sm" title="View Order Details">
                                                     <i class="fas fa-eye"></i>
                                                 </a>
                                                 <?php if ($order['OrderStatus'] !== 'Completed' && $order['OrderStatus'] !== 'Cancelled'): ?>
-                                                    <a href="edit_order.php?id=<?php echo $order['OrderID']; ?>" 
-                                                       class="btn btn-warning btn-sm"
-                                                       title="Edit Order">
+                                                    <a href="edit_order.php?id=<?php echo $order['OrderID']; ?>"
+                                                        class="btn btn-warning btn-sm" title="Edit Order">
                                                         <i class="fas fa-edit"></i>
                                                     </a>
                                                     <button type="button"
-                                                            onclick="showCancelModal(<?php echo $order['OrderID']; ?>, '<?php echo htmlspecialchars(addslashes($order['OrderID'])); ?>')"
-                                                            class="btn btn-danger btn-sm"
-                                                            title="Cancel Order">
+                                                        onclick="showCancelModal(<?php echo $order['OrderID']; ?>, '<?php echo htmlspecialchars(addslashes($order['OrderID'])); ?>')"
+                                                        class="btn btn-danger btn-sm" title="Cancel Order">
                                                         <i class="fas fa-times"></i>
                                                     </button>
                                                 <?php endif; ?>
                                                 <?php if ($order['OrderStatus'] === 'Completed'): ?>
                                                     <button type="button"
-                                                            onclick="showRefundModal(<?php echo $order['OrderID']; ?>, '<?php echo htmlspecialchars(addslashes($order['OrderID'])); ?>')"
-                                                            class="btn btn-secondary btn-sm"
-                                                            title="Refund Order">
+                                                        onclick="showRefundModal(<?php echo $order['OrderID']; ?>, '<?php echo htmlspecialchars(addslashes($order['OrderID'])); ?>')"
+                                                        class="btn btn-secondary btn-sm" title="Refund Order">
                                                         <i class="fas fa-undo"></i>
                                                     </button>
                                                 <?php endif; ?>
                                             </div>
-                </td>
-              </tr>
-            <?php endforeach; ?>
-          </tbody>
-        </table>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
                     </div>
                 <?php else: ?>
                     <div class="alert alert-info">
@@ -389,18 +387,18 @@ $statusColors = [
                         <i class="fas fa-undo"></i> Process Refund
                     </button>
                 </div>
-      </div>
+            </div>
+        </div>
     </div>
-  </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="../../js/admin-dashboard.js"></script>
+    <script src="../../js/admin-dashboard.js"></script>
     <script>
         let cancelModal, refundModal;
         let orderToCancel = null;
         let orderToRefund = null;
 
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             // Initialize tooltips
             const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
             tooltipTriggerList.map(function (tooltipTriggerEl) {
@@ -410,9 +408,9 @@ $statusColors = [
             // Initialize modals
             cancelModal = new bootstrap.Modal(document.getElementById('cancelModal'));
             refundModal = new bootstrap.Modal(document.getElementById('refundModal'));
-            
+
             // Set up cancel confirmation button
-            document.getElementById('confirmCancel').addEventListener('click', function() {
+            document.getElementById('confirmCancel').addEventListener('click', function () {
                 if (orderToCancel) {
                     window.location.href = `cancel_order.php?id=${orderToCancel.id}&token=${Date.now()}`;
                 }
@@ -420,7 +418,7 @@ $statusColors = [
             });
 
             // Set up refund confirmation button
-            document.getElementById('confirmRefund').addEventListener('click', function() {
+            document.getElementById('confirmRefund').addEventListener('click', function () {
                 if (orderToRefund) {
                     const reason = document.getElementById('refundReason').value.trim();
                     if (!reason) {
@@ -433,8 +431,8 @@ $statusColors = [
             });
 
             // Auto-close alerts after 5 seconds
-            setTimeout(function() {
-                document.querySelectorAll('.alert').forEach(function(alert) {
+            setTimeout(function () {
+                document.querySelectorAll('.alert').forEach(function (alert) {
                     if (alert && typeof bootstrap !== 'undefined') {
                         const bsAlert = new bootstrap.Alert(alert);
                         bsAlert.close();
@@ -463,4 +461,5 @@ $statusColors = [
         }
     </script>
 </body>
+
 </html>

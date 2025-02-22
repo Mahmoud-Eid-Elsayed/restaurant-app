@@ -11,7 +11,7 @@ $itemId = $_GET['id'];
 // Fetch item details
 $stmt = $conn->prepare("SELECT * FROM MenuItem WHERE ItemID = :id");
 $stmt->execute([':id' => $itemId]);
-$item = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$item = $stmt->fetch();
 
 if (!$item) {
   header("Location: menu_items.php");

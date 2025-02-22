@@ -7,7 +7,7 @@ $host = 'localhost';
 $port = '3307'; 
 $dbname = 'Restaurant_DB';
 $username = 'root';
-$password = '';
+$password = '@Eithar1904';
 
 $conn = new mysqli($host, $username, $password, $dbname, $port);
 if ($conn->connect_error) {

@@ -87,6 +87,29 @@ try {
             // Update order status
             $stmt = $conn->prepare("UPDATE `Order` SET OrderStatus = ? WHERE OrderID = ?");
             $stmt->execute([$newStatus, $orderId]);
+
+            // Add notification for the customer
+            $customerMessage = "Your order #$orderId status has been updated to '$newStatus'.";
+            $stmt = $conn->prepare("
+                INSERT INTO Notification (UserID, OrderID, NotificationType, Message)
+                VALUES (:userID, :orderID, 'OrderStatusUpdated', :message)
+            ");
+            $stmt->execute([
+                ':userID' => $order['CustomerID'],
+                ':orderID' => $orderId,
+                ':message' => $customerMessage
+            ]);
+
+            // Add notification for the admin
+            $adminMessage = "Order #$orderId status has been updated to '$newStatus'.";
+            $stmt = $conn->prepare("
+                INSERT INTO Notification (UserID, OrderID, NotificationType, Message)
+                VALUES (NULL, :orderID, 'OrderStatusUpdated', :message)
+            ");
+            $stmt->execute([
+                ':orderID' => $orderId,
+                ':message' => $adminMessage
+            ]);
         }
 
         // Update order items if order is not delivered/cancelled
@@ -161,9 +184,14 @@ try {
             <ul class="list-unstyled components">
                 <li><a href="index.php"><i class="fas fa-home"></i> Dashboard</a></li>
                 <li><a href="users.php"><i class="fas fa-users"></i> Users</a></li>
+                <li><a href="menu_categories.php"><i class="fas fa-list"></i> Categories</a></li>
                 <li><a href="menu_items.php"><i class="fas fa-utensils"></i> Menu Items</a></li>
                 <li class="active"><a href="orders.php"><i class="fas fa-shopping-cart"></i> Orders</a></li>
                 <li><a href="reservations.php"><i class="fas fa-calendar-alt"></i> Reservations</a></li>
+                <li><a href="inventory.php"><i class="fas fa-box"></i> Inventory</a></li>
+                <li><a href="suppliers.php"><i class="fa-solid fa-truck"></i></i> Suppliers</a></li>
+                <li><a href="admin_notifications.php"><i class="fa-solid fa-bell"></i> Notifications</a>
+
             </ul>
         </nav>
 
@@ -287,7 +315,8 @@ try {
                                             <tfoot>
                                                 <tr>
                                                     <td colspan="<?php echo $canEdit ? '3' : '2'; ?>" class="text-end">
-                                                        <strong>Total:</strong></td>
+                                                        <strong>Total:</strong>
+                                                    </td>
                                                     <td colspan="<?php echo $canEdit ? '2' : '1'; ?>"
                                                         class="order-total">
                                                         $<?php echo number_format($order['TotalAmount'], 2); ?>

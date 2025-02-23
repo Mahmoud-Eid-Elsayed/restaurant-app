@@ -15,6 +15,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $_SESSION['user_id'] = $user['UserID'];
     $_SESSION['username'] = $user['Username'];
     $_SESSION['role'] = $user['Role'];
+
     header('Location: index.php');
     exit();
   } else {
@@ -22,6 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   }
 }
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">

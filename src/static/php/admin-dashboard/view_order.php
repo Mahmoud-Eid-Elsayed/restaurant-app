@@ -145,6 +145,10 @@ $statusColors = [
                 <li><a href="menu_items.php"><i class="fas fa-utensils"></i> Menu Items</a></li>
                 <li class="active"><a href="orders.php"><i class="fas fa-shopping-cart"></i> Orders</a></li>
                 <li><a href="reservations.php"><i class="fas fa-calendar-alt"></i> Reservations</a></li>
+                <li><a href="inventory.php"><i class="fas fa-box"></i> Inventory</a></li>
+                <li><a href="suppliers.php"><i class="fa-solid fa-truck"></i></i> Suppliers</a></li>
+                <li><a href="admin_notifications.php"><i class="fa-solid fa-bell"></i> Notifications</a>
+
             </ul>
         </nav>
 
@@ -293,7 +297,8 @@ $statusColors = [
                                                 </p>
                                                 <?php if ($history['Notes']): ?>
                                                     <p class="text-muted mb-0">
-                                                        <small><?php echo htmlspecialchars($history['Notes']); ?></small></p>
+                                                        <small><?php echo htmlspecialchars($history['Notes']); ?></small>
+                                                    </p>
                                                 <?php endif; ?>
                                             </div>
                                         <?php endforeach; ?>

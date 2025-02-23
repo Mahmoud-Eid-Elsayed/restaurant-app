@@ -1,5 +1,9 @@
 <?php
 session_start();
+if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'Staff') {
+    header("Location: login.php");
+    exit();
+}
 require_once '../../connection/db.php';
 
 // Enable error reporting for debugging
@@ -218,6 +222,8 @@ $total_menu_items = $stmt->fetch(PDO::FETCH_ASSOC)['total_menu_items'];
                 <li>
                     <a href="suppliers.php"><i class="fa-solid fa-truck"></i></i> Suppliers</a>
                 </li>
+                <li><a href="admin_notifications.php"><i class="fa-solid fa-bell"></i> Notifications</a>
+
             </ul>
         </nav>
 

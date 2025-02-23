@@ -1,15 +1,17 @@
 <?php
 require_once '../../connection/db.php';
 
-class User {
+class User
+{
     private $conn;
 
-    public function __construct($conn) {
+    public function __construct($conn)
+    {
         $this->conn = $conn;
     }
 
-
-    private function validateUserData($data, $isUpdate = false) {
+    private function validateUserData($data, $isUpdate = false)
+    {
         $errors = [];
 
         if (!$isUpdate || isset($data['firstname'])) {
@@ -37,7 +39,8 @@ class User {
     }
 
 
-    public function addUser($data, $profilePic) {
+    public function addUser($data, $profilePic)
+    {
         $errors = $this->validateUserData($data);
 
         if (!empty($errors)) {
@@ -86,31 +89,33 @@ class User {
     }
 
 
-    public function updateUser($user_id, $username, $email, $phone, $address, $profilePic = null) {
+    public function updateUser($user_id, $username, $email, $phone, $address, $profilePic = null)
+    {
         try {
             $profilePicPath = null;
-    
+
             if ($profilePic && $profilePic['error'] === UPLOAD_ERR_OK) {
                 $allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
-                
+
                 if (in_array($profilePic['type'], $allowedTypes)) {
                     $uploadDir = "../../../assets/images/users/uploads/";
-                    
+
                     if (!is_dir($uploadDir)) {
                         mkdir($uploadDir, 0777, true);
                     }
-                    
+
                     $imageExtension = pathinfo($profilePic['name'], PATHINFO_EXTENSION);
                     $imageName = "user_" . $user_id . "." . $imageExtension;
                     $profilePicPath = $uploadDir . $imageName;
-    
+
                     if (!move_uploaded_file($profilePic['tmp_name'], $profilePicPath)) {
                         return false;
                     }
                 } else {
-                    return false; }
+                    return false;
+                }
             }
-    
+
             if ($profilePicPath) {
                 $stmt = $this->conn->prepare("UPDATE User SET Username = ?, Email = ?, PhoneNumber = ?, Address = ?, ProfilePictureURL = ? WHERE UserID = ?");
                 $stmt->execute([$username, $email, $phone, $address, $profilePicPath, $user_id]);
@@ -118,35 +123,37 @@ class User {
                 $stmt = $this->conn->prepare("UPDATE User SET Username = ?, Email = ?, PhoneNumber = ?, Address = ? WHERE UserID = ?");
                 $stmt->execute([$username, $email, $phone, $address, $user_id]);
             }
-    
+
             return true;
         } catch (PDOException $e) {
             return false;
         }
     }
-    
-    
-    public function getUserById($user_id) {
+
+
+    public function getUserById($user_id)
+    {
         $stmt = $this->conn->prepare("SELECT * FROM User WHERE UserID = ?");
         $stmt->execute([$user_id]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
-    public function loginUser($email, $password) {
+    public function loginUser($email, $password)
+    {
         $stmt = $this->conn->prepare("SELECT * FROM user WHERE Email = :email LIMIT 1");
         $stmt->execute(['email' => $email]);
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
-    
+
         if ($user && password_verify($password, $user['Password'])) {
             session_regenerate_id(true);
             $_SESSION['user_id'] = $user['UserID'];
             $_SESSION['username'] = $user['Username'];
             $_SESSION['role'] = $user['Role'];
-    
+
             return ['status' => true, 'role' => $user['Role']];
         }
         return ['status' => false, 'message' => 'Invalid email or password.'];
     }
-    
-    
+
+
 }
 ?>

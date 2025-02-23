@@ -83,27 +83,57 @@ try {
             <p>No new notifications.</p>
           <?php else: ?>
             <?php foreach ($notifications as $notification): ?>
-              <div class="list-group-item">
-                <div class="d-flex w-100 justify-content-between">
+              <div class="list-group-item d-flex justify-content-between align-items-center">
+                <div>
                   <h5 class="mb-1"><?php echo htmlspecialchars($notification['Message']); ?></h5>
                   <small><?php echo $notification['Timestamp']; ?></small>
                 </div>
-                <?php if (!$notification['IsRead']): ?>
-                  <form method="POST" action="mark_as_read.php" style="display: inline;">
-                    <input type="hidden" name="id" value="<?php echo $notification['NotificationID']; ?>">
-                    <button type="submit" class="btn btn-sm btn-success">Mark as Read</button>
-                  </form>
-                <?php else: ?>
-                  <small class="text-success">Read</small>
-                <?php endif; ?>
+                <button class="btn btn-sm <?php echo $notification['IsRead'] ? 'btn-success' : 'btn-warning'; ?>" onclick="toggleReadStatus(<?php echo $notification['NotificationID']; ?>,
+                  <?php echo $notification['IsRead']; ?>)">
+                  <?php echo $notification['IsRead'] ? 'Read ✅' : 'Mark as Read 🔴'; ?>
+                </button>
               </div>
             <?php endforeach; ?>
+
           <?php endif; ?>
         </div>
       </div>
     </div>
     <script src="../../../../src/assets/libraries/node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="../../js/admin-dashboard.js"></script>
+
+    <script>
+      function toggleReadStatus(notificationId, isRead) {
+        fetch('toggle_notification.php', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            notification_id: notificationId,
+            is_read: isRead
+          })
+        })
+          .then(response => {
+            if (!response.ok) {
+              throw new Error('Network response was not ok');
+            }
+            return response.json();
+          })
+          .then(data => {
+            if (data.success) {
+              // Reload the page or update the UI accordingly
+              location.reload();
+            } else {
+              alert('Failed to update notification status: ' + data.error);
+            }
+          })
+          .catch(error => {
+            console.error('Error:', error);
+          });
+      }
+    </script>
 </body>
 
 </html>

@@ -1,10 +1,8 @@
 <?php
 session_start();
 
-// Include the database connection
 require_once __DIR__ . '/../../connection/db.php';
 
-// Check if the notification ID is provided
 if (!isset($_GET['id'])) {
   die("Notification ID not provided.");
 }
@@ -12,9 +10,10 @@ $notificationID = $_GET['id'];
 
 try {
   // Mark the notification as read
-  $query = "UPDATE Notification SET IsRead = TRUE WHERE NotificationID = ?";
+  $query = "UPDATE Notification SET IsRead = TRUE WHERE NotificationID = ? AND UserID = ?";
   $stmt = $conn->prepare($query);
-  $stmt->execute([$notificationID]);
+  $stmt->execute([$notificationID, $_SESSION['user']['id']]);
+
 
   // Fetch the notification details
   $query = "SELECT * FROM Notification WHERE NotificationID = ?";

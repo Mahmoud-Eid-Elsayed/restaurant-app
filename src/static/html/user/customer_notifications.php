@@ -1,10 +1,8 @@
 <?php
 session_start();
 
-// Include the database connection
 require_once __DIR__ . '/../../connection/db.php';
 
-// Debugging: Check if the session is set
 if (!isset($_SESSION['user'])) {
   die("User not logged in.");
 }
@@ -14,7 +12,7 @@ $customer_id = $_SESSION['user']['id'];
 
 try {
   // Fetch notifications for the customer
-  $query = "SELECT * FROM Notification WHERE UserID = ? ORDER BY Timestamp DESC";
+  $query = "SELECT * FROM Notification WHERE UserID = ? OR UserID IS NULL ORDER BY Timestamp DESC";
   $stmt = $conn->prepare($query);
   $stmt->execute([$customer_id]);
   $notifications = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -41,21 +39,41 @@ try {
         <p>No new notifications.</p>
       <?php else: ?>
         <?php foreach ($notifications as $notification): ?>
-          <div class="list-group-item">
-            <div class="d-flex w-100 justify-content-between">
+          <div class="list-group-item d-flex justify-content-between align-items-center">
+            <div>
               <h5 class="mb-1"><?php echo htmlspecialchars($notification['Message']); ?></h5>
               <small><?php echo $notification['Timestamp']; ?></small>
             </div>
-            <?php if (!$notification['IsRead']): ?>
-              <small class="text-danger">Unread</small>
-            <?php else: ?>
-              <small class="text-success">Read</small>
-            <?php endif; ?>
+            <button class="btn btn-sm <?php echo $notification['IsRead'] ? 'btn-success' : 'btn-warning'; ?>"
+              onclick="toggleReadStatus(<?php echo $notification['NotificationID']; ?>, <?php echo $notification['IsRead']; ?>)">
+              <?php echo $notification['IsRead'] ? 'Read ✅' : 'Mark as Read 🔴'; ?>
+            </button>
           </div>
         <?php endforeach; ?>
       <?php endif; ?>
     </div>
   </div>
+  <script>
+    function toggleReadStatus(notificationID, currentStatus) {
+      fetch('toggle_notification.php', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: 'id=' + notificationID + '&status=' + currentStatus
+      })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            location.reload();
+          } else {
+            alert('Error updating notification');
+          }
+        })
+        .catch(error => console.error('Error:', error));
+    }
+  </script>
+
 </body>
 
 </html>

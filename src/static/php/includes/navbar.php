@@ -139,6 +139,18 @@ $cartItemCount = isset($_SESSION['cart']) ? count($_SESSION['cart']) : 0;
     </nav>
 
     <script>
+        <span id="cart-count"><?= $cartItemCount ?></span>
+
+    function updateCartCount() {
+        fetch('get_cart_count.php')
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById('cart-count').innerText = data;
+        });
+    }
+    updateCartCount();
+
+
         document.getElementById("profileIcon")?.addEventListener("click", function () {
             let dropdown = document.getElementById("profileDropdown");
             dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";

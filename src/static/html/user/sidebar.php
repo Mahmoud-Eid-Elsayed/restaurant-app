@@ -47,7 +47,7 @@ if (!$userData) {
                 <a href="editProfile.php" class="nav-link text-dark">✏ Edit Profile</a>
             </li>
             <li class="nav-item">
-                <a href="orders.php" class="nav-link text-dark">🛒 My Orders</a>
+                <a href="customer_orders-history.php" class="nav-link text-dark">🛒 My Orders</a>
             </li>
             <li class="nav-item">
                 <a href="../../php/menu/menu.php" class="nav-link text-dark">🍽 Menu</a>

@@ -51,6 +51,8 @@ try {
                 <li><a href="reservations.php"><i class="fas fa-calendar-alt"></i> Reservations</a></li>
                 <li><a href="inventory.php"><i class="fas fa-box"></i> Inventory</a></li>
                 <li><a href="suppliers.php"><i class="fa-solid fa-truck"></i></i> Suppliers</a></li>
+                <li><a href="admin_notifications.php"><i class="fa-solid fa-bell"></i> Notifications</a>
+
             </ul>
         </nav>
 

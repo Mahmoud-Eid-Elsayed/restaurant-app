@@ -1,8 +1,8 @@
 <?php
-session_start();
+// session_start(); // Ensure session starts before using session variables
 
 $isLoggedIn = isset($_SESSION['user']);
-$userProfileImage = "src/assets/images/users/default-profile.png";
+$userProfileImage = "/src/assets/images/users/profile_pictures/default-profile.png";
 
 if ($isLoggedIn) {
     $userProfileImage = $_SESSION['user']['profile_image'];
@@ -17,7 +17,7 @@ $cartItemCount = isset($_SESSION['cart']) ? count($_SESSION['cart']) : 0;
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title> Cart </title>
+    <title>Navbar</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
@@ -54,6 +54,8 @@ $cartItemCount = isset($_SESSION['cart']) ? count($_SESSION['cart']) : 0;
             height: 40px;
             border-radius: 50%;
             cursor: pointer;
+            object-fit: cover;
+            /* Ensure the image fills the circle */
         }
 
         .icon-container {
@@ -77,10 +79,9 @@ $cartItemCount = isset($_SESSION['cart']) ? count($_SESSION['cart']) : 0;
 </head>
 
 <body>
-
     <nav class="navbar navbar-expand-lg navbar-light bg-dark sticky-top shadow-sm">
         <div class="container-fluid">
-            <a class="navbar-brand text-white" href="#">THE CHEF</a>
+            <a class="navbar-brand text-white" href="../../../../index.html">THE CHEF</a>
 
             <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar"
                 aria-controls="offcanvasNavbar">
@@ -96,7 +97,9 @@ $cartItemCount = isset($_SESSION['cart']) ? count($_SESSION['cart']) : 0;
                 <div class="offcanvas-body">
                     <ul class="navbar-nav mx-auto mb-3 mb-lg-0">
                         <li class="nav-item"><a class="nav-link text-white" href="../../../../index.html">Home</a></li>
-                        <li class="nav-item"><a class="nav-link text-white" href="/src/static/php/menu/menu.php">Menu</a></li>
+                        <li class="nav-item"><a class="nav-link text-white"
+                                href="../../../static/php/menu/menu.php">Menu</a>
+                        </li>
                         <li class="nav-item"><a class="nav-link text-white" href="#">Offers</a></li>
                         <li class="nav-item"><a class="nav-link text-white" href="#">About Us</a></li>
                         <li class="nav-item"><a class="nav-link text-white" href="#">Contact</a></li>
@@ -117,27 +120,25 @@ $cartItemCount = isset($_SESSION['cart']) ? count($_SESSION['cart']) : 0;
                         </div>
 
                         <?php if (!$isLoggedIn): ?>
-                            <button class="btn btn-outline-light btn-sm">Sign Up</button>
-                            <button class="btn btn-light btn-sm" h>Log In</button>
+                            <a class="btn btn-outline-light btn-sm" href="../../../static/html/user/signup.php">Sign
+                                Up</a>
+                            <a class="btn btn-light btn-sm" href="../../../static/html/user/login.php">Log In</a>
                         <?php else: ?>
-
                             <div class="profile-menu">
                                 <img src="<?= $userProfileImage ?>" class="profile-img" id="profileIcon">
                                 <div class="profile-dropdown" id="profileDropdown">
-                                    <a href="profile.php">👤 Profile</a>
-                                    <a href="logout.php">🚪 Logout</a>
+                                    <a href="../../html/user/userProfile.php">👤 Profile</a>
+                                    <a href="../../html/user/logout.php">🚪 Logout</a>
                                 </div>
                             </div>
                         <?php endif; ?>
                     </div>
-
                 </div>
             </div>
         </div>
     </nav>
 
     <script>
-
         document.getElementById("profileIcon")?.addEventListener("click", function () {
             let dropdown = document.getElementById("profileDropdown");
             dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
@@ -150,7 +151,6 @@ $cartItemCount = isset($_SESSION['cart']) ? count($_SESSION['cart']) : 0;
             }
         });
     </script>
-
 </body>
 
 </html>

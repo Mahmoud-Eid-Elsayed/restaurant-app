@@ -62,7 +62,7 @@ try {
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Validate status change
         $newStatus = $_POST['status'] ?? '';
-        $validStatuses = ['Pending', 'Preparing', 'Ready', 'Delivered', 'Cancelled'];
+        $validStatuses = ['Pending', 'Processing', 'Completed', 'Cancelled', 'Refunded'];
         if (!in_array($newStatus, $validStatuses)) {
             throw new Exception('Invalid order status');
         }
@@ -113,7 +113,7 @@ try {
         }
 
         // Update order items if order is not delivered/cancelled
-        if ($canEdit) {
+        if ($canEdit && !empty($_POST['items'])) {
             // Validate that at least one item exists
             if (empty($_POST['items'])) {
                 throw new Exception('Order must contain at least one item');
@@ -258,10 +258,10 @@ try {
                                         <label for="status" class="form-label">Order Status</label>
                                         <select class="form-select" id="status" name="status" required>
                                             <option value="Pending" <?php echo $order['OrderStatus'] === 'Pending' ? 'selected' : ''; ?>>Pending</option>
-                                            <option value="Preparing" <?php echo $order['OrderStatus'] === 'Preparing' ? 'selected' : ''; ?>>Preparing</option>
-                                            <option value="Ready" <?php echo $order['OrderStatus'] === 'Ready' ? 'selected' : ''; ?>>Ready</option>
-                                            <option value="Delivered" <?php echo $order['OrderStatus'] === 'Delivered' ? 'selected' : ''; ?>>Delivered</option>
+                                            <option value="Processing" <?php echo $order['OrderStatus'] === 'Processing' ? 'selected' : ''; ?>>Processing</option>
+                                            <option value="Completed" <?php echo $order['OrderStatus'] === 'Completed' ? 'selected' : ''; ?>>Completed</option>
                                             <option value="Cancelled" <?php echo $order['OrderStatus'] === 'Cancelled' ? 'selected' : ''; ?>>Cancelled</option>
+                                            <option value="Refunded" <?php echo $order['OrderStatus'] === 'Refunded' ? 'selected' : ''; ?>>Refunded</option>
                                         </select>
                                     </div>
 

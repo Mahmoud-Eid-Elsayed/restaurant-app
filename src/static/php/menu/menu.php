@@ -6,7 +6,6 @@ require_once __DIR__ . '/../../connection/db.php';
 $cart_count = isset($_SESSION['cart']) ? count($_SESSION['cart']) : 0;
 $selectedCategory = isset($_GET['category']) ? htmlspecialchars($_GET['category']) : 'all';
 
-// Fetch categories
 $categories = [];
 try {
     $categoryQuery = "SELECT CategoryID, CategoryName FROM MenuCategory";
@@ -29,55 +28,74 @@ try {
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <style>
-        body { background-color: #ECF0F1; }
-        .navbar { background-color: #2C3E50; padding: 15px; border-radius: 10px; }
-        .navbar1 { 
-            background-color: #2C3E50; 
-            padding: 15px; 
+        .menu-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            padding: 20px;
+        }
+        
+        .menu-item {
+            width: calc(50% - 10px);
+            text-align: center;
+            background-color: #333;
+            padding: 15px;
             border-radius: 10px;
-            z-index: 1000;
-            text-align: center; 
-            position: sticky;
-            top: 80px; 
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
         }
-        .navbar1 a { 
-            color: white; 
-            font-weight: bold; 
-            margin-right: 35px; 
-            text-decoration: none; 
-            transition: color 0.3s; 
+        
+        .menu-item img {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
         }
-        .navbar a:hover { color: #E74C3C; }
-        .card { 
-            border: none; 
-            border-radius: 15px; 
-            overflow: hidden; 
-            transition: transform 0.3s, box-shadow 0.3s; 
-            background: white; 
-            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); 
+        
+        .menu-item h5, .menu-item p {
+            margin-top: 10px;
+            color: orange;
         }
-        .card:hover { 
-            transform: translateY(-5px); 
-            box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.2); 
+        
+        .btn-add {
+            background-color: orange;
+            color: black;
+            font-weight: bold;
+            border-radius: 10px;
+            transition: background 0.3s;
+            border: none;
+            padding: 10px 15px;
+            width: 100%;
+            margin-top: 10px;
         }
-        .card-img-top { 
-            height: 220px; 
-            object-fit: cover; 
+        
+        .btn-add:hover {
+            background-color: darkorange;
         }
-        .price { 
-            font-size: 1.3rem; 
-            color: #E74C3C; 
-            font-weight: bold; 
+
+        .navbar1 {
+            background-color: black;
+            padding: 10px;
         }
-        .btn-add { 
-            background-color: #27AE60; 
-            color: white; 
-            font-weight: bold; 
-            border-radius: 10px; 
-            transition: background 0.3s; 
+
+        .navbar1 a {
+            color: orange;
+            text-decoration: none;
+            margin-right: 15px;
         }
-        .btn-add:hover { 
-            background-color: #219150; 
+
+        .navbar1 a:hover {
+            color: darkorange;
+        }
+
+        .container h2 {
+            color: orange;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        #cart-status {
+            color: black;
+            text-align: center;
+            margin-bottom: 20px;
         }
     </style>
 </head>
@@ -94,7 +112,7 @@ try {
     <div class="container mt-5">
         <h2>Restaurant Menu</h2>
         <div id="cart-status">🛒 Items in Cart: <span id="cart-count"><?= $cart_count; ?></span></div>
-        <div class="row row-cols-1 row-cols-md-4 g-4">
+        <div class="menu-container">
             <?php 
             foreach ($categories as $categoryID => $categoryName) {
                 if ($selectedCategory !== 'all' && $selectedCategory != $categoryID) {
@@ -113,17 +131,13 @@ try {
                     while ($item = $result->fetch(PDO::FETCH_ASSOC)) {
                         $imageURL = !empty($item['ImageURL']) ? htmlspecialchars($item['ImageURL']) : 'path/to/default/image.jpg';
                         echo "
-                        <div class='col'>
-                            <div class='card'>
-                                <img src='$imageURL' class='card-img-top' alt='" . htmlspecialchars($item['ItemName']) . "'>
-                                <div class='card-body'>
-                                    <h5 class='card-title'>" . htmlspecialchars($item['ItemName']) . "</h5>
-                                    <p class='price'>\$" . htmlspecialchars($item['Price']) . "</p>
-                                    <button class='btn btn-add w-100 add-to-cart' data-id='" . htmlspecialchars($item['ItemID']) . "'>
-                                        <i class='bi bi-cart-plus'></i> Add to Cart
-                                    </button>
-                                </div>
-                            </div>
+                        <div class='menu-item'>
+                            <img src='$imageURL' alt='" . htmlspecialchars($item['ItemName']) . "'>
+                            <h5>" . htmlspecialchars($item['ItemName']) . "</h5>
+                            <p>\$" . htmlspecialchars($item['Price']) . "</p>
+                            <button class='btn btn-add add-to-cart' data-id='" . htmlspecialchars($item['ItemID']) . "'>
+                                <i class='bi bi-cart-plus'></i> Add to Cart
+                            </button>
                         </div>";
                     }
                     $stmt->closeCursor();
@@ -147,7 +161,6 @@ try {
             .then(response => response.text())
             .then(data => {
                 document.getElementById('cart-count').innerText = data;
-                // Optional: Show a notification or update the UI to indicate the item was added
                 alert('Item added to cart!');
             })
             .catch(error => console.error('Error:', error));

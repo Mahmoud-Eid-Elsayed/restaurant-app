@@ -67,6 +67,16 @@ $inventoryItems = $stmt->fetchAll(PDO::FETCH_ASSOC);
       font-weight: 500;
     }
 
+    .out-of-stock {
+      color: #dc3545;
+      font-weight: bold;
+    }
+
+    .in-stock {
+      color: #28a745;
+      font-weight: bold;
+    }
+
     @media (max-width: 768px) {
       .inventory-header {
         padding: 1.5rem;
@@ -116,7 +126,6 @@ $inventoryItems = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <li class="active"><a href="inventory.php"><i class="fas fa-box"></i> Inventory</a></li>
         <li><a href="suppliers.php"><i class="fa-solid fa-truck"></i></i> Suppliers</a></li>
         <li><a href="admin_notifications.php"><i class="fa-solid fa-bell"></i> Notifications</a>
-
       </ul>
     </nav>
 
@@ -159,6 +168,7 @@ $inventoryItems = $stmt->fetchAll(PDO::FETCH_ASSOC);
                   <th>Quantity</th>
                   <th>Unit</th>
                   <th>Reorder Level</th>
+                  <th>Stock Status</th>
                   <th>Actions</th>
                 </tr>
               </thead>
@@ -178,6 +188,13 @@ $inventoryItems = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     </td>
                     <td><?php echo htmlspecialchars($item['UnitOfMeasurement']); ?></td>
                     <td><?php echo htmlspecialchars($item['ReorderLevel']); ?></td>
+                    <td>
+                      <?php if ($item['QuantityInStock'] > 0): ?>
+                        <span class="in-stock">In Stock</span>
+                      <?php else: ?>
+                        <span class="out-of-stock">Out of Stock</span>
+                      <?php endif; ?>
+                    </td>
                     <td>
                       <div class="btn-group btn-group-sm">
                         <a href="edit_inventory_item.php?id=<?php echo $item['InventoryItemID']; ?>" class="btn btn-warning"

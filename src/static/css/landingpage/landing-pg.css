@@ -13,8 +13,8 @@ body {
     font-family: 'Inter', 'Poppins', sans-serif;
     line-height: 1.6;
     color: var(--text-dark);
-    cursor: default;
-    scroll-behavior: smooth;
+  cursor: default;
+  scroll-behavior: smooth;
 }
 
 /* Navbar Styles */
@@ -37,7 +37,7 @@ body {
 
 .navbar-brand img {
     height: 50px;
-    width: auto;
+  width: auto;
     transition: transform 0.3s ease;
 }
 
@@ -49,16 +49,16 @@ body {
     font-weight: 500;
     padding: 0.5rem 1rem !important;
     transition: all 0.3s ease;
-    position: relative;
+  position: relative;
 }
 
 .nav-link::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 50%;
-    width: 0;
-    height: 2px;
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 0;
+  height: 2px;
     background-color: var(--primary-color);
     transition: all 0.3s ease;
     transform: translateX(-50%);
@@ -134,7 +134,7 @@ body {
 
 #chef-res .card-img-top {
     height: 100%;
-    width: 100%;
+  width: 100%;
     object-fit: cover;
     transition: all 0.5s ease;
 }
@@ -579,9 +579,9 @@ footer .social-links a:hover {
 }
 
 #carouselExample {
-    height: 500px;
+  height: 500px;
 }
 
 .d-block {
-    object-fit: cover;
+  object-fit: cover;
 }

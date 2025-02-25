@@ -62,41 +62,37 @@ try {
             font-weight: bold;
             border-radius: 10px;
             transition: background 0.3s;
-            border: none;
-            padding: 10px 15px;
-            width: 100%;
-            margin-top: 10px;
         }
-        
+
         .btn-add:hover {
-            background-color: darkorange;
+            background-color: #219150;
         }
 
-        .navbar1 {
-            background-color: black;
-            padding: 10px;
+        .pagination {
+            justify-content: center;
+            margin-top: 20px;
         }
 
-        .navbar1 a {
-            color: orange;
+        .pagination a {
+            margin: 0 5px;
             text-decoration: none;
-            margin-right: 15px;
+            color: #2C3E50;
         }
 
-        .navbar1 a:hover {
-            color: darkorange;
+        .badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: red;
+            color: white;
+            font-size: 12px;
+            border-radius: 50%;
+            padding: 3px 6px;
         }
 
-        .container h2 {
-            color: orange;
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        #cart-status {
-            color: black;
-            text-align: center;
-            margin-bottom: 20px;
+        .pagination a.active {
+            font-weight: bold;
+            color: #E74C3C;
         }
     </style>
 </head>
@@ -131,38 +127,33 @@ try {
     <div class="container mt-5">
         <h2>Restaurant Menu</h2>
         <div id="cart-status">🛒 Items in Cart: <span id="cart-count"><?= $cart_count; ?></span></div>
-        <div class="menu-container">
-            <?php 
+        <div class="row row-cols-1 row-cols-md-4 g-4">
+            <?php
             foreach ($categories as $categoryID => $categoryName) {
                 if ($selectedCategory !== 'all' && $selectedCategory != $categoryID) {
                     continue;
                 }
 
-                try {
-                    $stmt = $conn->prepare("SELECT ItemID, ItemName, Price, ImageURL FROM MenuItem WHERE CategoryID = ? AND Availability = 1");
-                    $stmt->execute([$categoryID]);
-                    $result = $stmt;
+                $stmt = $conn->prepare("SELECT ItemID, ItemName, Price, ImageURL FROM MenuItem WHERE CategoryID = ? AND Availability = 1");
+                $stmt->execute([$categoryID]);
+                $result = $stmt;
 
-                    if ($result->rowCount() == 0) {
-                        echo "<p style='color: red;'>⚠ No items found in this category.</p>";
-                    }
-
-                    while ($item = $result->fetch(PDO::FETCH_ASSOC)) {
-                        $imageURL = !empty($item['ImageURL']) ? htmlspecialchars($item['ImageURL']) : 'path/to/default/image.jpg';
-                        echo "
-                        <div class='menu-item'>
-                            <img src='$imageURL' alt='" . htmlspecialchars($item['ItemName']) . "'>
-                            <h5>" . htmlspecialchars($item['ItemName']) . "</h5>
-                            <p>\$" . htmlspecialchars($item['Price']) . "</p>
-                            <button class='btn btn-add add-to-cart' data-id='" . htmlspecialchars($item['ItemID']) . "'>
-                                <i class='bi bi-cart-plus'></i> Add to Cart
-                            </button>
-                        </div>";
-                    }
-                    $stmt->closeCursor();
-                } catch (PDOException $e) {
-                    die("Error fetching items: " . $e->getMessage());
+                while ($item = $result->fetch()) {
+                    echo "
+                    <div class='col'>
+                        <div class='card'>
+                            <img src='" . htmlspecialchars($item['ImageURL']) . "' class='card-img-top' alt='" . htmlspecialchars($item['ItemName']) . "'>
+                            <div class='card-body'>
+                                <h5 class='card-title'>" . htmlspecialchars($item['ItemName']) . "</h5>
+                                <p class='price'>\$" . htmlspecialchars($item['Price']) . "</p>
+                                <button class='btn btn-add w-100 add-to-cart' data-id='" . htmlspecialchars($item['ItemID']) . "'>
+                                    <i class='bi bi-cart-plus'></i> Add to Cart
+                                </button>
+                            </div>
+                        </div>
+                    </div>";
                 }
+                $stmt->closeCursor();
             }
             ?>
         </div>
@@ -170,22 +161,22 @@ try {
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-    document.querySelectorAll('.add-to-cart').forEach(button => {
-        button.addEventListener('click', function() {
-            let itemID = this.getAttribute('data-id');
-            fetch('add_to_cart.php', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: `id=${itemID}`
-            })
-            .then(response => response.text())
-            .then(data => {
-                document.getElementById('cart-count').innerText = data;
-                alert('Item added to cart!');
-            })
-            .catch(error => console.error('Error:', error));
+        document.querySelectorAll('.add-to-cart').forEach(button => {
+            button.addEventListener('click', function () {
+                let itemID = this.getAttribute('data-id');
+                fetch('add_to_cart.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: `id=${itemID}`
+                })
+                    .then(response => response.text())
+                    .then(data => {
+                        document.getElementById('cart-count').innerText = data;
+                    })
+                    .catch(error => console.error('Error:', error));
+            });
         });
-    });
-</script>
+    </script>
+
 </body>
 </html>

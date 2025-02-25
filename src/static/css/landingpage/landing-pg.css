@@ -1,99 +1,587 @@
+/* Global Styles */
+:root {
+    --primary-color: #e67e22;
+    --secondary-color: #2c3e50;
+    --accent-color: #f39c12;
+    --text-dark: #2d3436;
+    --text-light: #636e72;
+    --white: #ffffff;
+    --section-padding: 5rem 0;
+}
+
 body {
+    font-family: 'Inter', 'Poppins', sans-serif;
+    line-height: 1.6;
+    color: var(--text-dark);
   cursor: default;
   scroll-behavior: smooth;
 }
 
-.navbar-brand .logo {
-  height: 80px;
+/* Navbar Styles */
+.navbar {
+    padding: 1rem 0;
+    transition: all 0.3s ease;
+    background-color: rgba(255, 255, 255, 0.95) !important;
+    border-radius: 50px;
+    animation: fadeInDown 0.6s ease-out;
+}
+
+.navbar.scrolled {
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-brand {
+    padding: 0;
+    margin-right: 2rem;
+}
+
+.navbar-brand img {
+    height: 50px;
   width: auto;
+    transition: transform 0.3s ease;
 }
 
-.navbar-nav .nav-link {
+.navbar-brand img:hover {
+    transform: scale(1.05);
+}
+
+.nav-link {
+    font-weight: 500;
+    padding: 0.5rem 1rem !important;
+    transition: all 0.3s ease;
   position: relative;
-  padding: 0.5rem 1rem;
-  color: #1f0f66;
-  transition: color 0.3s ease;
 }
 
-.navbar-nav .nav-link::after {
+.nav-link::after {
   content: '';
   position: absolute;
   bottom: 0;
   left: 50%;
   width: 0;
   height: 2px;
-  background-color: #007bff;
-  transition: width 0.3s ease, left 0.3s ease;
+    background-color: var(--primary-color);
+    transition: all 0.3s ease;
+    transform: translateX(-50%);
 }
 
-.navbar-nav .nav-link:hover::after {
+.nav-link:hover::after,
+.nav-link.active::after {
+    width: 80%;
+}
+
+/* Hero Carousel Styles */
+.carousel {
+    height: 80vh;
+    margin-top: -76px;
+}
+
+.carousel-item {
+    height: 80vh;
+}
+
+.carousel-item img {
+    object-fit: cover;
+    filter: brightness(0.7);
+}
+
+.carousel-caption {
+    bottom: 20%;
+    z-index: 2;
+    animation: fadeInUp 1s ease-out;
+}
+
+/* Chef Section Styles */
+#chef-res {
+    padding: var(--section-padding);
+    background-color: #f8f9fa;
+    position: relative;
+    overflow: hidden;
+}
+
+#chef-res h1 {
+    color: var(--primary-color);
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+#chef-res h3 {
+    color: var(--secondary-color);
+    margin-bottom: 3rem;
+}
+
+#chef-res .card {
+    border: none;
+    border-radius: 20px;
+    overflow: hidden;
+    transition: all 0.4s ease;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    background: linear-gradient(to bottom, #fff 0%, #f8f9fa 100%);
+    opacity: 0;
+    animation: fadeInUp 0.6s ease-out forwards;
+}
+
+#chef-res .card:hover {
+    transform: translateY(-15px);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+}
+
+#chef-res .card-img-wrapper {
+    position: relative;
+    height: 400px;
+    overflow: hidden;
+}
+
+#chef-res .card-img-top {
+    height: 100%;
   width: 100%;
-  left: 0;
+    object-fit: cover;
+    transition: all 0.5s ease;
 }
 
-.navbar-nav .nav-link.active {
-  color: #007bff;
+#chef-res .card:hover .card-img-top {
+    transform: scale(1.1);
 }
 
-.navbar-nav .nav-link.active::after {
-  width: 100%;
-  left: 0;
+#chef-res .card-body {
+    padding: 2rem;
+    text-align: center;
+    position: relative;
 }
 
+#chef-res .card-title {
+    font-size: 1.5rem;
+    color: var(--primary-color);
+    margin-bottom: 0.5rem;
+}
+
+#chef-res .chef-role {
+    font-size: 1.1rem;
+    color: var(--text-light);
+    margin-bottom: 1rem;
+    font-weight: 500;
+}
+
+#chef-res .card-text {
+    color: var(--text-dark);
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+}
+
+#chef-res .social-links {
+    margin-top: 1.5rem;
+}
+
+#chef-res .social-links a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #f8f9fa;
+    margin: 0 0.5rem;
+    transition: all 0.3s ease;
+}
+
+#chef-res .social-links a:hover {
+    transform: translateY(-5px);
+    background-color: var(--primary-color);
+    color: white !important;
+    animation: pulse 1s infinite;
+}
+
+#chef-res .social-links a i {
+    font-size: 1.2rem;
+    transition: all 0.3s ease;
+}
+
+@media (max-width: 768px) {
+    #chef-res .card-img-wrapper {
+        height: 300px;
+    }
+    
+    #chef-res .card-body {
+        padding: 1.5rem;
+    }
+}
+
+/* Special Offers Section */
+#menu-offers {
+    padding: var(--section-padding);
+}
+
+#menu-offers h1 {
+    color: var(--secondary-color);
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 3rem;
+}
+
+#menu-offers .card {
+    margin-bottom: 2rem;
+}
+
+#menu-offers .card-img-top {
+    height: 250px;
+}
+
+/* About Us Section */
+#about-us {
+    background-color: #f8f9fa;
+    padding: var(--section-padding);
+}
+
+#about-us img {
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+#about-us .display-4 {
+    color: var(--secondary-color);
+}
+
+#about-us .text-primary {
+    color: var(--primary-color) !important;
+}
+
+#about-us .fas {
+    color: var(--primary-color);
+}
+
+/* Reservation Section */
+.resr {
+    padding: var(--section-padding);
+}
+
+#reservation-pic {
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.form-control {
+    padding: 0.75rem 1rem;
+    border-radius: 10px;
+    border: 1px solid #dee2e6;
+    transition: all 0.3s ease;
+}
+
+.form-control:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.2rem rgba(230, 126, 34, 0.25);
+}
+
+/* Footer Styles */
+footer {
+    background: linear-gradient(135deg, var(--secondary-color) 0%, #1a252f 100%) !important;
+    padding: 4rem 0 2rem;
+}
+
+footer h5 {
+    color: var(--primary-color);
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+}
+
+footer p {
+    color: #b2bec3;
+    font-size: 0.95rem;
+}
+
+footer .social-links a {
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    line-height: 40px;
+    text-align: center;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    margin: 0 0.5rem;
+    transition: all 0.3s ease;
+}
+
+footer .social-links a:hover {
+    background-color: var(--primary-color);
+    transform: translateY(-3px);
+}
+
+/* Button Styles */
+.btn {
+    padding: 0.75rem 1.5rem;
+    border-radius: 10px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.btn-primary:hover {
+    background-color: #d35400;
+    border-color: #d35400;
+    transform: translateY(-2px);
+    animation: pulse 1s;
+}
+
+.btn-outline-primary {
+    color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.btn-outline-primary:hover {
+    background-color: var(--primary-color);
+    color: white;
+    transform: translateY(-2px);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .carousel {
+        height: 60vh;
+        margin-top: -56px;
+    }
+
+    .carousel-item {
+        height: 60vh;
+    }
+
+    #chef-res h1,
+    #menu-offers h1 {
+        font-size: 2rem;
+    }
+
+    .card-img-top {
+        height: 250px;
+    }
+
+    #about-us img {
+        margin-bottom: 2rem;
+    }
+}
+
+/* Animations */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes fadeInRight {
+    from {
+        opacity: 0;
+        transform: translateX(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes zoomIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes slideInBottom {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+.animate-fadeInUp {
+    animation: fadeInUp 0.6s ease-out;
+}
+
+.animate-fadeInLeft {
+    animation: fadeInLeft 0.6s ease-out;
+}
+
+.animate-fadeInRight {
+    animation: fadeInRight 0.6s ease-out;
+}
+
+.animate-zoomIn {
+    animation: zoomIn 0.6s ease-out;
+}
+
+.animate-slideInBottom {
+    animation: slideInBottom 0.6s ease-out;
+}
+
+.animate-pulse {
+    animation: pulse 2s infinite;
+}
+
+/* Animation Delays */
+.delay-1 {
+    animation-delay: 0.2s;
+}
+
+.delay-2 {
+    animation-delay: 0.4s;
+}
+
+.delay-3 {
+    animation-delay: 0.6s;
+}
+
+/* Enhanced Section Animations */
 .navbar {
-  border-radius: 50px;
+    animation: fadeInDown 0.6s ease-out;
+}
+
+.carousel-caption {
+    animation: fadeInUp 1s ease-out;
+}
+
+#chef-res .card:nth-child(1) {
+    animation-delay: 0.2s;
+}
+
+#chef-res .card:nth-child(2) {
+    animation-delay: 0.4s;
+}
+
+#chef-res .card:nth-child(3) {
+    animation-delay: 0.6s;
+}
+
+#chef-res .social-links a:hover {
+    animation: pulse 1s infinite;
+}
+
+.btn-primary:hover {
+    animation: pulse 1s;
+}
+
+/* Scroll Reveal Animations */
+.reveal {
+    opacity: 0;
+    transition: all 0.8s ease;
+}
+
+.reveal.active {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.reveal-left {
+    transform: translateX(-50px);
+}
+
+.reveal-right {
+    transform: translateX(50px);
+}
+
+.reveal-bottom {
+    transform: translateY(50px);
+}
+
+.reveal-scale {
+    transform: scale(0.9);
+}
+
+/* Enhanced Hover Effects */
+.card {
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+}
+
+.card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+}
+
+.nav-link {
+    transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.nav-link:hover {
+    transform: translateY(-2px);
+}
+
+/* Loading Animation */
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--primary-color);
+    border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #d35400;
 }
 
 #logo-Elchef {
-  transition: transform 0.7s ease-in-out;
+    transition: transform 0.3s ease;
 }
 
 #logo-Elchef:hover {
-  transform: scale(1.1);
-  border-radius: 40px;
-  background: rgb(95, 90, 189);
-  background: linear-gradient(180deg, rgba(95, 90, 189, 1) 0%, rgba(33, 66, 194, 0.8016456582633054) 50%, rgba(0, 212, 255, 1) 100%);
+    transform: scale(1.05);
 }
-
 
 #carouselExample {
   height: 500px;
-
 }
 
 .d-block {
   object-fit: cover;
-}
-
-.navbar-brand img {
-  width: 30%;
-  height: auto;
-}
-
-.card {
-  text-align: center;
-  margin-top: 20px;
-  cursor: pointer;
-  transition: transform 0.5s ease-in-out;
-}
-
-.card:hover {
-  transform: scale(1.05);
-}
-
-.card-img-top {
-  width: 100%;
-  height: auto;
-  border-radius: 5%;
-}
-
-.card {
-  margin: 10px;
-  text-align: center;
-}
-
-#reservation-pic {
-  width: 100%;
-  height: auto;
-  border-radius: 5%;
 }

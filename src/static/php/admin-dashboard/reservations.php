@@ -180,7 +180,7 @@ function formatDateTime($date, $time)
                 <?php endif; ?>
 
                 <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h2>Manage Reservations</h2>
+                    <h2><i class="fas fa-calendar-alt me-3"></i>Manage Reservations</h2>
                     <button type="button" class="btn btn-outline-secondary" onclick="window.location.reload()">
                         <i class="fas fa-sync-alt"></i> Refresh
                     </button>

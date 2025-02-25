@@ -85,6 +85,7 @@ try {
                 <?php if (in_array($order['OrderStatus'], ['Completed', 'Refunded'])): ?>
                   <a href="submit_feedback.php?order_id=<?php echo $order['OrderID']; ?>"
                     class="btn btn-primary btn-sm">Submit Feedback</a>
+                  <a href="reorder.php?order_id=<?php echo $order['OrderID']; ?>" class="btn btn-success btn-sm">Reorder</a>
                 <?php endif; ?>
               </td>
             </tr>

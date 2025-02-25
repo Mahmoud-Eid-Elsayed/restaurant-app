@@ -1,3 +1,43 @@
+SET FOREIGN_KEY_CHECKS = 0;
+
+DELETE FROM orderitem;
+DELETE FROM orderstatushistory;
+DELETE FROM `order`;
+DELETE FROM payment;
+DELETE FROM refund;
+DELETE FROM reservationhistory;
+DELETE FROM reservation;
+DELETE FROM revenue;
+DELETE FROM review;
+DELETE FROM specialoffer;
+DELETE FROM supplierorders;
+DELETE FROM supplier;
+DELETE FROM `table`;
+DELETE FROM inventoryitem;
+DELETE FROM menuitem;
+DELETE FROM menucategory;
+DELETE FROM notification;
+
+-- Reset Auto Increment Values
+ALTER TABLE orderitem AUTO_INCREMENT = 1;
+ALTER TABLE orderstatushistory AUTO_INCREMENT = 1;
+ALTER TABLE `order` AUTO_INCREMENT = 1;
+ALTER TABLE payment AUTO_INCREMENT = 1;
+ALTER TABLE refund AUTO_INCREMENT = 1;
+ALTER TABLE reservationhistory AUTO_INCREMENT = 1;
+ALTER TABLE reservation AUTO_INCREMENT = 1;
+ALTER TABLE revenue AUTO_INCREMENT = 1;
+ALTER TABLE review AUTO_INCREMENT = 1;
+ALTER TABLE specialoffer AUTO_INCREMENT = 1;
+ALTER TABLE supplierorders AUTO_INCREMENT = 1;
+ALTER TABLE supplier AUTO_INCREMENT = 1;
+ALTER TABLE `table` AUTO_INCREMENT = 1;
+ALTER TABLE inventoryitem AUTO_INCREMENT = 1;
+ALTER TABLE menuitem AUTO_INCREMENT = 1;
+ALTER TABLE menucategory AUTO_INCREMENT = 1;
+ALTER TABLE notification AUTO_INCREMENT = 1;
+
+SET FOREIGN_KEY_CHECKS = 1;
 
 --
 -- Database: `restaurant_db`
@@ -25,6 +65,13 @@ CREATE TABLE IF NOT EXISTS `customerstats` (
 --
 
 TRUNCATE TABLE `customerstats`;
+--
+-- Dumping data for table `customerstats`
+--
+
+INSERT INTO `customerstats` (`CustomerID`, `TotalSpent`, `LastOrderDate`, `OrderCount`) VALUES
+(1, 160.00, '2025-02-24 15:43:46', 10);
+
 -- --------------------------------------------------------
 
 --
@@ -53,8 +100,8 @@ TRUNCATE TABLE `inventoryitem`;
 -- Dumping data for table `inventoryitem`
 --
 
-INSERT DELAYED INTO `inventoryitem` (`InventoryItemID`, `ItemName`, `QuantityInStock`, `UnitOfMeasurement`, `ReorderLevel`, `SupplierID`, `LastPurchasedDate`) VALUES
-(9, 'chererer', 60.00, 'kg', 4.00, 10, NULL);
+INSERT INTO `inventoryitem` (`InventoryItemID`, `ItemName`, `QuantityInStock`, `UnitOfMeasurement`, `ReorderLevel`, `SupplierID`, `LastPurchasedDate`) VALUES
+(1, 'chererer', 60.00, 'kg', 4.00, 11, NULL);
 
 -- --------------------------------------------------------
 
@@ -80,9 +127,9 @@ TRUNCATE TABLE `menucategory`;
 -- Dumping data for table `menucategory`
 --
 
-INSERT DELAYED INTO `menucategory` (`CategoryID`, `CategoryName`, `Description`, `ImageURL`) VALUES
+INSERT INTO `menucategory` (`CategoryID`, `CategoryName`, `Description`, `ImageURL`) VALUES
 (1, 'Main Dish', NULL, NULL),
-(2, 'Breakfast', NULL, NULL),
+(2, 'Breakfast', 'update', NULL),
 (3, 'Drink', NULL, NULL),
 (4, 'special offers', 'black Friday offers', NULL);
 
@@ -103,7 +150,7 @@ CREATE TABLE IF NOT EXISTS `menuitem` (
   `Availability` tinyint(1) DEFAULT 1,
   PRIMARY KEY (`ItemID`),
   KEY `CategoryID` (`CategoryID`)
-) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=34 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Truncate table before insert `menuitem`
@@ -114,12 +161,8 @@ TRUNCATE TABLE `menuitem`;
 -- Dumping data for table `menuitem`
 --
 
-INSERT DELAYED INTO `menuitem` (`ItemID`, `ItemName`, `Description`, `Price`, `ImageURL`, `CategoryID`, `Availability`) VALUES
-(1, 'Grilled Chicken', 'Juicy grilled chicken', 22.00, 'grilled-chicken.jpg', 1, 1),
-(2, 'Beef Burger', 'Delicious beef burger', 18.00, 'beef-burger.jpg', 1, 1),
-(3, 'Spaghetti Bolognese', 'Pasta with meat sauce', 15.00, 'spaghetti-bolognese.jpg', 1, 1),
-(4, 'Chicken Alfredo', 'Creamy chicken pasta', 17.00, 'chicken-alfredo.jpg', 1, 1),
-(5, 'Grilled Salmon', 'Fresh grilled salmon', 25.00, 'grilled-salmon.jpg', 1, 1),
+INSERT INTO `menuitem` (`ItemID`, `ItemName`, `Description`, `Price`, `ImageURL`, `CategoryID`, `Availability`) VALUES
+
 
 
 -- --------------------------------------------------------
@@ -142,7 +185,7 @@ CREATE TABLE IF NOT EXISTS `notification` (
   KEY `UserID` (`UserID`),
   KEY `OrderID` (`OrderID`),
   KEY `ReservationID` (`ReservationID`)
-) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=149 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Truncate table before insert `notification`
@@ -153,11 +196,8 @@ TRUNCATE TABLE `notification`;
 -- Dumping data for table `notification`
 --
 
-INSERT DELAYED INTO `notification` (`NotificationID`, `UserID`, `OrderID`, `ReservationID`, `NotificationType`, `Message`, `Timestamp`, `IsRead`) VALUES
-(1, 2, NULL, NULL, '', 'Your order #1 has been placed successfully.', '2025-02-23 13:33:48', 0),
-(2, NULL, NULL, NULL, '', 'New order #1 has been placed by customer ID 2.', '2025-02-23 13:33:48', 0),
-(3, 2, NULL, NULL, '', 'Your order #2 has been placed successfully.', '2025-02-23 13:38:53', 0),
-
+INSERT INTO `notification` (`NotificationID`, `UserID`, `OrderID`, `ReservationID`, `NotificationType`, `Message`, `Timestamp`, `IsRead`) VALUES
+(1, 1, NULL, NULL, '', 'Your order #39 has been placed successfully.', '2025-02-24 12:10:41', 0),
 
 -- --------------------------------------------------------
 
@@ -179,7 +219,7 @@ CREATE TABLE IF NOT EXISTS `order` (
   `RefundDate` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`OrderID`),
   KEY `CustomerID` (`CustomerID`)
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=49 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Truncate table before insert `order`
@@ -190,12 +230,10 @@ TRUNCATE TABLE `order`;
 -- Dumping data for table `order`
 --
 
-INSERT DELAYED INTO `order` (`OrderID`, `CustomerID`, `OrderDate`, `OrderStatus`, `TotalAmount`, `DeliveryAddress`, `Notes`, `LastModified`, `RefundReason`, `RefundDate`) VALUES
-(1, 2, '2025-02-23 13:33:48', 'Pending', 14.00, NULL, NULL, NULL, NULL, NULL),
-(2, 2, '2025-02-23 13:38:53', '', 0.00, NULL, NULL, '2025-02-23 13:40:41', NULL, NULL),
-(3, 2, '2025-02-23 14:15:22', 'Pending', 216.00, NULL, NULL, NULL, NULL, NULL),
-(4, 2, '2025-02-23 14:33:06', 'Pending', 258.00, NULL, NULL, NULL, NULL, NULL),
-(5, 2, '2025-02-23 15:29:32', 'Pending', 50.00, NULL, NULL, NULL, NULL, NULL),
+INSERT INTO `order` (`OrderID`, `CustomerID`, `OrderDate`, `OrderStatus`, `TotalAmount`, `DeliveryAddress`, `Notes`, `LastModified`, `RefundReason`, `RefundDate`) VALUES
+(1, 1, '2025-02-24 12:10:41', 'Completed', 0.00, NULL, NULL, '2025-02-24 12:12:32', NULL, NULL),
+(2, 2, '2025-02-24 12:21:26', 'Completed', 0.00, NULL, NULL, '2025-02-24 13:00:47', NULL, NULL),
+(3, 3, '2025-02-24 12:25:43', 'Completed', 0.00, NULL, NULL, '2025-02-24 12:46:42', NULL, NULL),
 
 
 --
@@ -233,7 +271,7 @@ CREATE TABLE IF NOT EXISTS `orderitem` (
   PRIMARY KEY (`OrderItemID`),
   KEY `OrderID` (`OrderID`),
   KEY `ItemID` (`ItemID`)
-) ENGINE=InnoDB AUTO_INCREMENT=75 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=383 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Truncate table before insert `orderitem`
@@ -244,14 +282,10 @@ TRUNCATE TABLE `orderitem`;
 -- Dumping data for table `orderitem`
 --
 
-INSERT DELAYED INTO `orderitem` (`OrderItemID`, `OrderID`, `ItemID`, `Quantity`, `PriceAtTimeOfOrder`, `Customizations`) VALUES
-(1, 1, 9, 1, 0.00, NULL),
-(20, 2, 9, 2, 0.00, NULL),
-(21, 2, 20, 3, 0.00, NULL),
-(22, 2, 1, 2, 0.00, NULL),
-(23, 2, 7, 5, 0.00, NULL),
-(24, 2, 6, 1, 0.00, NULL),
-(25, 2, 8, 1, 0.00, NULL),
+INSERT INTO `orderitem` (`OrderItemID`, `OrderID`, `ItemID`, `Quantity`, `PriceAtTimeOfOrder`, `Customizations`) VALUES
+(1, 1, 1, 1, 0.00, NULL),
+(2, 2, 2, 1, 0.00, NULL),
+(3, 3, 3, 1, 0.00, NULL),
 
 -- --------------------------------------------------------
 
@@ -270,7 +304,7 @@ CREATE TABLE IF NOT EXISTS `orderstatushistory` (
   `ChangedBy` varchar(50) DEFAULT 'admin',
   PRIMARY KEY (`HistoryID`),
   KEY `OrderID` (`OrderID`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=79 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Truncate table before insert `orderstatushistory`
@@ -281,10 +315,10 @@ TRUNCATE TABLE `orderstatushistory`;
 -- Dumping data for table `orderstatushistory`
 --
 
-INSERT DELAYED INTO `orderstatushistory` (`HistoryID`, `OrderID`, `StatusFrom`, `StatusTo`, `ChangedAt`, `Notes`, `ChangedBy`) VALUES
-(1, 2, 'Pending', '', '2025-02-23 13:40:41', 'Status updated via admin dashboard', 'admin'),
-(2, 2, '', '', '2025-02-23 13:41:06', 'Status updated via admin dashboard', 'admin'),
-(3, 2, '', '', '2025-02-23 13:41:20', 'Status updated via admin dashboard', 'admin');
+INSERT INTO `orderstatushistory` (`HistoryID`, `OrderID`, `StatusFrom`, `StatusTo`, `ChangedAt`, `Notes`, `ChangedBy`) VALUES
+(1, 1, 'Pending', '', '2025-02-24 12:11:36', 'Status updated via admin dashboard', 'admin'),
+(2, 2, '', '', '2025-02-24 12:11:55', 'Status updated via admin dashboard', 'admin'),
+(3, 3, '', '', '2025-02-24 12:12:04', 'Status updated via admin dashboard', 'admin'),
 
 -- --------------------------------------------------------
 
@@ -328,13 +362,23 @@ CREATE TABLE IF NOT EXISTS `refund` (
   `Notes` text DEFAULT NULL,
   PRIMARY KEY (`RefundID`),
   KEY `OrderID` (`OrderID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Truncate table before insert `refund`
 --
 
 TRUNCATE TABLE `refund`;
+--
+-- Dumping data for table `refund`
+--
+
+INSERT INTO `refund` (`RefundID`, `OrderID`, `RefundAmount`, `RefundDate`, `RefundReason`, `Status`, `ProcessedAt`, `Notes`) VALUES
+(1, 42, 0.00, '2025-02-24 12:46:00', 'update', 'Processed', NULL, NULL),
+(2, 43, 0.00, '2025-02-24 13:08:28', 'test refund', 'Processed', NULL, NULL),
+(3, 44, 0.00, '2025-02-24 13:22:12', 'hj', 'Processed', NULL, NULL),
+(4, 46, 0.00, '2025-02-24 13:45:28', 'gh', 'Processed', NULL, NULL);
+
 -- --------------------------------------------------------
 
 --
@@ -359,7 +403,7 @@ CREATE TABLE IF NOT EXISTS `reservation` (
   PRIMARY KEY (`ReservationID`),
   KEY `CustomerID` (`CustomerID`),
   KEY `TableID` (`TableID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Truncate table before insert `reservation`
@@ -451,13 +495,21 @@ CREATE TABLE IF NOT EXISTS `review` (
   PRIMARY KEY (`ReviewID`),
   KEY `CustomerID` (`CustomerID`),
   KEY `OrderID` (`OrderID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Truncate table before insert `review`
 --
 
 TRUNCATE TABLE `review`;
+--
+-- Dumping data for table `review`
+--
+
+INSERT INTO `review` (`ReviewID`, `CustomerID`, `OrderID`, `Rating`, `Comment`, `ReviewDate`, `IsPublished`) VALUES
+(1, 2, 41, 5, 'good', '2025-02-24 12:53:11', 1),
+(2, 2, 43, 4, 'gggggggggg', '2025-02-24 13:01:49', 1);
+
 -- --------------------------------------------------------
 
 --
@@ -496,7 +548,7 @@ CREATE TABLE IF NOT EXISTS `supplier` (
   `Phone` varchar(20) DEFAULT NULL,
   `Address` text DEFAULT NULL,
   PRIMARY KEY (`SupplierID`)
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Truncate table before insert `supplier`
@@ -507,9 +559,10 @@ TRUNCATE TABLE `supplier`;
 -- Dumping data for table `supplier`
 --
 
-INSERT DELAYED INTO `supplier` (`SupplierID`, `SupplierName`, `ContactPerson`, `Email`, `Phone`, `Address`) VALUES
-(1, 'supplier1', '456456', 'supplier1@gm.com', '0123546456', '10 d ST'),
-(2, 'supplier2', 'dfgdfg', 'supplier2@gm.com', '01235689654', '256 DG ST');
+INSERT INTO `supplier` (`SupplierID`, `SupplierName`, `ContactPerson`, `Email`, `Phone`, `Address`) VALUES
+(10, 'hgjghjghj', '456456', 'fghfgh@gm.com', '0123546456', 'jhkhjkhjk'),
+(11, 'dgdfg', 'dfgdfg', 'dfgdfg@gm.com', '5555555555', 'gjghjghj'),
+(12, 'df', 'df', 'dfdf@dd.com', 'df', 'dfdf');
 
 -- --------------------------------------------------------
 
@@ -526,7 +579,7 @@ CREATE TABLE IF NOT EXISTS `supplierorders` (
   `Status` enum('Pending','Shipped','Delivered') DEFAULT 'Pending',
   PRIMARY KEY (`OrderID`),
   KEY `SupplierID` (`SupplierID`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Truncate table before insert `supplierorders`
@@ -537,8 +590,9 @@ TRUNCATE TABLE `supplierorders`;
 -- Dumping data for table `supplierorders`
 --
 
-INSERT DELAYED INTO `supplierorders` (`OrderID`, `SupplierID`, `OrderDate`, `TotalAmount`, `Status`) VALUES
-(4, 10, '2025-02-21', 5.00, 'Pending');
+INSERT INTO `supplierorders` (`OrderID`, `SupplierID`, `OrderDate`, `TotalAmount`, `Status`) VALUES
+(4, 10, '2025-02-21', 5.00, 'Pending'),
+(5, 11, '2025-03-05', 99.00, 'Shipped');
 
 -- --------------------------------------------------------
 
@@ -598,9 +652,9 @@ TRUNCATE TABLE `user`;
 -- Dumping data for table `user`
 --
 
-INSERT DELAYED INTO `user` (`UserID`, `Username`, `Password`, `Role`, `FirstName`, `LastName`, `Email`, `PhoneNumber`, `Address`, `ProfilePictureURL`, `RegistrationDate`, `LastLoginDate`, `LastModified`, `Status`, `LastLogin`) VALUES
-(1, 'admin', '$2y$10$Z8zqorF5V1wP8B4zaW4yqOeTk3RKDmAtOc.MbBgDdQZj.WYDaFgrS', 'Staff', 'Mado', 'Kira', 'admin@example.com', '01236598756', '123 Ramadan St', 'uploads/profile_pictures/67bae207e4def_Discord_SrankSungJinwoo.png', '2025-02-19 18:08:57', NULL, '2025-02-23 17:08:25', 'active', '2025-02-23 17:08:25'),
-(2, 'zaid', '$2y$10$NLQ7BM9p6ku0KozeWtecouZ/RHpvmdOSZy58YAi70QBdk9agOxkAi', 'Customer', 'zaid', 'ammer', 'zaid55@gmail.com', '01234567895', '10 ramadan ST', '../../../assets/images/users/uploads/user_2.jfif', '2025-02-23 07:49:30', '2025-02-23 07:49:30', '2025-02-23 16:11:53', 'active', '2025-02-23 16:11:53');
+INSERT INTO `user` (`UserID`, `Username`, `Password`, `Role`, `FirstName`, `LastName`, `Email`, `PhoneNumber`, `Address`, `ProfilePictureURL`, `RegistrationDate`, `LastLoginDate`, `LastModified`, `Status`, `LastLogin`) VALUES
+(1, 'admin', '$2y$10$Z8zqorF5V1wP8B4zaW4yqOeTk3RKDmAtOc.MbBgDdQZj.WYDaFgrS', 'Staff', 'Mado', 'Kira', 'admin@example.com', '01236598756', '123 Ramadan St', 'uploads/profile_pictures/67bae207e4def_Discord_SrankSungJinwoo.png', '2025-02-19 18:08:57', NULL, '2025-02-25 14:07:49', 'active', '2025-02-25 14:07:49'),
+(2, 'zaid', '$2y$10$NLQ7BM9p6ku0KozeWtecouZ/RHpvmdOSZy58YAi70QBdk9agOxkAi', 'Customer', 'zaid', 'ammer', 'robite1768@gmail.com', '01234567895', '10 ramadan ST', '../../../assets/images/users/uploads/user_2.jfif', '2025-02-23 07:49:30', '2025-02-23 07:49:30', '2025-02-23 16:11:53', 'active', '2025-02-23 16:11:53');
 
 --
 -- Triggers `user`
@@ -699,4 +753,5 @@ ALTER TABLE `review`
 --
 ALTER TABLE `supplierorders`
   ADD CONSTRAINT `supplierorders_ibfk_1` FOREIGN KEY (`SupplierID`) REFERENCES `supplier` (`SupplierID`) ON DELETE CASCADE;
+SET FOREIGN_KEY_CHECKS=1;
 COMMIT;

@@ -14,7 +14,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
   // Handle image upload
   if (isset($_FILES['image']) && $_FILES['image']['error'] == 0) {
-    $target_dir = "../../uploads/Menu-item"; // Ensure this directory exists and is writable
+    $target_dir = "../../uploads/Menu-item/"; // Ensure this directory exists and is writable
     $target_file = $target_dir . basename($_FILES["image"]["name"]);
     $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
 
@@ -26,7 +26,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // Allow certain file formats
         if ($imageFileType == "jpg" || $imageFileType == "png" || $imageFileType == "jpeg" || $imageFileType == "gif") {
           if (move_uploaded_file($_FILES["image"]["tmp_name"], $target_file)) {
-            $imageURL = "uploads/" . basename($_FILES["image"]["name"]);
+            $imageURL = "../../uploads/Menu-item/" . basename($_FILES["image"]["name"]);
           } else {
             echo "Sorry, there was an error uploading your file.";
             exit();
@@ -79,6 +79,30 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 <body>
   <div class="wrapper">
+<!-- Sidebar -->
+<nav id="sidebar">
+            <div class="sidebar-header">
+                <h3>ELCHEF Admin</h3>
+            </div>
+            <ul class="list-unstyled components">
+                <li><a href="index.php"><i class="fas fa-home"></i> Dashboard</a></li>
+                <li><a href="users.php"><i class="fas fa-users"></i> Users</a></li>
+                <li><a href="menu_categories.php"><i class="fas fa-list"></i> Categories</a></li>
+                <li><a href="menu_items.php"><i class="fas fa-utensils"></i> Menu Items</a></li>
+                <li class="active"><a href="orders.php"><i class="fas fa-shopping-cart"></i> Orders</a></li>
+                <li><a href="reservations.php"><i class="fas fa-calendar-alt"></i> Reservations</a></li>
+                <li><a href="inventory.php"><i class="fas fa-box"></i> Inventory</a></li>
+                <li><a href="suppliers.php"><i class="fa-solid fa-truck"></i></i> Suppliers</a></li>
+                <li><a href="admin_notifications.php"><i class="fa-solid fa-bell"></i> Notifications</a></li>
+            </ul>
+        </nav>
+
+        <!-- Page Content -->
+        <div id="content">
+            <button type="button" id="sidebarToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+            
     <div id="content">
       <div class="header"></div>
       <div class="main-content">

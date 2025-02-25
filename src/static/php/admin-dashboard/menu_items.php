@@ -101,6 +101,7 @@ try {
                                     <th>Category</th>
                                     <th>Price</th>
                                     <th>Description</th>
+                                    <th>Item Pic</th>
                                     <th>Availability</th>
                                     <th>Orders</th>
                                     <th>Actions</th>
@@ -114,6 +115,14 @@ try {
                                         <td><?php echo htmlspecialchars($item['CategoryName']); ?></td>
                                         <td>$<?php echo number_format($item['Price'], 2); ?></td>
                                         <td><?php echo htmlspecialchars($item['Description'] ?? 'No description'); ?></td>
+                                        <td>
+                                            <?php if (!empty($item['ImageURL'])): ?>
+                                                <img src="<?php echo htmlspecialchars($item['ImageURL']); ?>" width="50" height="50"
+                                                    alt="Item">
+                                            <?php else: ?>
+                                                <span>No Image</span>
+                                            <?php endif; ?>
+                                        </td>
                                         <td>
                                             <span
                                                 class="badge <?php echo $item['Availability'] ? 'bg-success' : 'bg-danger'; ?>">

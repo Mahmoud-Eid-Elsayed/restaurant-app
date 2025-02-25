@@ -144,7 +144,7 @@ while ($row = $categoryResult->fetch(PDO::FETCH_ASSOC)) {
                     echo "
                     <div class='col'>
                         <div class='card'>
-                            <img src='" . htmlspecialchars($item['ImageURL']) . "' class='card-img-top' alt='" . htmlspecialchars($item['ItemName']) . "'>
+                            <img src='../../../../src/static/uploads/Menu-item/" . htmlspecialchars($item['ImageURL']) . "' class='card-img-top' alt='" . htmlspecialchars($item['ItemName']) . "'>
                             <div class='card-body'>
                                 <h5 class='card-title'>" . htmlspecialchars($item['ItemName']) . "</h5>
                                 <p class='price'>\$" . htmlspecialchars($item['Price']) . "</p>

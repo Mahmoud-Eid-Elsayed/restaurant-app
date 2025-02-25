@@ -1,7 +1,7 @@
 <?php
 require_once '../../connection/db.php';
 
-// fetch all categories
+// Fetch all categories
 $stmt = $conn->query("SELECT * FROM MenuCategory");
 $categories = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -12,14 +12,51 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   $categoryID = $_POST['categoryID'];
   $availability = isset($_POST['availability']) ? 1 : 0;
 
+  // Handle image upload
+  if (isset($_FILES['image']) && $_FILES['image']['error'] == 0) {
+    $target_dir = "../../uploads/Menu-item"; // Ensure this directory exists and is writable
+    $target_file = $target_dir . basename($_FILES["image"]["name"]);
+    $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
+
+    // Check if image file is a actual image or fake image
+    $check = getimagesize($_FILES["image"]["tmp_name"]);
+    if ($check !== false) {
+      // Check file size (5MB max)
+      if ($_FILES["image"]["size"] <= 5000000) {
+        // Allow certain file formats
+        if ($imageFileType == "jpg" || $imageFileType == "png" || $imageFileType == "jpeg" || $imageFileType == "gif") {
+          if (move_uploaded_file($_FILES["image"]["tmp_name"], $target_file)) {
+            $imageURL = "uploads/" . basename($_FILES["image"]["name"]);
+          } else {
+            echo "Sorry, there was an error uploading your file.";
+            exit();
+          }
+        } else {
+          echo "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
+          exit();
+        }
+      } else {
+        echo "Sorry, your file is too large.";
+        exit();
+      }
+    } else {
+      echo "File is not an image.";
+      exit();
+    }
+  } else {
+    $imageURL = null; // No image uploaded
+  }
+
+  // Insert the new menu item into the database
   $stmt = $conn->prepare("
-        INSERT INTO MenuItem (ItemName, Description, Price, CategoryID, Availability)
-        VALUES (:itemName, :description, :price, :categoryID, :availability)
+        INSERT INTO MenuItem (ItemName, Description, Price, ImageURL, CategoryID, Availability)
+        VALUES (:itemName, :description, :price, :imageURL, :categoryID, :availability)
     ");
   $stmt->execute([
     ':itemName' => $itemName,
     ':description' => $description,
     ':price' => $price,
+    ':imageURL' => $imageURL,
     ':categoryID' => $categoryID,
     ':availability' => $availability
   ]);
@@ -42,14 +79,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 <body>
   <div class="wrapper">
-
     <div id="content">
-      <div class="header">
-
-      </div>
+      <div class="header"></div>
       <div class="main-content">
         <h2>Add Menu Item</h2>
-        <form method="POST">
+        <form method="POST" enctype="multipart/form-data">
           <div class="mb-3">
             <label for="itemName" class="form-label">Item Name</label>
             <input type="text" class="form-control" id="itemName" name="itemName" required>
@@ -69,6 +103,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <option value="<?php echo $category['CategoryID']; ?>"><?php echo $category['CategoryName']; ?></option>
               <?php endforeach; ?>
             </select>
+          </div>
+          <div class="mb-3">
+            <label for="image" class="form-label">Image</label>
+            <input type="file" class="form-control" id="image" name="image" accept="image/*">
           </div>
           <div class="mb-3 form-check">
             <input type="checkbox" class="form-check-input" id="availability" name="availability">

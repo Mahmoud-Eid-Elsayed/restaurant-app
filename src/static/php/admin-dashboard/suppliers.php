@@ -264,7 +264,7 @@ foreach ($suppliers as $supplier) {
 
       .stats-card {
         margin-bottom: 1rem;
-    }
+      }
 
       .action-card {
         margin-bottom: 1.5rem;
@@ -274,31 +274,31 @@ foreach ($suppliers as $supplier) {
 </head>
 
 <body>
-    <div class="wrapper">
-      <!-- Sidebar -->
-      <nav id="sidebar">
-        <div class="sidebar-header">
-          <h3>ELCHEF Admin</h3>
-        </div>
-        <ul class="list-unstyled components">
-          <li><a href="index.php"><i class="fas fa-home"></i> Dashboard</a></li>
-          <li><a href="users.php"><i class="fas fa-users"></i> Users</a></li>
-          <li><a href="menu_categories.php"><i class="fas fa-list"></i> Categories</a></li>
-          <li><a href="menu_items.php"><i class="fas fa-utensils"></i> Menu Items</a></li>
-          <li class="active"><a href="orders.php"><i class="fas fa-shopping-cart"></i> Orders</a></li>
-          <li><a href="reservations.php"><i class="fas fa-calendar-alt"></i> Reservations</a></li>
-          <li><a href="inventory.php"><i class="fas fa-box"></i> Inventory</a></li>
-          <li><a href="suppliers.php"><i class="fa-solid fa-truck"></i></i> Suppliers</a></li>
-          <li><a href="admin_notifications.php"><i class="fa-solid fa-bell"></i> Notifications</a>
+  <div class="wrapper">
+    <!-- Sidebar -->
+    <nav id="sidebar">
+      <div class="sidebar-header">
+        <h3>ELCHEF Admin</h3>
+      </div>
+      <ul class="list-unstyled components">
+        <li><a href="index.php"><i class="fas fa-home"></i> Dashboard</a></li>
+        <li><a href="users.php"><i class="fas fa-users"></i> Users</a></li>
+        <li><a href="menu_categories.php"><i class="fas fa-list"></i> Categories</a></li>
+        <li><a href="menu_items.php"><i class="fas fa-utensils"></i> Menu Items</a></li>
+        <li><a href="orders.php"><i class="fas fa-shopping-cart"></i> Orders</a></li>
+        <li><a href="reservations.php"><i class="fas fa-calendar-alt"></i> Reservations</a></li>
+        <li><a href="inventory.php"><i class="fas fa-box"></i> Inventory</a></li>
+        <li class="active"><a href="suppliers.php"><i class="fa-solid fa-truck"></i></i> Suppliers</a></li>
+        <li><a href="admin_notifications.php"><i class="fa-solid fa-bell"></i> Notifications</a>
 
-        </ul>
-      </nav>
+      </ul>
+    </nav>
 
-      <!-- Page Content -->
-      <div id="content">
+    <!-- Page Content -->
+    <div id="content">
       <button type="button" id="sidebarToggle" class="btn">
-          <i class="fas fa-bars"></i>
-        </button>
+        <i class="fas fa-bars"></i>
+      </button>
 
       <div class="container-fluid">
         <!-- Page Header -->
@@ -314,7 +314,7 @@ foreach ($suppliers as $supplier) {
               </button>
             </div>
           </div>
-                </div>
+        </div>
 
         <!-- Statistics Row -->
         <div class="row mb-4">
@@ -333,7 +333,7 @@ foreach ($suppliers as $supplier) {
                 <i class="fas fa-shopping-cart"></i>
               </div>
               <div class="number text-success">
-                <?php 
+                <?php
                 $totalOrders = 0;
                 foreach ($supplierOrders as $orders) {
                   $totalOrders += count($orders);
@@ -342,15 +342,15 @@ foreach ($suppliers as $supplier) {
                 ?>
               </div>
               <div class="label">Total Orders</div>
-                </div>
-                </div>
+            </div>
+          </div>
           <div class="col-md-4">
             <div class="stats-card">
               <div class="icon bg-warning bg-opacity-10 text-warning">
                 <i class="fas fa-clock"></i>
-                </div>
+              </div>
               <div class="number text-warning">
-                <?php 
+                <?php
                 $pendingOrders = 0;
                 foreach ($supplierOrders as $orders) {
                   foreach ($orders as $order) {
@@ -361,11 +361,11 @@ foreach ($suppliers as $supplier) {
                 }
                 echo $pendingOrders;
                 ?>
-                </div>
+              </div>
               <div class="label">Pending Orders</div>
             </div>
-            </div>
           </div>
+        </div>
 
         <!-- Suppliers List -->
         <div class="action-card">
@@ -374,8 +374,8 @@ foreach ($suppliers as $supplier) {
             <div class="form-group mb-0">
               <input type="text" class="form-control" id="supplierSearch" placeholder="Search suppliers...">
             </div>
-            </div>
-            <div class="card-body">
+          </div>
+          <div class="card-body">
             <div class="table-responsive">
               <table class="table table-hover">
                 <thead>
@@ -417,12 +417,12 @@ foreach ($suppliers as $supplier) {
                       <td><?php echo htmlspecialchars($supplier['Address']); ?></td>
                       <td>
                         <div class="btn-group">
-                          <button type="button" class="btn btn-sm btn-outline-primary btn-action" 
-                                  onclick="editSupplier(<?php echo $supplier['SupplierID']; ?>)">
+                          <button type="button" class="btn btn-sm btn-outline-primary btn-action"
+                            onclick="editSupplier(<?php echo $supplier['SupplierID']; ?>)">
                             <i class="fas fa-edit"></i>
                           </button>
                           <button type="button" class="btn btn-sm btn-outline-danger btn-action"
-                                  onclick="deleteSupplier(<?php echo $supplier['SupplierID']; ?>, '<?php echo htmlspecialchars($supplier['SupplierName']); ?>')">
+                            onclick="deleteSupplier(<?php echo $supplier['SupplierID']; ?>, '<?php echo htmlspecialchars($supplier['SupplierName']); ?>')">
                             <i class="fas fa-trash"></i>
                           </button>
                         </div>
@@ -432,56 +432,56 @@ foreach ($suppliers as $supplier) {
                 </tbody>
               </table>
             </div>
-            </div>
           </div>
+        </div>
 
         <!-- Supplier Orders -->
         <div class="action-card">
-            <div class="card-header">
+          <div class="card-header">
             <h5><i class="fas fa-shopping-cart me-2"></i>Supplier Orders</h5>
-            </div>
-            <div class="card-body">
-              <!-- Add Order Form -->
+          </div>
+          <div class="card-body">
+            <!-- Add Order Form -->
             <form method="POST" class="order-form mb-4">
               <div class="row g-3">
-                  <div class="col-md-3">
+                <div class="col-md-3">
                   <label class="form-label">Supplier</label>
                   <select class="form-select" name="supplier_id" required>
-                      <?php foreach ($suppliers as $supplier): ?>
-                        <option value="<?php echo $supplier['SupplierID']; ?>">
-                          <?php echo htmlspecialchars($supplier['SupplierName']); ?>
-                        </option>
-                      <?php endforeach; ?>
-                    </select>
-                  </div>
+                    <?php foreach ($suppliers as $supplier): ?>
+                      <option value="<?php echo $supplier['SupplierID']; ?>">
+                        <?php echo htmlspecialchars($supplier['SupplierName']); ?>
+                      </option>
+                    <?php endforeach; ?>
+                  </select>
+                </div>
                 <div class="col-md-3">
                   <label class="form-label">Order Date</label>
                   <input type="date" class="form-control" name="order_date" required>
-                  </div>
-                  <div class="col-md-2">
+                </div>
+                <div class="col-md-2">
                   <label class="form-label">Total Amount</label>
                   <div class="input-group">
                     <span class="input-group-text">$</span>
                     <input type="number" step="0.01" class="form-control" name="total_amount" required>
                   </div>
-                  </div>
-                  <div class="col-md-2">
+                </div>
+                <div class="col-md-2">
                   <label class="form-label">Status</label>
                   <select class="form-select" name="status" required>
-                      <option value="Pending">Pending</option>
-                      <option value="Shipped">Shipped</option>
-                      <option value="Delivered">Delivered</option>
-                    </select>
-                  </div>
+                    <option value="Pending">Pending</option>
+                    <option value="Shipped">Shipped</option>
+                    <option value="Delivered">Delivered</option>
+                  </select>
+                </div>
                 <div class="col-md-2 d-flex align-items-end">
                   <button type="submit" name="add_order" class="btn btn-primary w-100">
                     <i class="fas fa-plus me-2"></i>Add Order
                   </button>
-                  </div>
                 </div>
-              </form>
+              </div>
+            </form>
 
-              <!-- Orders Table -->
+            <!-- Orders Table -->
             <div class="table-responsive">
               <table class="table table-hover">
                 <thead>
@@ -500,7 +500,7 @@ foreach ($suppliers as $supplier) {
                       <tr>
                         <td>#<?php echo htmlspecialchars($order['OrderID']); ?></td>
                         <td>
-                          <?php 
+                          <?php
                           $supplierName = '';
                           foreach ($suppliers as $supplier) {
                             if ($supplier['SupplierID'] == $supplierID) {
@@ -521,11 +521,11 @@ foreach ($suppliers as $supplier) {
                         <td>
                           <div class="btn-group">
                             <button type="button" class="btn btn-sm btn-outline-primary btn-action"
-                                    onclick="editOrder(<?php echo $order['OrderID']; ?>)">
+                              onclick="editOrder(<?php echo $order['OrderID']; ?>)">
                               <i class="fas fa-edit"></i>
                             </button>
                             <button type="button" class="btn btn-sm btn-outline-success btn-action"
-                                    onclick="updateStatus(<?php echo $order['OrderID']; ?>)">
+                              onclick="updateStatus(<?php echo $order['OrderID']; ?>)">
                               <i class="fas fa-sync-alt"></i>
                             </button>
                           </div>
@@ -585,15 +585,15 @@ foreach ($suppliers as $supplier) {
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
   <script>
     // Toggle sidebar
-    document.getElementById('sidebarToggle').addEventListener('click', function() {
+    document.getElementById('sidebarToggle').addEventListener('click', function () {
       document.getElementById('sidebar').classList.toggle('active');
     });
 
     // Search functionality
-    document.getElementById('supplierSearch').addEventListener('keyup', function() {
+    document.getElementById('supplierSearch').addEventListener('keyup', function () {
       const searchText = this.value.toLowerCase();
       const tableRows = document.querySelectorAll('tbody tr');
-      
+
       tableRows.forEach(row => {
         const text = row.textContent.toLowerCase();
         row.style.display = text.includes(searchText) ? '' : 'none';
@@ -624,7 +624,7 @@ foreach ($suppliers as $supplier) {
     }
 
     // Auto-hide alerts after 5 seconds
-    setTimeout(function() {
+    setTimeout(function () {
       const alerts = document.querySelectorAll('.alert');
       alerts.forEach(alert => {
         const bsAlert = new bootstrap.Alert(alert);

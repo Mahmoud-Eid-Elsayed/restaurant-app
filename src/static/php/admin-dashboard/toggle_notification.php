@@ -1,36 +1,28 @@
 <?php
-error_reporting(E_ALL); // Report all PHP errors
-ini_set('display_errors', 1); // Display errors to the browser
+session_start();
+require_once __DIR__ . '/../../connection/db.php';
 
-require_once '../../static/connection/db.php'; // Adjust path if necessary
+if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !isset($_POST['id'])) {
+  echo json_encode(['error' => 'Invalid request']);
+  exit;
+}
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['notification_id'])) {
-  $notification_id = intval($_POST['notification_id']);
+$notificationID = intval($_POST['id']);
+$currentStatus = isset($_POST['status']) ? intval($_POST['status']) : 0;
+$newStatus = $currentStatus ? 0 : 1; // Toggle the status
 
-  try {
-    // Fetch the current status of the notification
-    $query = "SELECT IsRead FROM Notification WHERE NotificationID = ?";
-    $stmt = $conn->prepare($query);
-    $stmt->execute([$notification_id]);
-    $row = $stmt->fetch();
+try {
+  // Update the notification status
+  $query = "UPDATE Notification SET IsRead = ? WHERE NotificationID = ? AND UserID IS NULL";
+  $stmt = $conn->prepare($query);
+  $stmt->execute([$newStatus, $notificationID]);
 
-    if ($row) {
-      $new_status = $row['IsRead'] ? 0 : 1; // Toggle status
-
-      // Update the notification status
-      $update_query = "UPDATE Notification SET IsRead = ? WHERE NotificationID = ?";
-      $update_stmt = $conn->prepare($update_query);
-      $update_stmt->execute([$new_status, $notification_id]);
-
-      // Return a JSON response
-      echo json_encode(["success" => true, "new_status" => $new_status]);
-    } else {
-      echo json_encode(["success" => false, "error" => "Notification not found"]);
-    }
-  } catch (PDOException $e) {
-    echo json_encode(["success" => false, "error" => "Database error: " . $e->getMessage()]);
+  if ($stmt->rowCount() > 0) {
+    echo json_encode(['success' => true, 'newStatus' => $newStatus]);
+  } else {
+    echo json_encode(['error' => 'No rows affected']);
   }
-} else {
-  echo json_encode(["success" => false, "error" => "Invalid request"]);
+} catch (PDOException $e) {
+  echo json_encode(['error' => $e->getMessage()]);
 }
 ?>

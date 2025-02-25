@@ -1,7 +1,6 @@
 <?php
 session_start();
 require_once __DIR__ . '/../../connection/db.php';
-require '../includes/navbar.php';
 
 $cart_count = isset($_SESSION['cart']) ? count($_SESSION['cart']) : 0;
 $selectedCategory = isset($_GET['category']) ? $_GET['category'] : 'all';
@@ -22,163 +21,410 @@ while ($row = $categoryResult->fetch(PDO::FETCH_ASSOC)) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Restaurant Menu</title>
+    <title>ELCHEF - Restaurant Menu</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        body {
-            background-color: #ECF0F1;
+        :root {
+            --primary-color: #e67e22;
+            --secondary-color: #2c3e50;
+            --accent-color: #f39c12;
+            --text-dark: #2d3436;
+            --text-light: #636e72;
+            --white: #ffffff;
         }
 
-        .navbar1 {
-            background-color: #2C3E50;
-            padding: 15px;
-            border-radius: 10px;
-            z-index: 1000;
-            text-align: center;
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8f9fa;
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        .menu-header {
+            background: linear-gradient(135deg, var(--secondary-color) 0%, #1a252f 100%);
+            padding: 4rem 0 6rem;
+            margin-bottom: -4rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .menu-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('../../../assets/images/pattern.png');
+            opacity: 0.1;
+        }
+
+        .menu-header h1 {
+            color: var(--white);
+            font-weight: 700;
+            margin-bottom: 1rem;
+            position: relative;
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        .menu-header p {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto;
+            animation: fadeInUp 0.6s ease-out 0.2s both;
+        }
+
+        .category-nav {
+            background-color: var(--white);
+            padding: 1rem 0;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
             position: sticky;
             top: 80px;
+            z-index: 1000;
+            margin: 0 auto 2rem;
+            max-width: 90%;
+            animation: slideInBottom 0.6s ease-out;
         }
 
-        .navbar1 a {
-            color: white;
-            font-weight: bold;
-            margin-right: 35px;
+        .category-nav a {
+            color: var(--text-dark);
             text-decoration: none;
+            padding: 0.5rem 1.5rem;
+            border-radius: 25px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            margin: 0.5rem;
         }
 
-        .navbar1 a:hover {
-            color: #E74C3C;
+        .category-nav a:hover,
+        .category-nav a.active {
+            background-color: var(--primary-color);
+            color: var(--white);
+            transform: translateY(-2px);
         }
 
-        .card {
+        .category-nav a i {
+            margin-right: 8px;
+            font-size: 1.1rem;
+        }
+
+        .menu-card {
             border: none;
             border-radius: 15px;
-            transition: transform 0.3s, box-shadow 0.3s;
-            background: white;
-            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            transition: all 0.3s ease;
+            background: var(--white);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            height: 100%;
+            opacity: 0;
+            animation: fadeInUp 0.6s ease-out forwards;
         }
 
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.2);
+        .menu-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
         }
 
-        .card-img-top {
+        .menu-card img {
             height: 220px;
             object-fit: cover;
+            transition: transform 0.5s ease;
         }
 
-        .price {
-            font-size: 1.1rem;
-            color: #E74C3C;
-            font-weight: bold;
+        .menu-card:hover img {
+            transform: scale(1.1);
         }
 
-        .btn-add {
-            background-color: #27AE60;
-            color: white;
-            font-weight: bold;
+        .menu-card .card-body {
+            padding: 1.5rem;
+        }
+
+        .menu-card .card-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-dark);
+        }
+
+        .menu-card .price {
+            font-size: 1.25rem;
+            color: var(--primary-color);
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .btn-add-cart {
+            background-color: var(--primary-color);
+            color: var(--white);
+            border: none;
+            padding: 0.75rem 1.5rem;
             border-radius: 10px;
-            transition: background 0.3s;
-        }
-
-        .btn-add:hover {
-            background-color: #219150;
-        }
-
-        .pagination {
+            font-weight: 500;
+            transition: all 0.3s ease;
+            width: 100%;
+            display: flex;
+            align-items: center;
             justify-content: center;
-            margin-top: 20px;
+            gap: 8px;
         }
 
-        .pagination a {
-            margin: 0 5px;
-            text-decoration: none;
-            color: #2C3E50;
+        .btn-add-cart:hover {
+            background-color: #d35400;
+            transform: translateY(-2px);
         }
 
-        .badge {
-            position: absolute;
-            top: -5px;
-            right: -5px;
-            background: red;
-            color: white;
-            font-size: 12px;
-            border-radius: 50%;
-            padding: 3px 6px;
+        .cart-status {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background-color: var(--primary-color);
+            color: var(--white);
+            padding: 1rem 1.5rem;
+            border-radius: 50px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            z-index: 1001;
+            animation: fadeInUp 0.6s ease-out;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            min-width: 120px;
         }
 
-        .pagination a.active {
-            font-weight: bold;
-            color: #E74C3C;
+        .cart-status:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+            background-color: #d35400;
+        }
+
+        .cart-count {
+            background-color: var(--white);
+            color: var(--primary-color);
+            padding: 0.25rem 0.5rem;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            min-width: 24px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .cart-status:hover .cart-count {
+            background-color: var(--white);
+            color: #d35400;
+        }
+
+        .cart-status i {
+            font-size: 1.2rem;
+        }
+
+        .cart-label {
+            font-weight: 500;
+            margin-right: 5px;
+        }
+
+        @keyframes cartBounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        .cart-status.updating {
+            animation: cartBounce 0.5s ease;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideInBottom {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .menu-section {
+            padding: 2rem 0;
+        }
+
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 2rem;
+            padding: 2rem 0;
+        }
+
+        @media (max-width: 768px) {
+            .category-nav {
+                overflow-x: auto;
+                white-space: nowrap;
+                padding: 0.5rem;
+            }
+
+            .menu-header {
+                padding: 3rem 0 5rem;
+            }
+
+            .menu-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+                gap: 1.5rem;
+            }
+
+            .cart-status {
+                bottom: 20px;
+                right: 20px;
+                padding: 0.8rem 1.2rem;
+            }
         }
     </style>
 </head>
 
 <body>
-    <section class="navbar1 navbar-expand-lg py-3 position-sticky d-flex">
+    <?php require '../includes/navbar.php'; ?>
+
+    <div class="menu-header text-center">
         <div class="container">
-            <a class="navbar-brand text-white" href="?category=all">🍽 Restaurant Menu</a>
-            <?php foreach ($categories as $categoryID => $categoryName) { ?>
-                <a href="?category=<?= urlencode($categoryID) ?>">🍛 <?= htmlspecialchars($categoryName) ?></a>
-            <?php } ?>
-        </div>
-    </section>
-
-    <div class="container mt-5">
-        <h2>Restaurant Menu</h2>
-        <div id="cart-status">🛒 Items in Cart: <span id="cart-count"><?= $cart_count; ?></span></div>
-        <div class="row row-cols-1 row-cols-md-4 g-4">
-            <?php
-            foreach ($categories as $categoryID => $categoryName) {
-                if ($selectedCategory !== 'all' && $selectedCategory != $categoryID) {
-                    continue;
-                }
-
-                $stmt = $conn->prepare("SELECT ItemID, ItemName, Price, ImageURL FROM MenuItem WHERE CategoryID = ? AND Availability = 1");
-                $stmt->execute([$categoryID]);
-                $result = $stmt;
-
-                while ($item = $result->fetch()) {
-                    echo "
-                    <div class='col'>
-                        <div class='card'>
-                            <img src='" . htmlspecialchars($item['ImageURL']) . "' class='card-img-top' alt='" . htmlspecialchars($item['ItemName']) . "'>
-                            <div class='card-body'>
-                                <h5 class='card-title'>" . htmlspecialchars($item['ItemName']) . "</h5>
-                                <p class='price'>\$" . htmlspecialchars($item['Price']) . "</p>
-                                <button class='btn btn-add w-100 add-to-cart' data-id='" . htmlspecialchars($item['ItemID']) . "'>
-                                    <i class='bi bi-cart-plus'></i> Add to Cart
-                                </button>
-                            </div>
-                        </div>
-                    </div>";
-                }
-                $stmt->closeCursor();
-            }
-            ?>
+            <h1 class="display-4">Our Menu</h1>
+            <p class="lead">Experience culinary excellence with our carefully crafted dishes</p>
         </div>
     </div>
 
+    <div class="category-nav text-center">
+        <div class="container">
+            <a href="?category=all" class="<?= $selectedCategory === 'all' ? 'active' : '' ?>">
+                <i class="fas fa-utensils"></i> All Menu
+            </a>
+            <?php foreach ($categories as $categoryID => $categoryName) { ?>
+                <a href="?category=<?= urlencode($categoryID) ?>" 
+                   class="<?= $selectedCategory == $categoryID ? 'active' : '' ?>">
+                    <i class="fas fa-<?= $categoryID == 1 ? 'drumstick-bite' : 
+                                    ($categoryID == 2 ? 'fish' : 
+                                    ($categoryID == 3 ? 'ice-cream' : 
+                                    ($categoryID == 4 ? 'glass-martini-alt' : 'utensils'))) ?>"></i>
+                    <?= htmlspecialchars($categoryName) ?>
+                </a>
+            <?php } ?>
+        </div>
+    </div>
+
+    <div class="cart-status" onclick="window.location.href='cart.php'">
+        <i class="fas fa-shopping-cart"></i>
+        <span class="cart-label">Cart</span>
+        <span class="cart-count" id="cart-count"><?= $cart_count; ?></span>
+    </div>
+
+    <section class="menu-section">
+        <div class="container">
+            <div class="menu-grid">
+                <?php
+                foreach ($categories as $categoryID => $categoryName) {
+                    if ($selectedCategory !== 'all' && $selectedCategory != $categoryID) {
+                        continue;
+                    }
+
+                    $stmt = $conn->prepare("SELECT ItemID, ItemName, Price, ImageURL FROM MenuItem WHERE CategoryID = ? AND Availability = 1");
+                    $stmt->execute([$categoryID]);
+                    $result = $stmt;
+
+                    while ($item = $result->fetch()) {
+                        echo "
+                        <div class='menu-card'>
+                            <div class='card-img-wrapper'>
+                                <img src='" . htmlspecialchars($item['ImageURL']) . "' 
+                                     class='card-img-top' 
+                                     alt='" . htmlspecialchars($item['ItemName']) . "'>
+                            </div>
+                            <div class='card-body'>
+                                <h5 class='card-title'>" . htmlspecialchars($item['ItemName']) . "</h5>
+                                <div class='price'>$" . number_format($item['Price'], 2) . "</div>
+                                <button class='btn-add-cart add-to-cart' data-id='" . htmlspecialchars($item['ItemID']) . "'>
+                                    <i class='fas fa-cart-plus'></i>
+                                    Add to Cart
+                                </button>
+                            </div>
+                        </div>";
+                    }
+                    $stmt->closeCursor();
+                }
+                ?>
+            </div>
+        </div>
+    </section>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         document.querySelectorAll('.add-to-cart').forEach(button => {
-            button.addEventListener('click', function () {
+            button.addEventListener('click', function() {
+                const btn = this;
+                const cartStatus = document.querySelector('.cart-status');
+                btn.disabled = true;
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Adding...';
+                
                 let itemID = this.getAttribute('data-id');
                 fetch('add_to_cart.php', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                     body: `id=${itemID}`
                 })
-                    .then(response => response.text())
-                    .then(data => {
-                        document.getElementById('cart-count').innerText = data;
-                    })
-                    .catch(error => console.error('Error:', error));
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('cart-count').innerText = data;
+                    btn.innerHTML = '<i class="fas fa-check"></i> Added!';
+                    
+                    // Add bounce animation to cart
+                    cartStatus.classList.add('updating');
+                    setTimeout(() => {
+                        cartStatus.classList.remove('updating');
+                    }, 500);
+                    
+                    setTimeout(() => {
+                        btn.disabled = false;
+                        btn.innerHTML = '<i class="fas fa-cart-plus"></i> Add to Cart';
+                    }, 2000);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="fas fa-cart-plus"></i> Add to Cart';
+                });
             });
         });
-    </script>
 
+        // Animate menu cards on scroll
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.animationDelay = `${entry.target.dataset.delay}s`;
+                    entry.target.style.animationPlayState = 'running';
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.menu-card').forEach((card, index) => {
+            card.style.animationPlayState = 'paused';
+            card.dataset.delay = index * 0.1;
+            observer.observe(card);
+        });
+    </script>
 </body>
 
 </html>

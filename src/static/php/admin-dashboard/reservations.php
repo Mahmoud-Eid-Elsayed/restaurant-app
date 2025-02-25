@@ -139,7 +139,6 @@ function formatDateTime($date, $time)
 
 <body>
     <div class="wrapper">
-        <!-- Sidebar -->
         <nav id="sidebar">
             <div class="sidebar-header">
                 <h3>ELCHEF Admin</h3>
@@ -149,8 +148,8 @@ function formatDateTime($date, $time)
                 <li><a href="users.php"><i class="fas fa-users"></i> Users</a></li>
                 <li><a href="menu_categories.php"><i class="fas fa-list"></i> Categories</a></li>
                 <li><a href="menu_items.php"><i class="fas fa-utensils"></i> Menu Items</a></li>
-                <li class="active"><a href="orders.php"><i class="fas fa-shopping-cart"></i> Orders</a></li>
-                <li><a href="reservations.php"><i class="fas fa-calendar-alt"></i> Reservations</a></li>
+                <li><a href="orders.php"><i class="fas fa-shopping-cart"></i> Orders</a></li>
+                <li class="active"><a href="reservations.php"><i class="fas fa-calendar-alt"></i> Reservations</a></li>
                 <li><a href="inventory.php"><i class="fas fa-box"></i> Inventory</a></li>
                 <li><a href="suppliers.php"><i class="fa-solid fa-truck"></i></i> Suppliers</a></li>
                 <li><a href="admin_notifications.php"><i class="fa-solid fa-bell"></i> Notifications</a>

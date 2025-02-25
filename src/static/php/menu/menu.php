@@ -340,18 +340,19 @@ while ($row = $categoryResult->fetch(PDO::FETCH_ASSOC)) {
                         continue;
                     }
 
+
                     $stmt = $conn->prepare("SELECT ItemID, ItemName, Price, ImageURL FROM MenuItem WHERE CategoryID = ? AND Availability = 1");
                     $stmt->execute([$categoryID]);
                     $result = $stmt;
 
-                    while ($item = $result->fetch()) {
-                        echo "
+                while ($item = $result->fetch()) {
+                    echo "
+                    <div class='col'>
                         <div class='menu-card'>
-                            <div class='card-img-wrapper'>
-                                <img src='" . htmlspecialchars($item['ImageURL']) . "' 
-                                     class='card-img-top' 
-                                     alt='" . htmlspecialchars($item['ItemName']) . "'>
+                          <div class='card-img-wrapper'>
+                                <img src='../../../../src/static/uploads/Menu-item/" . htmlspecialchars($item['ImageURL']) . "' class='card-img-top' alt='" . htmlspecialchars($item['ItemName']) . "'>
                             </div>
+                            
                             <div class='card-body'>
                                 <h5 class='card-title'>" . htmlspecialchars($item['ItemName']) . "</h5>
                                 <div class='price'>$" . number_format($item['Price'], 2) . "</div>

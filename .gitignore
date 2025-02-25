@@ -1,6 +1,7 @@
 test
 .hintrc
 .env
-db.php
+src/static/connection/
+
 
 

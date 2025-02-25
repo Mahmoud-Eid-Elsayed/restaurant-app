@@ -1,9 +1,9 @@
 <?php
 $host = 'localhost';
 $port = '3306';
-$dbname = 'Restaurant_DB';
+$dbname = 'restaurant_db';
 $username = 'root';
-$password = 'Smsm@012';
+$password = '';
 
 try {
     $conn = new PDO("mysql:host=$host;port=$port;dbname=$dbname", $username, $password);

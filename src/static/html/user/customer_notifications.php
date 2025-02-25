@@ -1,21 +1,27 @@
 <?php
 session_start();
-
 require_once __DIR__ . '/../../connection/db.php';
 
 if (!isset($_SESSION['user'])) {
   die("User not logged in.");
 }
 
-// Fetch customer ID from session
 $customer_id = $_SESSION['user']['id'];
 
 try {
-  // Fetch notifications for the customer
+  // Fetch notifications
   $query = "SELECT * FROM Notification WHERE UserID = ? OR UserID IS NULL ORDER BY Timestamp DESC";
   $stmt = $conn->prepare($query);
   $stmt->execute([$customer_id]);
   $notifications = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+  // Count unread notifications
+  $unread_count = 0;
+  foreach ($notifications as $notification) {
+    if (!$notification['IsRead']) {
+      $unread_count++;
+    }
+  }
 } catch (PDOException $e) {
   die("Error fetching notifications: " . $e->getMessage());
 }
@@ -33,7 +39,7 @@ try {
 
 <body>
   <div class="container mt-5">
-    <h2>Your Notifications 🔔</h2>
+    <h2>Your Notifications 🔔 <span class="badge bg-danger"><?php echo $unread_count; ?></span></h2>
     <div class="list-group">
       <?php if (empty($notifications)): ?>
         <p>No new notifications.</p>
@@ -73,7 +79,6 @@ try {
         .catch(error => console.error('Error:', error));
     }
   </script>
-
 </body>
 
 </html>

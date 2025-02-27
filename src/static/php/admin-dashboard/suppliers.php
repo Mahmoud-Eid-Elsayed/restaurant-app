@@ -8,16 +8,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $supplierName = $_POST['supplier_name'];
     $contactPerson = $_POST['contact_person'];
     $email = $_POST['email'];
-    $phone = $_POST['phone'];
+    $PhoneNumber = $_POST['PhoneNumber'];
     $address = $_POST['address'];
 
     try {
-      $stmt = $conn->prepare("INSERT INTO Supplier (SupplierName, ContactPerson, Email, Phone, Address) VALUES (:supplierName, :contactPerson, :email, :phone, :address)");
+      $stmt = $conn->prepare("INSERT INTO supplier (SupplierName, ContactPerson, Email, PhoneNumber, Address) VALUES (:supplierName, :contactPerson, :email, :PhoneNumber, :address)");
       $stmt->execute([
         ':supplierName' => $supplierName,
         ':contactPerson' => $contactPerson,
         ':email' => $email,
-        ':phone' => $phone,
+        ':PhoneNumber' => $PhoneNumber,
         ':address' => $address
       ]);
     } catch (PDOException $e) {
@@ -410,8 +410,9 @@ foreach ($suppliers as $supplier) {
                         </a>
                       </td>
                       <td>
-                        <a href="tel:<?php echo htmlspecialchars($supplier['Phone']); ?>" class="text-decoration-none">
-                          <?php echo htmlspecialchars($supplier['Phone']); ?>
+                        <a href="tel:<?php echo htmlspecialchars($supplier['PhoneNumber']); ?>"
+                          class="text-decoration-none">
+                          <?php echo htmlspecialchars($supplier['PhoneNumber']); ?>
                         </a>
                       </td>
                       <td><?php echo htmlspecialchars($supplier['Address']); ?></td>
@@ -566,7 +567,7 @@ foreach ($suppliers as $supplier) {
             </div>
             <div class="mb-3">
               <label class="form-label">Phone</label>
-              <input type="text" class="form-control" name="phone">
+              <input type="text" class="form-control" name="PhoneNumber">
             </div>
             <div class="mb-3">
               <label class="form-label">Address</label>
@@ -619,10 +620,119 @@ foreach ($suppliers as $supplier) {
 
     // Update order status
     function updateStatus(id) {
-      // Implement status update logic
-      alert('Status update functionality to be implemented');
+      // Create a Bootstrap modal for status selection
+      const modalHTML = `
+        <div class="modal fade" id="statusModal" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Update Order Status</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <label for="statusSelect" class="form-label">Select New Status:</label>
+                        <select id="statusSelect" class="form-select">
+                            <option value="Pending">Pending</option>
+                            <option value="Shipped">Shipped</option>
+                            <option value="Delivered">Delivered</option>
+                        </select>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-primary" id="confirmStatusUpdate">Update</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+
+      // Append the modal to the body
+      document.body.insertAdjacentHTML('beforeend', modalHTML);
+
+      // Show the modal
+      const statusModal = new bootstrap.Modal(document.getElementById('statusModal'));
+      statusModal.show();
+
+      // Handle the "Update" button click
+      document.getElementById('confirmStatusUpdate').addEventListener('click', () => {
+        const newStatus = document.getElementById('statusSelect').value;
+
+        // Send the update request
+        fetch('update_order_status.php', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            order_id: id,
+            status: newStatus
+          })
+        })
+          .then(response => response.json())
+          .then(data => {
+            if (data.success) {
+              // Show a success toast
+              showToast('Status updated successfully!', 'success');
+
+              // Update the status in the table row dynamically
+              const statusBadge = document.querySelector(`tr[data-order-id="${id}"] .status-badge`);
+              if (statusBadge) {
+                statusBadge.textContent = newStatus;
+                statusBadge.className = `status-badge status-${newStatus.toLowerCase()}`;
+              }
+            } else {
+              // Show an error toast
+              showToast('Error updating status: ' + data.error, 'danger');
+            }
+          })
+          .catch(error => {
+            console.error('Error:', error);
+            showToast('An error occurred while updating the status', 'danger');
+          })
+          .finally(() => {
+            // Hide the modal
+            statusModal.hide();
+            document.getElementById('statusModal').remove(); // Clean up the modal
+          });
+      });
     }
 
+    // Function to show a toast notification
+    function showToast(message, type = 'success') {
+      const toastContainer = document.getElementById('toastContainer');
+      if (!toastContainer) {
+        // Create a toast container if it doesn't exist
+        const containerHTML = `<div id="toastContainer" aria-live="polite" aria-atomic="true" class="position-fixed bottom-0 end-0 p-3" style="z-index: 11"></div>`;
+        document.body.insertAdjacentHTML('beforeend', containerHTML);
+      }
+
+      const toastHTML = `
+        <div class="toast align-items-center text-white bg-${type} border-0" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body">
+                    ${message}
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+            </div>
+        </div>
+    `;
+
+      // Append the toast to the container
+      toastContainer.insertAdjacentHTML('beforeend', toastHTML);
+
+      // Initialize and show the toast
+      const toastElement = toastContainer.lastElementChild;
+      const toast = new bootstrap.Toast(toastElement, {
+        autohide: true,
+        delay: 3000
+      });
+      toast.show();
+
+      // Remove the toast after it hides
+      toastElement.addEventListener('hidden.bs.toast', () => {
+        toastElement.remove();
+      });
+    }
     // Auto-hide alerts after 5 seconds
     setTimeout(function () {
       const alerts = document.querySelectorAll('.alert');
@@ -632,6 +742,9 @@ foreach ($suppliers as $supplier) {
       });
     }, 5000);
   </script>
+  <!-- Toast Container -->
+  <div id="toastContainer" aria-live="polite" aria-atomic="true" class="position-fixed bottom-0 end-0 p-3"
+    style="z-index: 11"></div>
 </body>
 
 </html>

@@ -142,9 +142,10 @@ $statusColors = [
                 <li><a href="menu_categories.php"><i class="fas fa-list"></i> Categories</a></li>
                 <li><a href="menu_items.php"><i class="fas fa-utensils"></i> Menu Items</a></li>
                 <li><a href="orders.php"><i class="fas fa-shopping-cart"></i> Orders</a></li>
-                <li><a href="reservations.php"><i class="fas fa-calendar-alt"></i> Reservations</a></li>
-                <li><a href="admin_notifications.php"><i class="fa-solid fa-bell"></i> Notifications</a>
-                </li>
+                <li class="active"><a href="reservations.php"><i class="fas fa-calendar-alt"></i> Reservations</a></li>
+                <li><a href="inventory.php"><i class="fas fa-box"></i> Inventory</a></li>
+                <li><a href="suppliers.php"><i class="fa-solid fa-truck"></i> Suppliers</a></li>
+                <li><a href="admin_notifications.php"><i class="fa-solid fa-bell"></i> Notifications</a></li>
             </ul>
         </nav>
 
@@ -316,6 +317,4 @@ $statusColors = [
 
     <script src="../../../../src/assets/libraries/node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
     <script src="../../js/admin-dashboard.js"></script>
-</body>
-
-</html>
+</body></html>

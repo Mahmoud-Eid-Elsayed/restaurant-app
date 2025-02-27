@@ -49,7 +49,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
   // Insert the new menu item into the database
   $stmt = $conn->prepare("
-        INSERT INTO MenuItem (ItemName, Description, Price, ImageURL, CategoryID, Availability)
+        INSERT INTO menuitem (ItemName, Description, Price, ImageURL, CategoryID, Availability)
         VALUES (:itemName, :description, :price, :imageURL, :categoryID, :availability)
     ");
   $stmt->execute([
@@ -79,72 +79,72 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 <body>
   <div class="wrapper">
-<!-- Sidebar -->
-<nav id="sidebar">
-            <div class="sidebar-header">
-                <h3>ELCHEF Admin</h3>
-            </div>
-            <ul class="list-unstyled components">
-                <li><a href="index.php"><i class="fas fa-home"></i> Dashboard</a></li>
-                <li><a href="users.php"><i class="fas fa-users"></i> Users</a></li>
-                <li><a href="menu_categories.php"><i class="fas fa-list"></i> Categories</a></li>
-                <li><a href="menu_items.php"><i class="fas fa-utensils"></i> Menu Items</a></li>
-                <li class="active"><a href="orders.php"><i class="fas fa-shopping-cart"></i> Orders</a></li>
-                <li><a href="reservations.php"><i class="fas fa-calendar-alt"></i> Reservations</a></li>
-                <li><a href="inventory.php"><i class="fas fa-box"></i> Inventory</a></li>
-                <li><a href="suppliers.php"><i class="fa-solid fa-truck"></i></i> Suppliers</a></li>
-                <li><a href="admin_notifications.php"><i class="fa-solid fa-bell"></i> Notifications</a></li>
-            </ul>
-        </nav>
+    <!-- Sidebar -->
+    <nav id="sidebar">
+      <div class="sidebar-header">
+        <h3>ELCHEF Admin</h3>
+      </div>
+      <ul class="list-unstyled components">
+        <li><a href="index.php"><i class="fas fa-home"></i> Dashboard</a></li>
+        <li><a href="users.php"><i class="fas fa-users"></i> Users</a></li>
+        <li><a href="menu_categories.php"><i class="fas fa-list"></i> Categories</a></li>
+        <li><a href="menu_items.php"><i class="fas fa-utensils"></i> Menu Items</a></li>
+        <li class="active"><a href="orders.php"><i class="fas fa-shopping-cart"></i> Orders</a></li>
+        <li><a href="reservations.php"><i class="fas fa-calendar-alt"></i> Reservations</a></li>
+        <li><a href="inventory.php"><i class="fas fa-box"></i> Inventory</a></li>
+        <li><a href="suppliers.php"><i class="fa-solid fa-truck"></i></i> Suppliers</a></li>
+        <li><a href="admin_notifications.php"><i class="fa-solid fa-bell"></i> Notifications</a></li>
+      </ul>
+    </nav>
 
-        <!-- Page Content -->
-        <div id="content">
-            <button type="button" id="sidebarToggle">
-                <i class="fas fa-bars"></i>
-            </button>
-            
+    <!-- Page Content -->
     <div id="content">
-      <div class="header"></div>
-      <div class="main-content">
-        <h2>Add Menu Item</h2>
-        <form method="POST" enctype="multipart/form-data">
-          <div class="mb-3">
-            <label for="itemName" class="form-label">Item Name</label>
-            <input type="text" class="form-control" id="itemName" name="itemName" required>
-          </div>
-          <div class="mb-3">
-            <label for="description" class="form-label">Description</label>
-            <textarea class="form-control" id="description" name="description" rows="3"></textarea>
-          </div>
-          <div class="mb-3">
-            <label for="price" class="form-label">Price</label>
-            <input type="number" step="0.01" class="form-control" id="price" name="price" required>
-          </div>
-          <div class="mb-3">
-            <label for="categoryID" class="form-label">Category</label>
-            <select class="form-control" id="categoryID" name="categoryID" required>
-              <?php foreach ($categories as $category): ?>
-                <option value="<?php echo $category['CategoryID']; ?>"><?php echo $category['CategoryName']; ?></option>
-              <?php endforeach; ?>
-            </select>
-          </div>
-          <div class="mb-3">
-            <label for="image" class="form-label">Image</label>
-            <input type="file" class="form-control" id="image" name="image" accept="image/*">
-          </div>
-          <div class="mb-3 form-check">
-            <input type="checkbox" class="form-check-input" id="availability" name="availability">
-            <label class="form-check-label" for="availability">Available</label>
-          </div>
-          <button type="submit" class="btn btn-primary">Add Item</button>
-        </form>
+      <button type="button" id="sidebarToggle">
+        <i class="fas fa-bars"></i>
+      </button>
+
+      <div id="content">
+        <div class="header"></div>
+        <div class="main-content">
+          <h2>Add Menu Item</h2>
+          <form method="POST" enctype="multipart/form-data">
+            <div class="mb-3">
+              <label for="itemName" class="form-label">Item Name</label>
+              <input type="text" class="form-control" id="itemName" name="itemName" required>
+            </div>
+            <div class="mb-3">
+              <label for="description" class="form-label">Description</label>
+              <textarea class="form-control" id="description" name="description" rows="3"></textarea>
+            </div>
+            <div class="mb-3">
+              <label for="price" class="form-label">Price</label>
+              <input type="number" step="0.01" class="form-control" id="price" name="price" required>
+            </div>
+            <div class="mb-3">
+              <label for="categoryID" class="form-label">Category</label>
+              <select class="form-control" id="categoryID" name="categoryID" required>
+                <?php foreach ($categories as $category): ?>
+                  <option value="<?php echo $category['CategoryID']; ?>"><?php echo $category['CategoryName']; ?></option>
+                <?php endforeach; ?>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label for="image" class="form-label">Image</label>
+              <input type="file" class="form-control" id="image" name="image" accept="image/*">
+            </div>
+            <div class="mb-3 form-check">
+              <input type="checkbox" class="form-check-input" id="availability" name="availability">
+              <label class="form-check-label" for="availability">Available</label>
+            </div>
+            <button type="submit" class="btn btn-primary">Add Item</button>
+          </form>
+        </div>
       </div>
     </div>
-  </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
-  <script src="../../js/admin-dashboard.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
+    <script src="../../js/admin-dashboard.js"></script>
 </body>
 
 </html>

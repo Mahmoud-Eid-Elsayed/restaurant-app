@@ -38,7 +38,9 @@ ALTER TABLE menucategory AUTO_INCREMENT = 1;
 ALTER TABLE notification AUTO_INCREMENT = 1;
 
 SET FOREIGN_KEY_CHECKS = 1;
-
+-- INSERT INTO `User` (`Username`, `Password`, `Role`, `FirstName`, `LastName`, `Email`, `PhoneNumber`, `Address`, `ProfilePictureURL`)
+-- VALUES 
+-- ('admin', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Staff', 'John', 'Doe', 'admin@example.com', '1234567890', '123 Main St', 'profile.jpg');
 --
 -- Database: `restaurant_db`
 --

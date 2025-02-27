@@ -25,8 +25,8 @@ try {
     die("Order not found.");
   }
 
-  // Fetch the order items
-  $query = "SELECT oi.*, mi.Price FROM OrderItem oi
+  // Fetch the order items with the current price from MenuItem
+  $query = "SELECT oi.*, mi.Price AS CurrentPrice FROM OrderItem oi
               INNER JOIN MenuItem mi ON oi.ItemID = mi.ItemID
               WHERE oi.OrderID = ?";
   $stmt = $conn->prepare($query);
@@ -42,10 +42,10 @@ try {
 
   // Add items to the new order
   foreach ($order_items as $item) {
-    $query = "INSERT INTO OrderItem (OrderID, ItemID, Quantity, Price)
+    $query = "INSERT INTO OrderItem (OrderID, ItemID, Quantity, PriceAtTimeOfOrder)
                   VALUES (?, ?, ?, ?)";
     $stmt = $conn->prepare($query);
-    $stmt->execute([$new_order_id, $item['ItemID'], $item['Quantity'], $item['Price']]);
+    $stmt->execute([$new_order_id, $item['ItemID'], $item['Quantity'], $item['CurrentPrice']]);
   }
 
   // Send notifications

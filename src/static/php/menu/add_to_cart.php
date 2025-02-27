@@ -1,28 +1,21 @@
 <?php
 session_start();
-require_once __DIR__ . '/../../connection/db.php';
+require_once __DIR__ . '/../../connection/db.php'; // db.php provides $conn as PDO
+
 // Initialize the cart if it doesn't exist
 if (!isset($_SESSION['cart'])) {
     $_SESSION['cart'] = [];
 }
 
-// Connect to the database
-$conn = new mysqli("localhost", "root", "", "Restaurant_DB");
-
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
-
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["id"])) {
     $product_id = $_POST["id"];
 
-    // Fetch product details from the database
-    $query = "SELECT ItemID, ItemName, Price, ImageURL FROM MenuItem WHERE ItemID = ?";
+    // Fetch product details from the database using PDO
+    $query = "SELECT ItemID, ItemName, Price, ImageURL FROM MenuItem WHERE ItemID = :id";
     $stmt = $conn->prepare($query);
-    $stmt->bind_param("i", $product_id);
+    $stmt->bindParam(":id", $product_id, PDO::PARAM_INT);
     $stmt->execute();
-    $result = $stmt->get_result();
-    $product = $result->fetch_assoc();
+    $product = $stmt->fetch();
 
     if ($product) {
         // Ensure all required keys are present

@@ -19,7 +19,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     try {
         $stmt = $conn->prepare("
-            INSERT INTO Reservation (CustomerName, CustomerEmail, CustomerPhone, TableID, ReservationDate, ReservationTime, NumberOfGuests, ReservationStatus, Notes)
+            INSERT INTO reservation (CustomerName, CustomerEmail, CustomerPhone, TableID, ReservationDate, ReservationTime, NumberOfGuests, ReservationStatus, Notes)
             VALUES (:name, :email, :phone, :table_id, :date, :time, :guests, 'Pending', :notes)
         ");
 

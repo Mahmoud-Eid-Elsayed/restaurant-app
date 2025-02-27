@@ -24,11 +24,11 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
 
         $stmt = $conn->prepare("
             SELECT t.TableID, t.TableNumber, t.Capacity, t.Location
-            FROM `Table` t
+            FROM `table` t
             WHERE t.Capacity >= :guests
             AND t.TableID NOT IN (
                 SELECT r.TableID
-                FROM Reservation r
+                FROM reservation r
                 WHERE r.ReservationDate = :date
                 AND (
                     (r.ReservationTime >= :start_time AND r.ReservationTime < :end_time) OR

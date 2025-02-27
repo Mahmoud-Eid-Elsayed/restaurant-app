@@ -1,5 +1,16 @@
 <?php
 require_once '../../connection/db.php';
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
+require __DIR__ . '/../../../../vendor/autoload.php';
+
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
+// تحميل ملف .env
+$dotenv = Dotenv\Dotenv::createUnsafeImmutable(__DIR__);
+$dotenv->load();
 
 class User
 {
@@ -38,7 +49,6 @@ class User
         return $errors;
     }
 
-
     public function addUser($data, $profilePic)
     {
         $errors = $this->validateUserData($data);
@@ -58,6 +68,9 @@ class User
             $allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
             if (in_array($profilePic['type'], $allowedTypes)) {
                 $uploadDir = "../../../assets/images/users/uploads/";
+                if (!is_dir($uploadDir)) {
+                    mkdir($uploadDir, 0777, true);
+                }
                 $imageName = time() . "_" . basename($profilePic['name']);
                 $uploadPath = $uploadDir . $imageName;
                 move_uploaded_file($profilePic['tmp_name'], $uploadPath);
@@ -69,8 +82,8 @@ class User
         $passwordHash = password_hash($data['password'], PASSWORD_DEFAULT);
         $timestamp = date("Y-m-d H:i:s");
 
-        $stmt = $this->conn->prepare("INSERT INTO User (Username, Password, Role, FirstName, LastName, Email, PhoneNumber, Address, ProfilePictureURL, RegistrationDate, LastLoginDate)
-                                      VALUES (:username, :password, 'customer', :firstname, :lastname, :email, :phonenumber, :address, :ProfilePictureURL, :RegistrationDate, :lastlogindate)");
+        $stmt = $this->conn->prepare("INSERT INTO User (Username, Password, Role, FirstName, LastName, Email, PhoneNumber, Address, ProfilePictureURL, RegistrationDate, LastLoginDate, Status)
+                                      VALUES (:username, :password, 'customer', :firstname, :lastname, :email, :phonenumber, :address, :ProfilePictureURL, :RegistrationDate, :lastlogindate, :Status)");
 
         $success = $stmt->execute([
             'firstname' => $data['firstname'],
@@ -82,68 +95,21 @@ class User
             'password' => $passwordHash,
             'ProfilePictureURL' => $uploadPath,
             'RegistrationDate' => $timestamp,
-            'lastlogindate' => $timestamp
+            'lastlogindate' => $timestamp,
+            'Status' => 'inactive'
         ]);
 
         return ['status' => $success, 'errors' => []];
     }
 
-
-    public function updateUser($user_id, $username, $email, $phone, $address, $profilePic = null)
-    {
-        try {
-            $profilePicPath = null;
-
-            if ($profilePic && $profilePic['error'] === UPLOAD_ERR_OK) {
-                $allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
-
-                if (in_array($profilePic['type'], $allowedTypes)) {
-                    $uploadDir = "../../../assets/images/users/uploads/";
-
-                    if (!is_dir($uploadDir)) {
-                        mkdir($uploadDir, 0777, true);
-                    }
-
-                    $imageExtension = pathinfo($profilePic['name'], PATHINFO_EXTENSION);
-                    $imageName = "user_" . $user_id . "." . $imageExtension;
-                    $profilePicPath = $uploadDir . $imageName;
-
-                    if (!move_uploaded_file($profilePic['tmp_name'], $profilePicPath)) {
-                        return false;
-                    }
-                } else {
-                    return false;
-                }
-            }
-
-            if ($profilePicPath) {
-                $stmt = $this->conn->prepare("UPDATE User SET Username = ?, Email = ?, PhoneNumber = ?, Address = ?, ProfilePictureURL = ? WHERE UserID = ?");
-                $stmt->execute([$username, $email, $phone, $address, $profilePicPath, $user_id]);
-            } else {
-                $stmt = $this->conn->prepare("UPDATE User SET Username = ?, Email = ?, PhoneNumber = ?, Address = ? WHERE UserID = ?");
-                $stmt->execute([$username, $email, $phone, $address, $user_id]);
-            }
-
-            return true;
-        } catch (PDOException $e) {
-            return false;
-        }
-    }
-
-
-    public function getUserById($user_id)
-    {
-        $stmt = $this->conn->prepare("SELECT * FROM User WHERE UserID = ?");
-        $stmt->execute([$user_id]);
-        return $stmt->fetch(PDO::FETCH_ASSOC);
-    }
     public function loginUser($email, $password)
     {
-        $stmt = $this->conn->prepare("SELECT * FROM user WHERE Email = :email LIMIT 1");
+        $stmt = $this->conn->prepare("SELECT * FROM User WHERE Email = :email LIMIT 1");
         $stmt->execute(['email' => $email]);
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if ($user && password_verify($password, $user['Password'])) {
+            session_start();
             session_regenerate_id(true);
             $_SESSION['user_id'] = $user['UserID'];
             $_SESSION['username'] = $user['Username'];
@@ -154,6 +120,107 @@ class User
         return ['status' => false, 'message' => 'Invalid email or password.'];
     }
 
+    public function getUserById($user_id) {
+        $stmt = $this->conn->prepare("SELECT * FROM User WHERE UserID = ?");
+        $stmt->execute([$user_id]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+    public function logoutUser()
+    {
+        session_start();
+        session_unset();
+        session_destroy();
+        return true;
+    }
 
+    public function sendMail($email, $otp)
+    {
+        $mail = new PHPMailer(true);
+        $user = 'Dear Customer';
+
+        try {
+            $mail->isSMTP();
+            $mail->Host = 'smtp.sendgrid.net';
+            $mail->SMTPAuth = true;
+            $mail->Username = $_ENV['MAIL_USERNAME'];
+            $mail->Password = $_ENV['SENDGRID_API_KEY'];
+            $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+            $mail->Port = 587;
+            $mail->SMTPDebug = 0;
+
+            $mail->setFrom('macawilo@asciibinder.net', 'El Chef');
+            $mail->addAddress($email, $user);
+            $mail->addReplyTo('macawilo@asciibinder.net', 'El Chef');
+
+            $mail->isHTML(true);
+            $mail->Subject = 'Registration Confirmation';
+            $mail->Body = "Your OTP is: <b>$otp</b>";
+
+            $mail->send();
+            return ["status" => "success", "message" => "Your registration is completed. Please check your email."];
+        } catch (Exception $e) {
+            return ["status" => "error", "message" => "Failed to send confirmation email. Error: " . $mail->ErrorInfo];
+        }
+    }
+
+    public function verifyOTP($input){
+        if($input==$_SESSION['otp']){
+            $id=$_SESSION['id'];
+            $stmt = $this->conn->prepare("UPDATE User SET Status = 'active' WHERE UserID = ?");
+            $stmt->execute([$id]);
+        }
+
+    }
+    public function updateUser($user_id, $username, $email, $phone, $address, $profilePic = null) {
+        try {
+            $profilePicPath = null;
+    
+            if ($profilePic && $profilePic['error'] === UPLOAD_ERR_OK) {
+                $allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
+                
+                if (in_array($profilePic['type'], $allowedTypes)) {
+                    $uploadDir = "../../../assets/images/users/uploads/";
+                    
+                    if (!is_dir($uploadDir)) {
+                        mkdir($uploadDir, 0777, true);
+                    }
+                    
+                    $imageExtension = pathinfo($profilePic['name'], PATHINFO_EXTENSION);
+                    $imageName = "user_" . $user_id . "." . $imageExtension;
+                    $profilePicPath = $uploadDir . $imageName;
+    
+                    if (!move_uploaded_file($profilePic['tmp_name'], $profilePicPath)) {
+                        return false;
+                    }
+                } else {
+                    return false; }
+            }
+    
+            if ($profilePicPath) {
+                $stmt = $this->conn->prepare("UPDATE User SET Username = ?, Email = ?, PhoneNumber = ?, Address = ?, ProfilePictureURL = ? WHERE UserID = ?");
+                $stmt->execute([$username, $email, $phone, $address, $profilePicPath, $user_id]);
+            } else {
+                $stmt = $this->conn->prepare("UPDATE User SET Username = ?, Email = ?, PhoneNumber = ?, Address = ? WHERE UserID = ?");
+                $stmt->execute([$username, $email, $phone, $address, $user_id]);
+            }
+    
+            return true;
+        } catch (PDOException $e) {
+            return false;
+        }
+    }
+    
+
+    public function generateOTP($email)
+    {
+        $characters = '0123456789';
+        $otp = '';
+        for ($i = 0; $i < 6; $i++) {
+            $otp .= $characters[rand(0, strlen($characters) - 1)];
+        }
+        $_SESSION['otp'] = $otp;
+        $this->sendMail($email, $otp);
+        return $otp;
+    }
 }
 ?>

@@ -64,7 +64,7 @@ if (!$userData) {
                 <a href="../../php/menu/cart.php" class="nav-link text-dark">🛍 Cart</a>
             </li>
             <li class="nav-item mt-3">
-                <a href="logout.php" class="btn btn-danger w-100">🚪Logout</a>
+                <a href="./logout.php" class="btn btn-danger w-100">🚪Logout</a>
             </li>
         </ul>
     </div>

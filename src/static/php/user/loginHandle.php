@@ -34,7 +34,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             'id' => $result['user_id'],
             'username' => $result['username'],
             'role' => $result['role'],
-            'profile_image' => $result['profile_image']
+            'profile_image' => $result['profile_image'],
+            'email' => $result['email'],
         ];
 
         // Redirect based on role

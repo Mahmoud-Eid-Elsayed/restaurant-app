@@ -2,6 +2,7 @@
 session_start();
 
 require_once __DIR__ . '/../../connection/db.php';
+require_once "../../php/user/user.php";
 
 if (!isset($_GET['id'])) {
   die("Notification ID not provided.");
@@ -12,7 +13,7 @@ try {
   // Mark the notification as read
   $query = "UPDATE Notification SET IsRead = TRUE WHERE NotificationID = ? AND UserID = ?";
   $stmt = $conn->prepare($query);
-  $stmt->execute([$notificationID, $_SESSION['user']['id']]);
+  $stmt->execute([$notificationID, $_SESSION['user_id']]);
 
 
   // Fetch the notification details
@@ -40,17 +41,21 @@ try {
 </head>
 
 <body>
-  <div class="container mt-5">
-    <h2>Notification Details</h2>
-    <div class="card">
-      <div class="card-body">
-        <h5 class="card-title"><?php echo htmlspecialchars($notification['Message']); ?></h5>
-        <p class="card-text">
-          <strong>Type:</strong> <?php echo htmlspecialchars($notification['NotificationType']); ?><br>
-          <strong>Timestamp:</strong> <?php echo $notification['Timestamp']; ?><br>
-          <strong>Status:</strong> <?php echo $notification['IsRead'] ? 'Read' : 'Unread'; ?>
-        </p>
-        <a href="customer_notifications.php" class="btn btn-primary">Back to Notifications</a>
+  <div class="d-flex">
+  <?php include 'sidebar.php' ?>
+
+    <div class="container mt-5">
+      <h2>Notification Details</h2>
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title"><?php echo htmlspecialchars($notification['Message']); ?></h5>
+          <p class="card-text">
+            <strong>Type:</strong> <?php echo htmlspecialchars($notification['NotificationType']); ?><br>
+            <strong>Timestamp:</strong> <?php echo $notification['Timestamp']; ?><br>
+            <strong>Status:</strong> <?php echo $notification['IsRead'] ? 'Read' : 'Unread'; ?>
+          </p>
+          <a href="customer_notifications.php" class="btn btn-primary">Back to Notifications</a>
+        </div>
       </div>
     </div>
   </div>

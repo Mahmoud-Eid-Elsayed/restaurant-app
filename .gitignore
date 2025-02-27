@@ -1,4 +1,17 @@
+# Ignore test directory
 test
+
+# Ignore .hintrc file
 .hintrc
+
+# Ignore .env file
 .env
-db.php
+
+# Ignore src/static/connection directory (except .gitkeep and Readme.md)
+src/static/connection/*
+!src/static/connection/.gitkeep
+!src/static/connection/Readme.md
+
+src/static/connection/db.php
+
+src/assets/images/users/uploads

@@ -152,6 +152,7 @@ try {
                                     <th>Category</th>
                                     <th>Price</th>
                                     <th>Description</th>
+                                    <th>Item Pic</th>
                                     <th>Availability</th>
                                     <th>Orders</th>
                                     <th>Actions</th>
@@ -180,6 +181,17 @@ try {
                                         <td>
                                             <span class="badge <?php echo $item['Availability'] ? 'bg-success' : 'bg-danger'; ?>">
                                                 <i class="fas <?php echo $item['Availability'] ? 'fa-check-circle' : 'fa-times-circle'; ?> me-1"></i>
+                                            <?php if (!empty($item['ImageURL'])): ?>
+                                                <img src="<?php echo htmlspecialchars($item['ImageURL']); ?>" width="50" height="50"
+                                                    alt="Item">
+                                            <?php else: ?>
+                                                <span>No Image</span>
+                                            <?php endif; ?>
+                                        </td>
+                                        <td>
+                                            <span
+                                                class="badge <?php echo $item['Availability'] ? 'bg-success' : 'bg-danger'; ?>">
+
                                                 <?php echo $item['Availability'] ? 'Available' : 'Not Available'; ?>
                                             </span>
                                         </td>

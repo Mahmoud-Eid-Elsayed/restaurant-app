@@ -19,7 +19,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
   // Insert order
   $stmt = $conn->prepare("
-        INSERT INTO `Order` (CustomerID, OrderStatus, TotalAmount, DeliveryAddress, Notes)
+        INSERT INTO `order` (CustomerID, OrderStatus, TotalAmount, DeliveryAddress, Notes)
         VALUES (:customerID, :orderStatus, :totalAmount, :deliveryAddress, :notes)
     ");
   $stmt->execute([
@@ -35,7 +35,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   // Insert order items
   foreach ($items as $item) {
     $stmt = $conn->prepare("
-            INSERT INTO OrderItem (OrderID, ItemID, Quantity, PriceAtTimeOfOrder)
+            INSERT INTO orderitem (OrderID, ItemID, Quantity, PriceAtTimeOfOrder)
             VALUES (:orderID, :itemID, :quantity, :price)
         ");
     $stmt->execute([

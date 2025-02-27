@@ -1,7 +1,7 @@
 <?php
 
 require_once __DIR__ . '../../../connection/db.php';
-
+require_once "../../php/user/user.php";
 session_start();
 
 
@@ -16,7 +16,7 @@ $user_id = $_SESSION['user_id'];
 try {
   // Fetch order history (only show the latest status for each order)
   $order_query = "
-        SELECT o.OrderID, o.OrderDate, o.OrderStatus, o.TotalAmount, o.Notes
+        SELECT OrderID, OrderDate, OrderStatus, TotalAmount, Notes
         FROM `order` o
         WHERE o.CustomerID = :user_id
         AND o.OrderStatus IN ('Pending','Processing','Completed','Cancelled','Refunded') -- Filter by specific statuses
@@ -29,14 +29,14 @@ try {
 
   // Fetch table reservations
   $reservation_query = "
-        SELECT r.ReservationID, r.TableID, r.CustomerName, r.ReservationDate, 
-               r.ReservationTime, r.NumberOfGuests, r.ReservationStatus, r.Notes
-        FROM reservation r
-        WHERE r.CustomerID = :user_id
-        ORDER BY r.ReservationDate DESC, r.ReservationTime DESC
-    ";
+    SELECT ReservationID, TableID, CustomerName, ReservationDate, 
+           ReservationTime, NumberOfGuests, ReservationStatus, Notes
+    FROM reservation r
+    WHERE r.CustomerEmail = :customer_email
+    ORDER BY r.ReservationDate DESC, r.ReservationTime DESC
+";
   $reservation_stmt = $conn->prepare($reservation_query);
-  $reservation_stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+  $reservation_stmt->bindParam(':customer_email', $_SESSION['email'], PDO::PARAM_STR);
   $reservation_stmt->execute();
   $reservations = $reservation_stmt->fetchAll(PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
@@ -53,10 +53,14 @@ try {
   <title>Order History</title>
   <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
 </head>
 
 <body>
+<div class="d-flex">
+  <?php include 'sidebar.php' ?>
   <div class="container mt-5">
+
     <h1 class="mb-4">Order History</h1>
 
     <!-- Order History -->
@@ -85,6 +89,7 @@ try {
                 <?php if (in_array($order['OrderStatus'], ['Completed', 'Refunded'])): ?>
                   <a href="submit_feedback.php?order_id=<?php echo $order['OrderID']; ?>"
                     class="btn btn-primary btn-sm">Submit Feedback</a>
+                  <a href="reorder.php?order_id=<?php echo $order['OrderID']; ?>" class="btn btn-success btn-sm">Reorder</a>
                 <?php endif; ?>
               </td>
             </tr>
@@ -131,6 +136,7 @@ try {
       <div class="alert alert-info">No table reservations found.</div>
     <?php endif; ?>
   </div>
+</div>
 
   <!-- Bootstrap JS (optional) -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

@@ -8,13 +8,13 @@ $order_id = $new_order_id; // The newly created order ID
 
 // Insert notification for the customer
 $customer_message = "Your order #{$order_id} has been placed successfully!";
-$query = "INSERT INTO Notification (UserID, OrderID, NotificationType, Message) VALUES (?, ?, 'order', ?)";
+$query = "INSERT INTO notification (UserID, OrderID, NotificationType, Message) VALUES (?, ?, 'order', ?)";
 $stmt = $conn->prepare($query);
 $stmt->execute([$customer_id, $order_id, $customer_message]);
 
 // Insert notification for the admin
 $admin_message = "A new order #{$order_id} has been placed by Customer #{$customer_id}.";
-$query = "INSERT INTO Notification (UserID, OrderID, NotificationType, Message) VALUES (NULL, ?, 'order', ?)";
+$query = "INSERT INTO notification (UserID, OrderID, NotificationType, Message) VALUES (NULL, ?, 'order', ?)";
 $stmt = $conn->prepare($query);
 $stmt->execute([$order_id, $admin_message]);
 

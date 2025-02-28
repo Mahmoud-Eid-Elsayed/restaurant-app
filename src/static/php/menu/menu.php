@@ -97,7 +97,6 @@ try {
     </style>
 </head>
 <body>
-    <?php require '../includes/navbar.php'; ?>
 
     <div class="menu-header text-center">
         <div class="container">

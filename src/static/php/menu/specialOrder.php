@@ -1,33 +1,23 @@
 <?php
 session_start();
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
+require_once __DIR__ . '/../../connection/db.php';
 require '../includes/navbar.php';
 
-
-$host = 'localhost';
-$port = '3307';
-$dbname = 'Restaurant_DB';
-$username = 'root';
-$password = '@Eithar1904';
-
+// Database connection
 $conn = new mysqli($host, $username, $password, $dbname, $port);
 if ($conn->connect_error) {
     die("❌ Connection failed: " . $conn->connect_error);
 }
 
-
-$categories = [];
-$categoryQuery = "SELECT CategoryID, CategoryName FROM MenuCategory";
-$categoryResult = $conn->query($categoryQuery);
-while ($row = $categoryResult->fetch_assoc()) {
-    $categories[$row['CategoryID']] = $row['CategoryName'];
-}
-
-
+// Fetch active special offers
 $stmt = $conn->prepare("
-    SELECT mi.ItemID, mi.ItemName, mi.Price, mi.ImageURL, so.DiscountPercentage, so.ExpiryDate, so.OfferCode
-    FROM MenuItem mi
-    JOIN SpecialOffer so ON mi.ItemID = so.ItemID
-    WHERE mi.Availability = 1
+    SELECT OfferID, OfferName, Description, EndDate, ImageURL
+    FROM specialoffer
+    WHERE IsActive = 1
 ");
 $stmt->execute();
 $result = $stmt->get_result();
@@ -44,40 +34,34 @@ $stmt->close();
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <style>
-        body { background-color: #ECF0F1; }
-        .card { border-radius: 10px; transition: transform 0.3s, box-shadow 0.3s; }
-        .card:hover { transform: translateY(-5px); box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.2); }
-        .discounted-price { text-decoration: line-through; color: red; font-size: 1rem; }
-        .offer-code { background: #f1c40f; padding: 5px; border-radius: 5px; display: inline-block; }
-        .countdown { font-size: 1rem; color: #e74c3c; font-weight: bold; }
-        .btn-add { background-color: #27AE60; color: white; font-weight: bold; border-radius: 10px; }
+        body { background-color: #f8f9fa; font-family: Arial, sans-serif; }
+        .card { border-radius: 12px; transition: 0.3s; box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1); }
+        .card:hover { transform: translateY(-5px); box-shadow: 0px 10px 25px rgba(0, 0, 0, 0.2); }
+        .countdown { font-size: 1rem; color: #dc3545; font-weight: bold; }
+        .discount { font-size: 1.2rem; color: #e67e22; font-weight: bold; }
+        .add-to-cart-btn { background-color: #007bff; color: white; padding: 10px 20px; border-radius: 5px; text-decoration: none; display: inline-block; }
+        .add-to-cart-btn:hover { background-color: #0056b3; }
     </style>
 </head>
 <body>
 
 <div class="container mt-5">
-    <h2>🔥 Special Discounts - Limited Time!</h2>
+    <h2 class="text-center mb-4">🔥 Special Discounts - Limited Time!</h2>
     <div class="row row-cols-1 row-cols-md-3 g-4">
         <?php foreach ($specialOffers as $offer): 
-            $original_price = $offer['Price'];
-            $discounted_price = $original_price - ($original_price * ($offer['DiscountPercentage'] / 100));
+            $imageURL = isset($offer['ImageURL']) ? trim($offer['ImageURL']) : 'default.jpg';
+            $offerID = isset($offer['OfferID']) ? intval($offer['OfferID']) : 0;
+            $discount = 20; // Fixed discount at 20%
         ?>
         <div class="col">
-            <div class="card">
-                <img src="<?= htmlspecialchars($offer['ImageURL']) ?>" class="card-img-top" alt="<?= htmlspecialchars($offer['ItemName']) ?>">
+            <div class="card p-3">
+                <img src="<?= htmlspecialchars($imageURL) ?>" class="card-img-top" alt="<?= htmlspecialchars($offer['OfferName']) ?>">
                 <div class="card-body">
-                    <h5 class="card-title"><?= htmlspecialchars($offer['ItemName']) ?></h5>
-                    <p>
-                        <span class="discounted-price">$<?= number_format($original_price, 2) ?></span>
-                        <strong>$<?= number_format($discounted_price, 2) ?></strong>
-                    </p>
-                    <?php if (!empty($offer['OfferCode'])): ?>
-                        <p class="offer-code">Use Code: <strong><?= htmlspecialchars($offer['OfferCode']) ?></strong></p>
-                    <?php endif; ?>
-                    <p class="countdown" data-expiry="<?= $offer['ExpiryDate'] ?>"></p>
-                    <button class="btn btn-add w-100 add-to-cart" data-id="<?= htmlspecialchars($offer['ItemID']) ?>">
-                        🛒 Add to Cart
-                    </button>
+                    <h5 class="card-title"><?= htmlspecialchars($offer['OfferName']) ?></h5>
+                    <p class="card-text"><?= htmlspecialchars($offer['Description']) ?></p>
+                    <p class="discount">Discount: <?= $discount ?>%</p>
+                    <p class="countdown" data-expiry="<?= htmlspecialchars($offer['EndDate']) ?>"></p>
+                    <a href="src/static/php/menu/cart.php?offer_id=<?= $offerID ?>" class="add-to-cart-btn">Add to Cart</a>
                 </div>
             </div>
         </div>
@@ -86,15 +70,16 @@ $stmt->close();
 </div>
 
 <script>
-// عد تنازلي لانتهاء العروض
+// Countdown timer with reset on expiry
 document.querySelectorAll('.countdown').forEach(el => {
     let expiryDate = new Date(el.getAttribute('data-expiry')).getTime();
     let interval = setInterval(() => {
         let now = new Date().getTime();
         let timeLeft = expiryDate - now;
         if (timeLeft < 0) {
-            el.innerHTML = "⏳ Offer Expired";
+            el.innerHTML = "⏳ Offer Expired - Restarting...";
             clearInterval(interval);
+            setTimeout(() => location.reload(), 3000); // Reload page after 3 seconds
             return;
         }
         let days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
@@ -102,22 +87,6 @@ document.querySelectorAll('.countdown').forEach(el => {
         let minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
         el.innerHTML = `⏳ ${days}d ${hours}h ${minutes}m left`;
     }, 1000);
-});
-
-document.querySelectorAll('.add-to-cart').forEach(button => {
-    button.addEventListener('click', function() {
-        let itemID = this.getAttribute('data-id');
-        fetch('add_to_cart.php', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body: `id=${itemID}`
-        })
-        .then(response => response.text())
-        .then(data => {
-            
-        })
-        .catch(error => console.error('Error:', error));
-    });
 });
 </script>
 

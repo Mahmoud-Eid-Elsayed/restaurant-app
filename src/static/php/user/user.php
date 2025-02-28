@@ -69,7 +69,7 @@ class User
         $passwordHash = password_hash($data['password'], PASSWORD_DEFAULT);
         $timestamp = date("Y-m-d H:i:s");
 
-        $stmt = $this->conn->prepare("INSERT INTO User (Username, Password, Role, FirstName, LastName, Email, PhoneNumber, Address, ProfilePictureURL, RegistrationDate, LastLoginDate)
+        $stmt = $this->conn->prepare("INSERT INTO user (Username, Password, Role, FirstName, LastName, Email, PhoneNumber, Address, ProfilePictureURL, RegistrationDate, LastLoginDate)
                                       VALUES (:username, :password, 'customer', :firstname, :lastname, :email, :phonenumber, :address, :ProfilePictureURL, :RegistrationDate, :lastlogindate)");
 
         $success = $stmt->execute([

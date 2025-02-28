@@ -13,3 +13,5 @@ src/static/connection/*
 !src/static/connection/Readme.md
 
 src/static/connection/db.php
+
+src/assets/images/users/uploads

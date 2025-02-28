@@ -5,7 +5,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   $categoryName = $_POST['categoryName'];
   $description = $_POST['description'];
 
-  $stmt = $conn->prepare("INSERT INTO MenuCategory (CategoryName, Description) VALUES (:categoryName, :description)");
+  $stmt = $conn->prepare("INSERT INTO menucategory (CategoryName, Description) VALUES (:categoryName, :description)");
   $stmt->execute([
     ':categoryName' => $categoryName,
     ':description' => $description
@@ -29,10 +29,32 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 <body>
   <div class="wrapper">
-   
+<!-- Sidebar -->
+<nav id="sidebar">
+      <div class="sidebar-header">
+        <h3>ELCHEF Admin</h3>
+      </div>
+      <ul class="list-unstyled components">
+        <li><a href="index.php"><i class="fas fa-home"></i> Dashboard</a></li>
+        <li><a href="users.php"><i class="fas fa-users"></i> Users</a></li>
+        <li class="active"><a href="menu_categories.php"><i class="fas fa-list"></i> Categories</a></li>
+        <li><a href="menu_items.php"><i class="fas fa-utensils"></i> Menu Items</a></li>
+        <li><a href="orders.php"><i class="fas fa-shopping-cart"></i> Orders</a></li>
+        <li><a href="reservations.php"><i class="fas fa-calendar-alt"></i> Reservations</a></li>
+        <li><a href="inventory.php"><i class="fas fa-box"></i> Inventory</a></li>
+        <li><a href="suppliers.php"><i class="fa-solid fa-truck"></i> Suppliers</a></li>
+        <li ><a href="admin_notifications.php"><i class="fa-solid fa-bell"></i> Notifications</a></li>
+      </ul>
+    </nav>
+
+    <!-- Page Content -->
+    <div id="content">
+      <button type="button" id="sidebarToggle" class="btn btn-info">
+        <i class="fas fa-bars"></i>
+      </button>
     <div id="content">
       <div class="header">
-       
+
       </div>
       <div class="main-content">
         <h2>Add Menu Category</h2>

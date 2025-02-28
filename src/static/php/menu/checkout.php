@@ -11,23 +11,24 @@ require_once __DIR__ . '/../../connection/db.php';
 try {
   $conn->beginTransaction();
 
-  $query = "INSERT INTO `Order` (CustomerID, OrderDate, TotalAmount, OrderStatus) VALUES (?, NOW(), ?, 'Pending')";
+  $query = "INSERT INTO `order` (CustomerID, OrderDate, TotalAmount, OrderStatus) VALUES (?, NOW(), ?, 'Pending')";
   $stmt = $conn->prepare($query);
   $stmt->execute([$_SESSION['user_id'], array_sum(array_map(fn($item) => $item['price'] * $item['quantity'], $_SESSION['cart']))]);
   $orderID = $conn->lastInsertId();
 
-  $query = "INSERT INTO OrderItem (OrderID, ItemID, Quantity) VALUES (?, ?, ?)";
+  $query = "INSERT INTO orderitem (OrderID, ItemID, Quantity, PriceAtTimeOfOrder) VALUES (?, ?, ?, ?)";
   $stmt = $conn->prepare($query);
   foreach ($_SESSION['cart'] as $id => $item) {
-    $stmt->execute([$orderID, $id, $item['quantity']]);
+    $stmt->execute([$orderID, $id, $item['quantity'], $item['price']]); // Add the price
   }
 
-  $query = "INSERT INTO Notification (UserID, Message, Timestamp) VALUES (?, ?, NOW())";
+
+  $query = "INSERT INTO notification (UserID, Message, NotificationType, Timestamp) VALUES (?, ?, ?, NOW())";
   $stmt = $conn->prepare($query);
 
-  $stmt->execute([$_SESSION['user_id'], "Your order #$orderID has been placed successfully."]);
+  $stmt->execute([$_SESSION['user_id'], "Your order #$orderID has been placed successfully.", 'customer']);
 
-  $stmt->execute([null, "New order #$orderID has been placed by customer ID {$_SESSION['user_id']}."]);
+  $stmt->execute([null, "New order #$orderID has been placed by customer ID {$_SESSION['user_id']}.", 'admin']);
 
   $conn->commit();
 

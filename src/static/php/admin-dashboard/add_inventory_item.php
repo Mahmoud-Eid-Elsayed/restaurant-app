@@ -9,7 +9,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $supplierID = $_POST['supplier_id'];
 
     try {
-        $stmt = $conn->prepare("INSERT INTO InventoryItem (ItemName, QuantityInStock, UnitOfMeasurement, ReorderLevel, SupplierID) VALUES (:itemName, :quantity, :unit, :reorderLevel, :supplierID)");
+        $stmt = $conn->prepare("INSERT INTO inventoryitem (ItemName, QuantityInStock, UnitOfMeasurement, ReorderLevel, SupplierID) VALUES (:itemName, :quantity, :unit, :reorderLevel, :supplierID)");
         $stmt->execute([
             ':itemName' => $itemName,
             ':quantity' => $quantity,

@@ -8,7 +8,9 @@ if ($isLoggedIn) {
     $userProfileImage = $_SESSION['user']['profile_image'];
 }
 
-$cartItemCount = isset($_SESSION['cart']) ? count($_SESSION['cart']) : 0;
+$cartItemCount = isset($_SESSION['cart']) ? array_sum(array_map(function($item) { 
+    return $item['quantity']; 
+}, $_SESSION['cart'])) : 0;
 ?>
 
 <!DOCTYPE html>
@@ -55,7 +57,6 @@ $cartItemCount = isset($_SESSION['cart']) ? count($_SESSION['cart']) : 0;
             border-radius: 50%;
             cursor: pointer;
             object-fit: cover;
-            /* Ensure the image fills the circle */
         }
 
         .icon-container {
@@ -63,17 +64,57 @@ $cartItemCount = isset($_SESSION['cart']) ? count($_SESSION['cart']) : 0;
             cursor: pointer;
             color: white;
             position: relative;
+            transition: transform 0.3s ease;
+            padding: 8px;
+            border-radius: 50%;
+        }
+
+        .icon-container:hover {
+            transform: translateY(-2px);
+            background-color: rgba(255, 255, 255, 0.1);
         }
 
         .badge {
             position: absolute;
             top: -5px;
             right: -5px;
-            background: red;
+            background: #e67e22;
             color: white;
-            font-size: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
             border-radius: 50%;
-            padding: 3px 6px;
+            padding: 0.25rem 0.5rem;
+            min-width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid #fff;
+            transition: transform 0.3s ease;
+        }
+
+        .icon-container:hover .badge {
+            transform: scale(1.1);
+        }
+
+        .cart-link {
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            align-items: center;
+        }
+
+        .cart-link:hover {
+            color: inherit;
+        }
+
+        @keyframes cartBounce {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+
+        .cart-updated {
+            animation: cartBounce 0.5s ease;
         }
     </style>
 </head>
@@ -106,17 +147,20 @@ $cartItemCount = isset($_SESSION['cart']) ? count($_SESSION['cart']) : 0;
                     </ul>
 
                     <div class="d-flex align-items-center gap-3">
-
-                        <div class="icon-container position-relative">
-                            <a href="cart.php" class="text-white"><i class="bi bi-cart"></i></a>
-                            <?php if ($cartItemCount > 0): ?>
-                                <span class="badge"><?= $cartItemCount ?></span>
-                            <?php endif; ?>
+                        <div class="icon-container">
+                            <a href="../cart/cart.php" class="cart-link">
+                                <i class="bi bi-cart"></i>
+                                <?php if ($cartItemCount > 0): ?>
+                                    <span class="badge" id="cart-count"><?= $cartItemCount ?></span>
+                                <?php endif; ?>
+                            </a>
                         </div>
 
-                        <div class="icon-container position-relative">
-                            <a href="notifications.php" class="text-white"><i class="bi bi-bell"></i></a>
-                            <span class="badge"></span>
+                        <div class="icon-container">
+                            <a href="../notifications/notifications.php" class="cart-link">
+                                <i class="bi bi-bell"></i>
+                                <span class="badge"></span>
+                            </a>
                         </div>
 
                         <?php if (!$isLoggedIn): ?>

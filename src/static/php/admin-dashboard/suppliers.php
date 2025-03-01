@@ -90,294 +90,142 @@ foreach ($suppliers as $supplier) {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Suppliers Management - ELCHEF Admin</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <title>Suppliers - Admin Dashboard</title>
+  <link href="../../../../src/assets/libraries/node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="../../../../src/assets/libraries/fontawesome-6.7.2-web/css/all.min.css">
   <link rel="stylesheet" href="../../css/admin-dashboard/admin-dashboard.css">
   <style>
-    .page-header {
-      background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
-      color: white;
-      padding: 2rem;
-      border-radius: 15px;
-      margin-bottom: 2rem;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    }
-
-    .page-header h1 {
-      font-size: 2rem;
-      font-weight: 600;
-      margin: 0;
-    }
-
-    .page-header p {
-      margin: 0.5rem 0 0;
-      opacity: 0.9;
-    }
-
-    .stats-card {
-      background: white;
-      border-radius: 12px;
+    .reservation-details {
+      background-color: #f8f9fa;
+      border-radius: 0.25rem;
       padding: 1.5rem;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-      transition: transform 0.3s ease;
-    }
-
-    .stats-card:hover {
-      transform: translateY(-5px);
-    }
-
-    .stats-card .icon {
-      width: 50px;
-      height: 50px;
-      border-radius: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.5rem;
       margin-bottom: 1rem;
     }
 
-    .stats-card .number {
-      font-size: 1.8rem;
-      font-weight: 700;
-      margin-bottom: 0.5rem;
-    }
-
-    .stats-card .label {
-      color: #6c757d;
-      font-size: 0.9rem;
-    }
-
-    .action-card {
-      background: white;
-      border-radius: 15px;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-      margin-bottom: 2rem;
-    }
-
-    .action-card .card-header {
-      background: none;
-      padding: 1.5rem;
-      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-    }
-
-    .action-card .card-header h5 {
-      margin: 0;
-      font-weight: 600;
-      color: #2c3e50;
-    }
-
-    .action-card .card-body {
-      padding: 1.5rem;
-    }
-
-    .form-control {
-      border-radius: 8px;
-      border: 1px solid #e0e0e0;
-      padding: 0.75rem 1rem;
-    }
-
-    .form-control:focus {
-      box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
-      border-color: #3498db;
-    }
-
-    .btn-primary {
-      background: #3498db;
-      border: none;
-      padding: 0.75rem 1.5rem;
-      border-radius: 8px;
-      font-weight: 500;
-      transition: all 0.3s ease;
-    }
-
-    .btn-primary:hover {
-      background: #2980b9;
-      transform: translateY(-2px);
-    }
-
-    .table {
-      border-radius: 8px;
-      overflow: hidden;
-    }
-
-    .table th {
-      background: #f8f9fa;
-      font-weight: 600;
-      text-transform: uppercase;
-      font-size: 0.85rem;
-      letter-spacing: 0.5px;
-      padding: 1rem;
-    }
-
-    .table td {
-      padding: 1rem;
-      vertical-align: middle;
-    }
-
     .status-badge {
+      font-size: 1rem;
       padding: 0.5rem 1rem;
-      border-radius: 50px;
-      font-size: 0.85rem;
-      font-weight: 500;
     }
 
-    .status-pending {
-      background: rgba(255, 193, 7, 0.1);
-      color: #ffc107;
+    .timeline {
+      position: relative;
+      padding: 1rem 0;
     }
 
-    .status-shipped {
-      background: rgba(52, 152, 219, 0.1);
-      color: #3498db;
+    .timeline-item {
+      position: relative;
+      padding-left: 40px;
+      margin-bottom: 1.5rem;
     }
 
-    .status-delivered {
-      background: rgba(40, 167, 69, 0.1);
-      color: #28a745;
+    .timeline-item:last-child {
+      margin-bottom: 0;
     }
 
-    .btn-action {
-      padding: 0.5rem;
-      border-radius: 8px;
-      transition: all 0.3s ease;
-    }
-
-    .btn-action:hover {
-      transform: translateY(-2px);
-    }
-
-    .order-form {
+    .timeline-marker {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
       background: #f8f9fa;
-      border-radius: 12px;
-      padding: 1.5rem;
-      margin-bottom: 2rem;
+      border: 2px solid #dee2e6;
+      text-align: center;
+      line-height: 20px;
     }
 
-    @media (max-width: 768px) {
-      .page-header {
-        padding: 1.5rem;
-        margin-bottom: 1.5rem;
-      }
+    .timeline-marker i {
+      font-size: 12px;
+    }
 
-      .stats-card {
-        margin-bottom: 1rem;
-      }
+    .timeline-content {
+      position: relative;
+      padding-bottom: 1rem;
+      border-bottom: 1px dashed #dee2e6;
+    }
 
-      .action-card {
-        margin-bottom: 1.5rem;
-      }
+    .timeline-item:last-child .timeline-content {
+      border-bottom: none;
+      padding-bottom: 0;
     }
   </style>
 </head>
 
 <body>
-  <div class="wrapper">
-    <!-- Sidebar -->
-    <nav id="sidebar">
-      <div class="sidebar-header">
-        <h3>ELCHEF Admin</h3>
-      </div>
-      <ul class="list-unstyled components">
-        <li><a href="index.php"><i class="fas fa-home"></i> Dashboard</a></li>
-        <li><a href="users.php"><i class="fas fa-users"></i> Users</a></li>
-        <li><a href="menu_categories.php"><i class="fas fa-list"></i> Categories</a></li>
-        <li><a href="menu_items.php"><i class="fas fa-utensils"></i> Menu Items</a></li>
-        <li><a href="orders.php"><i class="fas fa-shopping-cart"></i> Orders</a></li>
-        <li><a href="reservations.php"><i class="fas fa-calendar-alt"></i> Reservations</a></li>
-        <li><a href="inventory.php"><i class="fas fa-box"></i> Inventory</a></li>
-        <li class="active"><a href="suppliers.php"><i class="fa-solid fa-truck"></i></i> Suppliers</a></li>
-        <li><a href="admin_notifications.php"><i class="fa-solid fa-bell"></i> Notifications</a>
 
-      </ul>
-    </nav>
-
-    <!-- Page Content -->
-    <div id="content">
-      <button type="button" id="sidebarToggle" class="btn">
-        <i class="fas fa-bars"></i>
-      </button>
-
-      <div class="container-fluid">
-        <!-- Page Header -->
-        <div class="page-header">
-          <div class="row align-items-center">
-            <div class="col-md-6">
-              <h1><i class="fas fa-truck me-2"></i>Suppliers Management</h1>
-              <p>Manage your suppliers and their orders</p>
-            </div>
-            <div class="col-md-6 text-md-end">
-              <button type="button" class="btn btn-light" data-bs-toggle="modal" data-bs-target="#addSupplierModal">
-                <i class="fas fa-plus me-2"></i>Add New Supplier
-              </button>
-            </div>
-          </div>
+    <div class="wrapper">
+      <!-- Sidebar -->
+      <nav id="sidebar">
+        <div class="sidebar-header">
+          <h3>ELCHEF Admin</h3>
         </div>
+        <ul class="list-unstyled components">
+          <li><a href="index.php"><i class="fas fa-home"></i> Dashboard</a></li>
+          <li><a href="users.php"><i class="fas fa-users"></i> Users</a></li>
+          <li><a href="menu_categories.php"><i class="fas fa-list"></i> Categories</a></li>
+          <li><a href="menu_items.php"><i class="fas fa-utensils"></i> Menu Items</a></li>
+          <li class="active"><a href="orders.php"><i class="fas fa-shopping-cart"></i> Orders</a></li>
+          <li><a href="reservations.php"><i class="fas fa-calendar-alt"></i> Reservations</a></li>
+          <li><a href="inventory.php"><i class="fas fa-box"></i> Inventory</a></li>
+          <li><a href="suppliers.php"><i class="fa-solid fa-truck"></i></i> Suppliers</a></li>
+          <li><a href="admin_notifications.php"><i class="fa-solid fa-bell"></i> Notifications</a>
 
-        <!-- Statistics Row -->
-        <div class="row mb-4">
-          <div class="col-md-4">
-            <div class="stats-card">
-              <div class="icon bg-primary bg-opacity-10 text-primary">
-                <i class="fas fa-users"></i>
-              </div>
-              <div class="number text-primary"><?php echo count($suppliers); ?></div>
-              <div class="label">Total Suppliers</div>
-            </div>
-          </div>
-          <div class="col-md-4">
-            <div class="stats-card">
-              <div class="icon bg-success bg-opacity-10 text-success">
-                <i class="fas fa-shopping-cart"></i>
-              </div>
-              <div class="number text-success">
-                <?php
-                $totalOrders = 0;
-                foreach ($supplierOrders as $orders) {
-                  $totalOrders += count($orders);
-                }
-                echo $totalOrders;
-                ?>
-              </div>
-              <div class="label">Total Orders</div>
-            </div>
-          </div>
-          <div class="col-md-4">
-            <div class="stats-card">
-              <div class="icon bg-warning bg-opacity-10 text-warning">
-                <i class="fas fa-clock"></i>
-              </div>
-              <div class="number text-warning">
-                <?php
-                $pendingOrders = 0;
-                foreach ($supplierOrders as $orders) {
-                  foreach ($orders as $order) {
-                    if ($order['Status'] === 'Pending') {
-                      $pendingOrders++;
-                    }
-                  }
-                }
-                echo $pendingOrders;
-                ?>
-              </div>
-              <div class="label">Pending Orders</div>
-            </div>
-          </div>
-        </div>
+        </ul>
+      </nav>
 
-        <!-- Suppliers List -->
-        <div class="action-card">
-          <div class="card-header d-flex justify-content-between align-items-center">
-            <h5><i class="fas fa-users me-2"></i>Supplier List</h5>
-            <div class="form-group mb-0">
-              <input type="text" class="form-control" id="supplierSearch" placeholder="Search suppliers...">
+      <!-- Page Content -->
+      <div id="content">
+        <button type="button" id="sidebarToggle">
+          <i class="fas fa-bars"></i>
+        </button>
+
+        <div class="container mt-5">
+          <h1 class="mb-4">Suppliers</h1>
+
+          <!-- Add Supplier Form -->
+          <div class="card mb-4">
+            <div class="card-header">
+              <h5 class="card-title">Add New Supplier</h5>
+            </div>
+
+            <div class="card-body">
+              <form method="POST">
+                <div class="mb-3">
+                  <label for="supplier_name" class="form-label">Supplier Name</label>
+                  <input type="text" class="form-control" id="supplier_name" name="supplier_name" required>
+                </div>
+
+                <div class="mb-3">
+                  <label for="contact_person" class="form-label">Contact Person</label>
+                  <input type="text" class="form-control" id="contact_person" name="contact_person">
+                </div>
+                <div class="mb-3">
+                  <label for="email" class="form-label">Email</label>
+                  <input type="email" class="form-control" id="email" name="email">
+                </div>
+                <div class="mb-3">
+                  <label for="phone" class="form-label">Phone</label>
+                  <input type="text" class="form-control" id="phone" name="phone">
+                </div>
+                <div class="mb-3">
+                  <label for="address" class="form-label">Address</label>
+                  <textarea class="form-control" id="address" name="address" rows="3"></textarea>
+                </div>
+                <button type="submit" name="add_supplier" class="btn btn-primary">Add Supplier</button>
+              </form>
             </div>
           </div>
-          <div class="card-body">
-            <div class="table-responsive">
-              <table class="table table-hover">
+
+
+          <!-- Suppliers Table -->
+          <div class="card mb-4">
+
+            <div class="card-header">
+              <h5 class="card-title">Supplier List</h5>
+            </div>
+            <div class="card-body">
+              <table class="table table-bordered">
                 <thead>
                   <tr>
                     <th>ID</th>
@@ -392,18 +240,10 @@ foreach ($suppliers as $supplier) {
                 <tbody>
                   <?php foreach ($suppliers as $supplier): ?>
                     <tr>
-                      <td>#<?php echo htmlspecialchars($supplier['SupplierID']); ?></td>
-                      <td>
-                        <div class="d-flex align-items-center">
-                          <div class="avatar-sm bg-primary bg-opacity-10 text-primary rounded-circle me-2">
-                            <?php echo strtoupper(substr($supplier['SupplierName'], 0, 1)); ?>
-                          </div>
-                          <div>
-                            <div class="fw-semibold"><?php echo htmlspecialchars($supplier['SupplierName']); ?></div>
-                          </div>
-                        </div>
-                      </td>
+                      <td><?php echo htmlspecialchars($supplier['SupplierID']); ?></td>
+                      <td><?php echo htmlspecialchars($supplier['SupplierName']); ?></td>
                       <td><?php echo htmlspecialchars($supplier['ContactPerson']); ?></td>
+<<<<<<< HEAD
                       <td>
                         <a href="mailto:<?php echo htmlspecialchars($supplier['Email']); ?>" class="text-decoration-none">
                           <?php echo htmlspecialchars($supplier['Email']); ?>
@@ -415,18 +255,17 @@ foreach ($suppliers as $supplier) {
                           <?php echo htmlspecialchars($supplier['PhoneNumber']); ?>
                         </a>
                       </td>
+=======
+                      <td><?php echo htmlspecialchars($supplier['Email']); ?></td>
+                      <td><?php echo htmlspecialchars($supplier['Phone']); ?></td>
+>>>>>>> 02-menu-page
                       <td><?php echo htmlspecialchars($supplier['Address']); ?></td>
                       <td>
-                        <div class="btn-group">
-                          <button type="button" class="btn btn-sm btn-outline-primary btn-action"
-                            onclick="editSupplier(<?php echo $supplier['SupplierID']; ?>)">
-                            <i class="fas fa-edit"></i>
-                          </button>
-                          <button type="button" class="btn btn-sm btn-outline-danger btn-action"
-                            onclick="deleteSupplier(<?php echo $supplier['SupplierID']; ?>, '<?php echo htmlspecialchars($supplier['SupplierName']); ?>')">
-                            <i class="fas fa-trash"></i>
-                          </button>
-                        </div>
+                        <a href="edit_supplier.php?id=<?php echo $supplier['SupplierID']; ?>"
+                          class="btn btn-sm btn-warning">Edit</a>
+                        <a href="suppliers.php?delete_id=<?php echo $supplier['SupplierID']; ?>"
+                          class="btn btn-sm btn-danger"
+                          onclick="return confirm('Are you sure you want to delete this supplier?')">Delete</a>
                       </td>
                     </tr>
                   <?php endforeach; ?>
@@ -434,57 +273,51 @@ foreach ($suppliers as $supplier) {
               </table>
             </div>
           </div>
-        </div>
 
-        <!-- Supplier Orders -->
-        <div class="action-card">
-          <div class="card-header">
-            <h5><i class="fas fa-shopping-cart me-2"></i>Supplier Orders</h5>
-          </div>
-          <div class="card-body">
-            <!-- Add Order Form -->
-            <form method="POST" class="order-form mb-4">
-              <div class="row g-3">
-                <div class="col-md-3">
-                  <label class="form-label">Supplier</label>
-                  <select class="form-select" name="supplier_id" required>
-                    <?php foreach ($suppliers as $supplier): ?>
-                      <option value="<?php echo $supplier['SupplierID']; ?>">
-                        <?php echo htmlspecialchars($supplier['SupplierName']); ?>
-                      </option>
-                    <?php endforeach; ?>
-                  </select>
-                </div>
-                <div class="col-md-3">
-                  <label class="form-label">Order Date</label>
-                  <input type="date" class="form-control" name="order_date" required>
-                </div>
-                <div class="col-md-2">
-                  <label class="form-label">Total Amount</label>
-                  <div class="input-group">
-                    <span class="input-group-text">$</span>
-                    <input type="number" step="0.01" class="form-control" name="total_amount" required>
+          <!-- Supplier Orders Section -->
+          <div class="card">
+            <div class="card-header">
+              <h5 class="card-title">Supplier Orders</h5>
+            </div>
+            <div class="card-body">
+              <!-- Add Order Form -->
+              <form method="POST" class="mb-4">
+                <div class="row">
+                  <div class="col-md-3">
+                    <label for="supplier_id" class="form-label">Supplier</label>
+                    <select class="form-control" id="supplier_id" name="supplier_id" required>
+                      <?php foreach ($suppliers as $supplier): ?>
+                        <option value="<?php echo $supplier['SupplierID']; ?>">
+                          <?php echo htmlspecialchars($supplier['SupplierName']); ?>
+                        </option>
+                      <?php endforeach; ?>
+                    </select>
+                  </div>
+                  <div class="col-md-2">
+                    <label for="order_date" class="form-label">Order Date</label>
+                    <input type="date" class="form-control" id="order_date" name="order_date" required>
+                  </div>
+                  <div class="col-md-2">
+                    <label for="total_amount" class="form-label">Total Amount</label>
+                    <input type="number" step="0.01" class="form-control" id="total_amount" name="total_amount"
+                      required>
+                  </div>
+                  <div class="col-md-2">
+                    <label for="status" class="form-label">Status</label>
+                    <select class="form-control" id="status" name="status" required>
+                      <option value="Pending">Pending</option>
+                      <option value="Shipped">Shipped</option>
+                      <option value="Delivered">Delivered</option>
+                    </select>
+                  </div>
+                  <div class="col-md-3 align-self-end">
+                    <button type="submit" name="add_order" class="btn btn-primary">Add Order</button>
                   </div>
                 </div>
-                <div class="col-md-2">
-                  <label class="form-label">Status</label>
-                  <select class="form-select" name="status" required>
-                    <option value="Pending">Pending</option>
-                    <option value="Shipped">Shipped</option>
-                    <option value="Delivered">Delivered</option>
-                  </select>
-                </div>
-                <div class="col-md-2 d-flex align-items-end">
-                  <button type="submit" name="add_order" class="btn btn-primary w-100">
-                    <i class="fas fa-plus me-2"></i>Add Order
-                  </button>
-                </div>
-              </div>
-            </form>
+              </form>
 
-            <!-- Orders Table -->
-            <div class="table-responsive">
-              <table class="table table-hover">
+              <!-- Orders Table -->
+              <table class="table table-bordered">
                 <thead>
                   <tr>
                     <th>Order ID</th>
@@ -492,45 +325,19 @@ foreach ($suppliers as $supplier) {
                     <th>Order Date</th>
                     <th>Total Amount</th>
                     <th>Status</th>
-                    <th>Actions</th>
                   </tr>
                 </thead>
                 <tbody>
                   <?php foreach ($supplierOrders as $supplierID => $orders): ?>
                     <?php foreach ($orders as $order): ?>
                       <tr>
-                        <td>#<?php echo htmlspecialchars($order['OrderID']); ?></td>
+                        <td><?php echo htmlspecialchars($order['OrderID']); ?></td>
                         <td>
-                          <?php
-                          $supplierName = '';
-                          foreach ($suppliers as $supplier) {
-                            if ($supplier['SupplierID'] == $supplierID) {
-                              $supplierName = $supplier['SupplierName'];
-                              break;
-                            }
-                          }
-                          echo htmlspecialchars($supplierName);
-                          ?>
+                          <?php echo htmlspecialchars($suppliers[array_search($supplierID, array_column($suppliers, 'SupplierID'))]['SupplierName']); ?>
                         </td>
                         <td><?php echo htmlspecialchars($order['OrderDate']); ?></td>
-                        <td>$<?php echo number_format($order['TotalAmount'], 2); ?></td>
-                        <td>
-                          <span class="status-badge status-<?php echo strtolower($order['Status']); ?>">
-                            <?php echo htmlspecialchars($order['Status']); ?>
-                          </span>
-                        </td>
-                        <td>
-                          <div class="btn-group">
-                            <button type="button" class="btn btn-sm btn-outline-primary btn-action"
-                              onclick="editOrder(<?php echo $order['OrderID']; ?>)">
-                              <i class="fas fa-edit"></i>
-                            </button>
-                            <button type="button" class="btn btn-sm btn-outline-success btn-action"
-                              onclick="updateStatus(<?php echo $order['OrderID']; ?>)">
-                              <i class="fas fa-sync-alt"></i>
-                            </button>
-                          </div>
-                        </td>
+                        <td>$<?php echo htmlspecialchars($order['TotalAmount']); ?></td>
+                        <td><?php echo htmlspecialchars($order['Status']); ?></td>
                       </tr>
                     <?php endforeach; ?>
                   <?php endforeach; ?>
@@ -539,10 +346,8 @@ foreach ($suppliers as $supplier) {
             </div>
           </div>
         </div>
-      </div>
-    </div>
-  </div>
 
+<<<<<<< HEAD
   <!-- Add Supplier Modal -->
   <div class="modal fade" id="addSupplierModal" tabindex="-1">
     <div class="modal-dialog">
@@ -745,6 +550,10 @@ foreach ($suppliers as $supplier) {
   <!-- Toast Container -->
   <div id="toastContainer" aria-live="polite" aria-atomic="true" class="position-fixed bottom-0 end-0 p-3"
     style="z-index: 11"></div>
+=======
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="../../js/admin-dashboard.js"></script>
+>>>>>>> 02-menu-page
 </body>
 
 </html>

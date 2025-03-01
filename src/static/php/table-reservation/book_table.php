@@ -1,7 +1,7 @@
 <?php
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
-
+session_start();
 require '../../../../src/static/connection/db.php';
 require __DIR__ . '/../../../../vendor/autoload.php';
 
@@ -118,6 +118,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 </head>
 
 <body>
+    <?php include '../includes/navbar.php'; ?>
     <div class="container my-5 resr">
         <div class="row">
             <div class="col-md-6">
@@ -174,41 +175,53 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     <script>
 
-        function fetchAvailableTables() {
-            const date = document.getElementById('date').value;
-            const time = document.getElementById('time').value;
-            const guests = document.getElementById('guests').value;
+function fetchAvailableTables() {
+    const date = document.getElementById('date').value;
+    const time = document.getElementById('time').value;
+    const guests = document.getElementById('guests').value;
 
-            console.log("Fetching available tables for:", date, time, guests);
+    console.log("Fetching available tables for:", date, time, guests);
 
-            fetch(`get_available_tables.php?date=${date}&time=${time}&guests=${guests}`)
-                .then(response => response.json())
-                .then(data => {
-                    console.log("Response from server:", data);
+    // Check if all required fields are filled
+    if (!date || !time || !guests) {
+        console.log("Skipping fetch: Date, time, or guests is missing.");
+        return;
+    }
 
-                    if (data.status === "success") {
-                        const tableSelect = document.getElementById('table_id');
-                        tableSelect.innerHTML = '<option value="">Select a table</option>';
+    fetch(`get_available_tables.php?date=${date}&time=${time}&guests=${guests}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log("Response from server:", data);
 
-                        data.tables.forEach(table => {
-                            const option = document.createElement('option');
-                            option.value = table.TableID;
-                            option.textContent = `Table ${table.TableNumber} (Capacity: ${table.Capacity}, Location: ${table.Location})`;
-                            tableSelect.appendChild(option);
-                        });
-                    } else {
-                        alert(data.message);
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert("Failed to fetch available tables. Please try again later.");
+            if (data.status === "success") {
+                const tableSelect = document.getElementById('table_id');
+                tableSelect.innerHTML = '<option value="">Select a table</option>';
+
+                data.tables.forEach(table => {
+                    const option = document.createElement('option');
+                    option.value = table.TableID;
+                    option.textContent = `Table ${table.TableNumber} (Capacity: ${table.Capacity}, Location: ${table.Location})`;
+                    tableSelect.appendChild(option);
                 });
-        }
+            } else {
+                alert(data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert("Failed to fetch available tables. Please try again later.");
+        });
+}
 
-        document.getElementById('date').addEventListener('change', fetchAvailableTables);
-        document.getElementById('time').addEventListener('change', fetchAvailableTables);
-        document.getElementById('guests').addEventListener('change', fetchAvailableTables);
+// Add event listeners to the form fields
+document.getElementById('date').addEventListener('change', fetchAvailableTables);
+document.getElementById('time').addEventListener('change', fetchAvailableTables);
+document.getElementById('guests').addEventListener('change', fetchAvailableTables);
 
         document.getElementById('bookingForm').addEventListener('submit', function (e) {
             e.preventDefault();

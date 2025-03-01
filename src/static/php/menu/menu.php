@@ -28,6 +28,7 @@ try {
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="../../../css/landingpage/landing-pg.css">
     <style>
         .menu-container {
             display: flex;
@@ -111,12 +112,12 @@ try {
                 <i class="fas fa-utensils"></i> All Menu
             </a>
             <?php foreach ($categories as $categoryID => $categoryName) { ?>
-                <a href="?category=<?= urlencode($categoryID) ?>" 
-                   class="<?= $selectedCategory == $categoryID ? 'active' : '' ?>">
-                    <i class="fas fa-<?= $categoryID == 1 ? 'drumstick-bite' : 
-                                    ($categoryID == 2 ? 'fish' : 
-                                    ($categoryID == 3 ? 'ice-cream' : 
-                                    ($categoryID == 4 ? 'glass-martini-alt' : 'utensils'))) ?>"></i>
+                <a href="?category=<?= urlencode($categoryID) ?>"
+                    class="<?= $selectedCategory == $categoryID ? 'active' : '' ?>">
+                    <i class="fas fa-<?= $categoryID == 1 ? 'drumstick-bite' :
+                        ($categoryID == 2 ? 'fish' :
+                            ($categoryID == 3 ? 'ice-cream' :
+                                ($categoryID == 4 ? 'glass-martini-alt' : 'utensils'))) ?>"></i>
                     <?= htmlspecialchars($categoryName) ?>
                 </a>
             <?php } ?>
@@ -160,6 +161,26 @@ try {
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script>
+        // Add notification function
+        function showNotification() {
+            const notification = document.getElementById('notification');
+            notification.classList.add('show');
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+
+        function updateCartCount(count) {
+            const cartCount = document.getElementById('cart-count');
+            if (cartCount) {
+                cartCount.style.transform = 'scale(1.2)';
+                cartCount.textContent = count;
+                setTimeout(() => {
+                    cartCount.style.transform = 'scale(1)';
+                }, 200);
+            }
+        }
+
         document.querySelectorAll('.add-to-cart').forEach(button => {
             button.addEventListener('click', function () {
                 let itemID = this.getAttribute('data-id');

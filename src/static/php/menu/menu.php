@@ -349,10 +349,13 @@ while ($row = $categoryResult->fetch(PDO::FETCH_ASSOC)) {
                     $result = $stmt;
 
                     while ($item = $result->fetch()) {
+                        // Fix the image URL path
+                        $imageUrl = '../../../static/uploads/Menu-item/' . basename($item['ImageURL']);
+                        
                         echo "
                         <div class='menu-card'>
                             <div class='card-img-wrapper'>
-                                <img src='" . htmlspecialchars($item['ImageURL']) . "' 
+                                <img src='" . htmlspecialchars($imageUrl) . "' 
                                      class='card-img-top' 
                                      alt='" . htmlspecialchars($item['ItemName']) . "'>
                             </div>

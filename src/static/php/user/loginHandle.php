@@ -34,12 +34,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             'id' => $result['user_id'],
             'username' => $result['username'],
             'role' => $result['role'],
-            'profile_image' => $result['profile_image']
+            'profile_image' => $result['profile_image'],
+            'status'=>$result['status'],
         ];
 
         // Redirect based on role
         if ($result['role'] === 'Staff') {
             header("Location: ../../../../admin-dashboard/index.php");
+        } else if ($result['user']['status'] == 'inactive') { 
+            header("Location: ../../php/user/otp.php");
         } else {
             header("Location: ../../html/user/userProfile.php");
         }

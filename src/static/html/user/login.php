@@ -42,6 +42,7 @@ if (isset($_SESSION['form_errors'])) {
                 </div>
                 <button type="submit" class="btn btn-primary btn-block my-3">Login</button>
             </form>
+            <a href="email_password_reset.php?value=setpassword">forgot your password</a>
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js"></script>

@@ -242,6 +242,7 @@ while ($row = $categoryResult->fetch(PDO::FETCH_ASSOC)) {
                 opacity: 0;
                 transform: translateY(20px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -253,6 +254,7 @@ while ($row = $categoryResult->fetch(PDO::FETCH_ASSOC)) {
                 opacity: 0;
                 transform: translateY(30px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -273,7 +275,7 @@ while ($row = $categoryResult->fetch(PDO::FETCH_ASSOC)) {
         /* Add success notification */
         .notification {
             position: fixed;
-            top: 20px;
+            top: 25%;
             right: 20px;
             padding: 15px 25px;
             background-color: #2ecc71;
@@ -283,7 +285,7 @@ while ($row = $categoryResult->fetch(PDO::FETCH_ASSOC)) {
             display: flex;
             align-items: center;
             gap: 10px;
-            z-index: 1000;
+            z-index: 100000;
             transform: translateY(-100px);
             opacity: 0;
             transition: all 0.3s ease;
@@ -323,12 +325,12 @@ while ($row = $categoryResult->fetch(PDO::FETCH_ASSOC)) {
                 <i class="fas fa-utensils"></i> All Menu
             </a>
             <?php foreach ($categories as $categoryID => $categoryName) { ?>
-                <a href="?category=<?= urlencode($categoryID) ?>" 
-                   class="<?= $selectedCategory == $categoryID ? 'active' : '' ?>">
-                    <i class="fas fa-<?= $categoryID == 1 ? 'drumstick-bite' : 
-                                    ($categoryID == 2 ? 'fish' : 
-                                    ($categoryID == 3 ? 'ice-cream' : 
-                                    ($categoryID == 4 ? 'glass-martini-alt' : 'utensils'))) ?>"></i>
+                <a href="?category=<?= urlencode($categoryID) ?>"
+                    class="<?= $selectedCategory == $categoryID ? 'active' : '' ?>">
+                    <i class="fas fa-<?= $categoryID == 1 ? 'drumstick-bite' :
+                        ($categoryID == 2 ? 'fish' :
+                            ($categoryID == 3 ? 'ice-cream' :
+                                ($categoryID == 4 ? 'glass-martini-alt' : 'utensils'))) ?>"></i>
                     <?= htmlspecialchars($categoryName) ?>
                 </a>
             <?php } ?>
@@ -351,7 +353,7 @@ while ($row = $categoryResult->fetch(PDO::FETCH_ASSOC)) {
                     while ($item = $result->fetch()) {
                         // Fix the image URL path
                         $imageUrl = '../../../static/uploads/Menu-item/' . basename($item['ImageURL']);
-                        
+
                         echo "
                         <div class='menu-card'>
                             <div class='card-img-wrapper'>
@@ -399,33 +401,33 @@ while ($row = $categoryResult->fetch(PDO::FETCH_ASSOC)) {
         }
 
         document.querySelectorAll('.add-to-cart').forEach(button => {
-            button.addEventListener('click', function() {
+            button.addEventListener('click', function () {
                 const btn = this;
                 btn.disabled = true;
                 btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Adding...';
-                
+
                 let itemID = this.getAttribute('data-id');
                 fetch('add_to_cart.php', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                     body: `id=${itemID}`
                 })
-                .then(response => response.text())
-                .then(data => {
-                    updateCartCount(data);
-                    btn.innerHTML = '<i class="fas fa-check"></i> Added!';
-                    showNotification();
-                    
-                    setTimeout(() => {
+                    .then(response => response.text())
+                    .then(data => {
+                        updateCartCount(data);
+                        btn.innerHTML = '<i class="fas fa-check"></i> Added!';
+                        showNotification();
+
+                        setTimeout(() => {
+                            btn.disabled = false;
+                            btn.innerHTML = '<i class="fas fa-cart-plus"></i> Add to Cart';
+                        }, 2000);
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
                         btn.disabled = false;
                         btn.innerHTML = '<i class="fas fa-cart-plus"></i> Add to Cart';
-                    }, 2000);
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    btn.disabled = false;
-                    btn.innerHTML = '<i class="fas fa-cart-plus"></i> Add to Cart';
-                });
+                    });
             });
         });
 

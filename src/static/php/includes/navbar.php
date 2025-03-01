@@ -1,15 +1,24 @@
 <?php
-// session_start(); // Ensure session starts before using session variables
+// session_start();
 
-$isLoggedIn = isset($_SESSION['user']);
-$userProfileImage = "/src/assets/images/users/profile_pictures/default-profile.png";
+$isLoggedIn = isset($_SESSION['user_id']);
+$userProfileImage = "/src/assets/images/users/profile_pictures/default-profile.png"; // Default profile picture
 
 if ($isLoggedIn) {
-    $userProfileImage = $_SESSION['user']['profile_image'];
+    // Fetch user data from session or database
+    require '../../connection/db.php';
+    require '../../php/user/user.php';
+
+    $user = new User($conn);
+    $userData = $user->getUserById($_SESSION['user_id']);
+
+    if ($userData && !empty($userData['ProfilePictureURL'])) {
+        $userProfileImage = $userData['ProfilePictureURL'];
+    }
 }
 
-$cartItemCount = isset($_SESSION['cart']) ? array_sum(array_map(function($item) { 
-    return $item['quantity']; 
+$cartItemCount = isset($_SESSION['cart']) ? array_sum(array_map(function ($item) {
+    return $item['quantity'];
 }, $_SESSION['cart'])) : 0;
 ?>
 
@@ -109,8 +118,15 @@ $cartItemCount = isset($_SESSION['cart']) ? array_sum(array_map(function($item) 
         }
 
         @keyframes cartBounce {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.2); }
+
+            0%,
+            100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.2);
+            }
         }
 
         .cart-updated {
@@ -122,7 +138,7 @@ $cartItemCount = isset($_SESSION['cart']) ? array_sum(array_map(function($item) 
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-dark sticky-top shadow-sm">
         <div class="container-fluid">
-            <a class="navbar-brand text-white" href="../../../../index.html">THE CHEF</a>
+            <a class="navbar-brand text-white" href="../../../../index.php">THE CHEF</a>
 
             <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar"
                 aria-controls="offcanvasNavbar">
@@ -137,18 +153,19 @@ $cartItemCount = isset($_SESSION['cart']) ? array_sum(array_map(function($item) 
                 </div>
                 <div class="offcanvas-body">
                     <ul class="navbar-nav mx-auto mb-3 mb-lg-0">
-                        <li class="nav-item"><a class="nav-link text-white" href="../../../../index.html">Home</a></li>
+                        <li class="nav-item"><a class="nav-link text-white" href="../../../../index.php">Home</a></li>
                         <li class="nav-item"><a class="nav-link text-white"
                                 href="../../../static/php/menu/menu.php">Menu</a>
                         </li>
                         <li class="nav-item"><a class="nav-link text-white" href="#">Offers</a></li>
-                        <li class="nav-item"><a class="nav-link text-white" href="#">About Us</a></li>
-                        <li class="nav-item"><a class="nav-link text-white" href="#">Contact</a></li>
+                        <li class="nav-item"><a class="nav-link text-white" href="../../../static/php/table-reservation/book_table.php">Book a
+                                Table</a>
+                        </li>
                     </ul>
 
                     <div class="d-flex align-items-center gap-3">
                         <div class="icon-container">
-                            <a href="../cart/cart.php" class="cart-link">
+                            <a href="../menu/cart.php" class="cart-link">
                                 <i class="bi bi-cart"></i>
                                 <?php if ($cartItemCount > 0): ?>
                                     <span class="badge" id="cart-count"><?= $cartItemCount ?></span>
@@ -157,7 +174,7 @@ $cartItemCount = isset($_SESSION['cart']) ? array_sum(array_map(function($item) 
                         </div>
 
                         <div class="icon-container">
-                            <a href="../notifications/notifications.php" class="cart-link">
+                            <a href="../../../static/html/user/customer_notifications.php" class="cart-link">
                                 <i class="bi bi-bell"></i>
                                 <span class="badge"></span>
                             </a>

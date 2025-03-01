@@ -214,6 +214,9 @@ $total_menu_items = $stmt->fetch(PDO::FETCH_ASSOC)['total_menu_items'];
                     <a href="orders.php"><i class="fas fa-shopping-cart"></i> Orders</a>
                 </li>
                 <li>
+                    <a href="special_offers.php"><i class="fas fa-shopping-cart"></i> Special Offers</a>
+                </li>
+                <li>
                     <a href="reservations.php"><i class="fas fa-calendar-alt"></i> Reservations</a>
                 </li>
                 <li>

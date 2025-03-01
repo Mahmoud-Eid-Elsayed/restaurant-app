@@ -1,28 +1,21 @@
 <?php
 session_start();
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-
 require_once __DIR__ . '/../../connection/db.php';
 require '../includes/navbar.php';
 
-// Database connection
-$conn = new mysqli($host, $username, $password, $dbname, $port);
-if ($conn->connect_error) {
-    die("❌ Connection failed: " . $conn->connect_error);
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
+$sql = "SELECT * FROM SpecialOffer";
+$stmt = $conn->prepare($sql);
+$stmt->execute();
+$result = $stmt;
+
+if (!$result) {
+    die("Query failed");
 }
 
-// Fetch active special offers
-$stmt = $conn->prepare("
-    SELECT OfferID, OfferName, Description, EndDate, ImageURL
-    FROM specialoffer
-    WHERE IsActive = 1
-");
-$stmt->execute();
-$result = $stmt->get_result();
-$specialOffers = $result->fetch_all(MYSQLI_ASSOC);
-$stmt->close();
+$cart_count = isset($_SESSION['cart']) ? count($_SESSION['cart']) : 0;
 ?>
 
 <!DOCTYPE html>
@@ -31,64 +24,160 @@ $stmt->close();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Special Offers</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <style>
-        body { background-color: #f8f9fa; font-family: Arial, sans-serif; }
-        .card { border-radius: 12px; transition: 0.3s; box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1); }
-        .card:hover { transform: translateY(-5px); box-shadow: 0px 10px 25px rgba(0, 0, 0, 0.2); }
-        .countdown { font-size: 1rem; color: #dc3545; font-weight: bold; }
-        .discount { font-size: 1.2rem; color: #e67e22; font-weight: bold; }
-        .add-to-cart-btn { background-color: #007bff; color: white; padding: 10px 20px; border-radius: 5px; text-decoration: none; display: inline-block; }
-        .add-to-cart-btn:hover { background-color: #0056b3; }
+        body {
+            background-color: #f0f0f0;
+            font-family: Arial, sans-serif;
+        }
+        .offer-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            width: 100%;
+            padding: 20px;
+        }
+        .offer-card {
+            background: white;
+            border: 1px solid #ddd;
+            padding: 15px;
+            width: 300px;
+            border-radius: 8px;
+            box-shadow: 2px 2px 10px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        .offer-card img {
+            max-width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 5px;
+        }
+        .offer-card h3 {
+            color: #1f3a93;
+        }
+        .offer-card p {
+            margin: 5px 0;
+            color: #666;
+        }
+        .original-price {
+            text-decoration: line-through;
+            color: #999;
+        }
+        .discount-percentage {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+        .final-price {
+            color: #2ecc71;
+            font-weight: bold;
+        }
+        .countdown {
+            color: #1f3a93;
+            font-weight: bold;
+            font-size: 16px;
+        }
+        .add-to-cart {
+            background-color: #1f3a93;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .add-to-cart:hover {
+            background-color: #162c6a;
+        }
     </style>
 </head>
 <body>
+    <h2 style="width: 100%; text-align: center; color: #1f3a93;">Special Offers</h2>
+    <div id="cart-status">🛒 Items in Cart: <span id="cart-count"><?= $cart_count; ?></span></div>
+    <div class="offer-container">
+        <?php while ($row = $result->fetch(PDO::FETCH_ASSOC)): ?>
+            <div class="offer-card">
+                <?php
+                $imageURL = !empty($row['ImageURL']) ? htmlspecialchars($row['ImageURL']) : 'default-image.jpg';
+                ?>
+                <img src="<?php echo $imageURL; ?>" alt="Offer Image">
+                <h3><?php echo htmlspecialchars($row['OfferCode'] ?? ''); ?></h3>
+                <p><?php echo htmlspecialchars($row['Description'] ?? ''); ?></p>
 
-<div class="container mt-5">
-    <h2 class="text-center mb-4">🔥 Special Discounts - Limited Time!</h2>
-    <div class="row row-cols-1 row-cols-md-3 g-4">
-        <?php foreach ($specialOffers as $offer): 
-            $imageURL = isset($offer['ImageURL']) ? trim($offer['ImageURL']) : 'default.jpg';
-            $offerID = isset($offer['OfferID']) ? intval($offer['OfferID']) : 0;
-            $discount = 20; // Fixed discount at 20%
-        ?>
-        <div class="col">
-            <div class="card p-3">
-                <img src="<?= htmlspecialchars($imageURL) ?>" class="card-img-top" alt="<?= htmlspecialchars($offer['OfferName']) ?>">
-                <div class="card-body">
-                    <h5 class="card-title"><?= htmlspecialchars($offer['OfferName']) ?></h5>
-                    <p class="card-text"><?= htmlspecialchars($offer['Description']) ?></p>
-                    <p class="discount">Discount: <?= $discount ?>%</p>
-                    <p class="countdown" data-expiry="<?= htmlspecialchars($offer['EndDate']) ?>"></p>
-                    <a href="src/static/php/menu/cart.php?offer_id=<?= $offerID ?>" class="add-to-cart-btn">Add to Cart</a>
-                </div>
-            </div>
-        </div>
-        <?php endforeach; ?>
+                <?php
+                $originalPrice = 100;
+                $discountPercentage = $row['DiscountPercentage'] ?? 0;
+                $discountAmount = $row['DiscountAmount'] ?? 0;
+
+                if ($discountPercentage > 0) {
+                    $finalPrice = $originalPrice * (1 - ($discountPercentage / 100));
+                } elseif ($discountAmount > 0) {
+                    $finalPrice = $originalPrice - $discountAmount;
+                } else {
+                    $finalPrice = $originalPrice;
+                }
+
+                $finalPrice = max(0, $finalPrice);
+
+                $currentDate = new DateTime();
+                $expiryDate = clone $currentDate;
+                $expiryDate->modify('+10 days');
+
+                $timeRemaining = $expiryDate->getTimestamp() - $currentDate->getTimestamp();
+                ?>
+
+                <p><span class="original-price">$<?php echo number_format($originalPrice, 2); ?></span></p>
+                <p><span class="discount-percentage"><?php echo ($discountPercentage > 0) ? $discountPercentage . '% Off' : (($discountAmount > 0) ? '$' . number_format($discountAmount, 2) . ' Off' : 'No Discount'); ?></span></p>
+                <p><span class="final-price">$<?php echo number_format($finalPrice, 2); ?></span></p>
+                
+                <p class="countdown" data-time="<?php echo $timeRemaining; ?>">Loading...</p>
+                <button class='btn btn-add w-100 add-to-cart' data-id='" . htmlspecialchars($item['ItemID']) . "">
+                                    <i class='bi bi-cart-plus'></i> Add to Cart
+                                </button>           
+        <?php endwhile; ?>
     </div>
-</div>
 
-<script>
-// Countdown timer with reset on expiry
-document.querySelectorAll('.countdown').forEach(el => {
-    let expiryDate = new Date(el.getAttribute('data-expiry')).getTime();
-    let interval = setInterval(() => {
-        let now = new Date().getTime();
-        let timeLeft = expiryDate - now;
-        if (timeLeft < 0) {
-            el.innerHTML = "⏳ Offer Expired - Restarting...";
-            clearInterval(interval);
-            setTimeout(() => location.reload(), 3000); // Reload page after 3 seconds
-            return;
+    <script>
+        function startCountdown() {
+            document.querySelectorAll('.countdown').forEach(element => {
+                let timeRemaining = parseInt(element.getAttribute('data-time'));
+                function updateCountdown() {
+                    if (timeRemaining <= 0) {
+                        element.innerHTML = "Offer Expired!";
+                        return;
+                    }
+                    let days = Math.floor(timeRemaining / (60 * 60 * 24));
+                    let hours = Math.floor((timeRemaining % (60 * 60 * 24)) / (60 * 60));
+                    let minutes = Math.floor((timeRemaining % (60 * 60)) / 60);
+                    let seconds = Math.floor(timeRemaining % 60);
+                    element.innerHTML = `${days}d ${hours}h ${minutes}m ${seconds}s Left`;
+                    timeRemaining--;
+                }
+                updateCountdown();
+                setInterval(updateCountdown, 1000);
+            });
         }
-        let days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
-        let hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        let minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
-        el.innerHTML = `⏳ ${days}d ${hours}h ${minutes}m left`;
-    }, 1000);
-});
-</script>
+        document.addEventListener('DOMContentLoaded', startCountdown);
 
+        document.querySelectorAll('.add-to-cart').forEach(button => {
+            button.addEventListener('click', function () {
+                let itemID = this.getAttribute('data-id');
+                fetch('add_to_cart.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: `id=${itemID}`
+                })
+                    .then(response => response.text())
+                    .then(data => {
+                        document.getElementById('cart-count').innerText = data;
+                    })
+                    .catch(error => console.error('Error:', error));
+            });
+    
+        });
+    </script>
 </body>
 </html>
+
+<?php
+$conn = null;
+?>

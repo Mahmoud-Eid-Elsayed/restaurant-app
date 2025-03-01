@@ -130,9 +130,8 @@ $cart_count = isset($_SESSION['cart']) ? count($_SESSION['cart']) : 0;
                 <p><span class="final-price">$<?php echo number_format($finalPrice, 2); ?></span></p>
                 
                 <p class="countdown" data-time="<?php echo $timeRemaining; ?>">Loading...</p>
-                <button class='btn btn-add w-100 add-to-cart' data-id='" . htmlspecialchars($item['ItemID']) . "">
-                                    <i class='bi bi-cart-plus'></i> Add to Cart
-                                </button>           
+                <button class="add-to-cart" data-id="<?php echo $row['OfferID']; ?>">Add to Cart</button>
+            </div>
         <?php endwhile; ?>
     </div>
 

@@ -53,7 +53,7 @@ $stmt = $conn->query("
         DATE_FORMAT(CURRENT_DATE, '%M %d, %Y') as report_date
     FROM `Order`
     WHERE DATE(OrderDate) = CURRENT_DATE
-    AND OrderStatus = 'Delivered'
+    AND OrderStatus = 'Completed'
 ");
 $daily_report = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -65,7 +65,7 @@ $stmt = $conn->query("
         DATE_FORMAT(CURRENT_DATE, '%M %d') as end_date
     FROM `Order`
     WHERE OrderDate >= DATE_SUB(CURRENT_DATE, INTERVAL 7 DAY)
-    AND OrderStatus = 'Delivered'
+    AND OrderStatus = 'Completed'
 ");
 $weekly_report = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -77,7 +77,7 @@ $stmt = $conn->query("
         DATE_FORMAT(CURRENT_DATE, '%M %d') as end_date
     FROM `Order`
     WHERE OrderDate >= DATE_SUB(CURRENT_DATE, INTERVAL 30 DAY)
-    AND OrderStatus = 'Delivered'
+    AND OrderStatus = 'Completed'
 ");
 $monthly_report = $stmt->fetch(PDO::FETCH_ASSOC);
 

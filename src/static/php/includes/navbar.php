@@ -157,8 +157,10 @@ $cartItemCount = isset($_SESSION['cart']) ? array_sum(array_map(function ($item)
                         <li class="nav-item"><a class="nav-link text-white"
                                 href="../../../static/php/menu/menu.php">Menu</a>
                         </li>
-                        <li class="nav-item"><a class="nav-link text-white" href="#">Offers</a></li>
-                        <li class="nav-item"><a class="nav-link text-white" href="../../../static/php/table-reservation/book_table.php">Book a
+                        <li class="nav-item"><a class="nav-link text-white"
+                                href="../../../static/php/menu/specialOrder.php">Offers</a></li>
+                        <li class="nav-item"><a class="nav-link text-white"
+                                href="../../../static/php/table-reservation/book_table.php">Book a
                                 Table</a>
                         </li>
                     </ul>

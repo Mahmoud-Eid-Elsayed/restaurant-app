@@ -4,7 +4,8 @@
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="description" content="ELCHEF - Experience culinary excellence with our finest dishes and exceptional service">
+  <meta name="description"
+    content="ELCHEF - Experience culinary excellence with our finest dishes and exceptional service">
   <meta name="author" content="ITI Team 4-2025=>(Mahmoud Eid, Ahmed haidar, somaya hassan, Eithar Wageh)">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="src/assets/libraries/fontawesome-6.7.2-web/css/all.min.css">
@@ -40,7 +41,8 @@
             <li class="nav-item"><a class="nav-link" href="src/static/php/menu/menu.php">Menu</a></li>
             <li class="nav-item"><a class="nav-link" href="#menu-offers">Special Offers</a></li>
             <li class="nav-item"><a class="nav-link" href="#about-us">About Us</a></li>
-            <li class="nav-item"><a class="nav-link" href="src/static/php/table-reservation/book_table.php">Book a Table</a></li>
+            <li class="nav-item"><a class="nav-link" href="src/static/php/table-reservation/book_table.php">Book a
+                Table</a></li>
           </ul>
 
           <div class="d-flex gap-2">
@@ -112,7 +114,8 @@
             <div class="card-body text-center">
               <h5 class="card-title">Ibrahim Omran</h5>
               <p class="text-muted mb-3">Master Chef</p>
-              <p class="card-text">With over 15 years of experience in international cuisine, Chef Ibrahim brings innovation and excellence to every dish.</p>
+              <p class="card-text">With over 15 years of experience in international cuisine, Chef Ibrahim brings
+                innovation and excellence to every dish.</p>
               <div class="social-links mt-3">
                 <a href="#" class="text-primary me-2"><i class="fab fa-facebook"></i></a>
                 <a href="#" class="text-info me-2"><i class="fab fa-twitter"></i></a>
@@ -127,7 +130,8 @@
             <div class="card-body text-center">
               <h5 class="card-title">Bosina Adham</h5>
               <p class="text-muted mb-3">Patissier</p>
-              <p class="card-text">Specializing in French pastries and desserts, Chef Bosina creates edible works of art that delight both eyes and palate.</p>
+              <p class="card-text">Specializing in French pastries and desserts, Chef Bosina creates edible works of art
+                that delight both eyes and palate.</p>
               <div class="social-links mt-3">
                 <a href="#" class="text-primary me-2"><i class="fab fa-facebook"></i></a>
                 <a href="#" class="text-info me-2"><i class="fab fa-twitter"></i></a>
@@ -142,7 +146,8 @@
             <div class="card-body text-center">
               <h5 class="card-title">Said Gommah</h5>
               <p class="text-muted mb-3">Sous Chef</p>
-              <p class="card-text">Chef Said's passion for Mediterranean cuisine and attention to detail ensures every dish meets our high standards.</p>
+              <p class="card-text">Chef Said's passion for Mediterranean cuisine and attention to detail ensures every
+                dish meets our high standards.</p>
               <div class="social-links mt-3">
                 <a href="#" class="text-primary me-2"><i class="fab fa-facebook"></i></a>
                 <a href="#" class="text-info me-2"><i class="fab fa-twitter"></i></a>
@@ -160,33 +165,51 @@
     <div class="container">
       <div class="text-center mb-5">
         <h1 class="animate-fadeInUp delay-1">Our Menu</h1>
-        <p class="lead text-muted animate-fadeInUp delay-2">Experience culinary excellence with our diverse selection</p>
+        <p class="lead text-muted animate-fadeInUp delay-2">Experience culinary excellence with our diverse selection
+        </p>
       </div>
       <div class="row g-4 justify-content-center">
         <div class="col-md-4">
           <div class="card h-100">
-            <img src="src/assets/images/menu/appetizers.webp" class="card-img-top" alt="Appetizers">
+            <div class="card-img-wrapper">
+              <img src="src/static/uploads/Menu-item/_13f7e066-28ed-416a-b0ef-9b27c3075bc7.jpeg" class="card-img-top"
+                alt="Appetizers">
+            </div>
             <div class="card-body text-center">
               <h5 class="card-title">Appetizers</h5>
               <p class="card-text">Start your culinary journey with our exquisite appetizers</p>
+              <a href="src/static/php/menu/menu.php?category=2" class="btn btn-primary mt-3">
+                <i class="fas fa-utensils me-2"></i>View Appetizers
+              </a>
             </div>
           </div>
         </div>
         <div class="col-md-4">
           <div class="card h-100">
-            <img src="src/assets/images/menu/main-course.webp" class="card-img-top" alt="Main Course">
+            <div class="card-img-wrapper">
+              <img src="src/static/uploads/Menu-item/453458708_392009743499161_3475548967102124824_n.jpeg"
+                class="card-img-top" alt="Main Course">
+            </div>
             <div class="card-body text-center">
               <h5 class="card-title">Main Course</h5>
               <p class="card-text">Savor our chef's signature main course creations</p>
+              <a href="src/static/php/menu/menu.php?category=2" class="btn btn-primary mt-3">
+                <i class="fas fa-drumstick-bite me-2"></i>View Main Courses
+              </a>
             </div>
           </div>
         </div>
         <div class="col-md-4">
           <div class="card h-100">
-            <img src="src/assets/images/menu/desserts.webp" class="card-img-top" alt="Desserts">
+            <div class="card-img-wrapper">
+              <img src="src/static/uploads/Menu-item/3hero.jpeg" class="card-img-top" alt="Desserts">
+            </div>
             <div class="card-body text-center">
               <h5 class="card-title">Desserts</h5>
               <p class="card-text">Complete your meal with our delightful desserts</p>
+              <a href="src/static/php/menu/menu.php?category=3" class="btn btn-primary mt-3">
+                <i class="fas fa-ice-cream me-2"></i>View Desserts
+              </a>
             </div>
           </div>
         </div>
@@ -244,19 +267,22 @@
     <div class="container">
       <div class="row align-items-center">
         <div class="col-md-6">
-          <img src="src/assets/images/about-Us/about-us.webp" class="img-fluid rounded shadow animate-fadeInLeft" alt="About ELCHEF">
+          <img src="src/assets/images/about-Us/about-us.webp" class="img-fluid rounded shadow animate-fadeInLeft"
+            alt="About ELCHEF">
         </div>
         <div class="col-md-6">
           <h2 class="display-4 mb-4 animate-fadeInRight delay-1">Our Story</h2>
-          <p class="lead mb-4 animate-fadeInRight delay-2">Welcome to <strong class="text-primary">ELCHEF</strong>, where passion meets culinary excellence.</p>
-          
+          <p class="lead mb-4 animate-fadeInRight delay-2">Welcome to <strong class="text-primary">ELCHEF</strong>,
+            where passion meets culinary excellence.</p>
+
           <div class="feature-item d-flex align-items-start mb-4">
             <div class="icon-box me-3">
               <i class="fas fa-utensils fa-2x text-primary"></i>
             </div>
             <div>
               <h5 class="mb-2">Culinary Excellence</h5>
-              <p class="text-muted">Our expert chefs craft each dish with precision and creativity, using only the finest ingredients.</p>
+              <p class="text-muted">Our expert chefs craft each dish with precision and creativity, using only the
+                finest ingredients.</p>
             </div>
           </div>
 
@@ -266,7 +292,8 @@
             </div>
             <div>
               <h5 class="mb-2">Passionate Service</h5>
-              <p class="text-muted">We're dedicated to providing an exceptional dining experience that exceeds expectations.</p>
+              <p class="text-muted">We're dedicated to providing an exceptional dining experience that exceeds
+                expectations.</p>
             </div>
           </div>
 
@@ -276,7 +303,8 @@
             </div>
             <div>
               <h5 class="mb-2">Quality Ingredients</h5>
-              <p class="text-muted">We source the finest local and international ingredients to ensure superior quality in every dish.</p>
+              <p class="text-muted">We source the finest local and international ingredients to ensure superior quality
+                in every dish.</p>
             </div>
           </div>
 
@@ -293,13 +321,14 @@
     <div class="container">
       <div class="row align-items-center">
         <div class="col-md-6">
-          <img src="src/assets/images/reservation/reservation-pic.png" class="img-fluid animate-fadeInLeft" id="reservation-pic"
-            alt="Book a Table">
+          <img src="src/assets/images/reservation/reservation-pic.webp" class="img-fluid animate-fadeInLeft"
+            id="reservation-pic" alt="Book a Table">
         </div>
         <div class="col-md-6">
           <div class="reservation-preview p-4 bg-white rounded shadow animate-fadeInRight">
             <h2 class="text-center mb-4">Reserve Your Table</h2>
-            <p class="lead text-center mb-4">Experience fine dining at its best. Book your table now and create memorable moments with us.</p>
+            <p class="lead text-center mb-4">Experience fine dining at its best. Book your table now and create
+              memorable moments with us.</p>
             <div class="features mb-4">
               <div class="feature-item d-flex align-items-center mb-3">
                 <i class="fas fa-check-circle text-primary me-3"></i>
@@ -330,7 +359,8 @@
       <div class="row g-4">
         <div class="col-md-4 animate-fadeInLeft delay-1">
           <h5>About ELCHEF</h5>
-          <p>Experience the finest dining with our carefully crafted menu, exceptional service, and elegant atmosphere.</p>
+          <p>Experience the finest dining with our carefully crafted menu, exceptional service, and elegant atmosphere.
+          </p>
           <div class="social-links mt-3">
             <a href="#" class="me-2"><i class="fab fa-facebook fa-lg"></i></a>
             <a href="#" class="me-2"><i class="fab fa-twitter fa-lg"></i></a>
@@ -358,7 +388,8 @@
       <hr class="my-4">
       <div class="text-center">
         <p class="mb-0">&copy; 2025 ELCHEF Restaurant. All rights reserved.</p>
-        <small class="text-muted">Designed with <i class="fas fa-heart text-danger"></i> by ITI Team 4</small>
+        <small class="text-light">Designed with <i class="fas fa-heart text-danger"></i> by ITI Team 4(Mahmoud
+          Elsayed,Somaya Hassan,Ahmed Hidar,Eithar Wageh)</small>
       </div>
     </div>
   </footer>
@@ -385,7 +416,7 @@
       reveals.forEach(element => {
         const elementTop = element.getBoundingClientRect().top;
         const elementVisible = 150;
-        
+
         if (elementTop < window.innerHeight - elementVisible) {
           element.classList.add('active');
         }
@@ -393,12 +424,12 @@
     });
 
     // Initialize animations on page load
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
       // Add reveal classes to elements
       const animatedElements = document.querySelectorAll('.animate-fadeInUp, .animate-fadeInLeft, .animate-fadeInRight');
       animatedElements.forEach(element => {
         element.classList.add('reveal');
-        
+
         // Add appropriate reveal direction class
         if (element.classList.contains('animate-fadeInLeft')) {
           element.classList.add('reveal-left');

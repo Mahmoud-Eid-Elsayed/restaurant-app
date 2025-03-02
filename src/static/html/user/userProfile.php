@@ -1,5 +1,5 @@
 <?php
-require_once "../../php/user/user.php";
+require_once __DIR__ . '/../../php/user/user.php';
 session_start();
 if (!isset($_SESSION['role']) || $_SESSION['role'] === 'Staff') {
     header("Location: ../../../static/php/admin-dashboard/index.php");

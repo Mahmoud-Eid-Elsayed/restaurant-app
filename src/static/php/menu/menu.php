@@ -25,6 +25,7 @@ while ($row = $categoryResult->fetch(PDO::FETCH_ASSOC)) {
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="../../../css/landingpage/landing-pg.css">
     <style>
         :root {
             --primary-color: #e67e22;
@@ -179,97 +180,44 @@ while ($row = $categoryResult->fetch(PDO::FETCH_ASSOC)) {
             transform: translateY(-2px);
         }
 
-        .cart-status {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            background-color: var(--primary-color);
-            color: var(--white);
-            padding: 1rem 1.5rem;
-            border-radius: 50px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-            z-index: 1001;
-            animation: fadeInUp 0.6s ease-out;
-            transition: all 0.3s ease;
-            cursor: pointer;
+        /* Navbar Cart Styles */
+        .nav-cart {
+            position: relative;
             display: flex;
             align-items: center;
-            gap: 10px;
-            min-width: 120px;
+            margin-left: 15px;
         }
 
-        .cart-status:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
-            background-color: #d35400;
-        }
-
-        .cart-count {
-            background-color: var(--white);
-            color: var(--primary-color);
-            padding: 0.25rem 0.5rem;
-            border-radius: 20px;
-            font-weight: 600;
-            font-size: 0.9rem;
-            min-width: 24px;
-            text-align: center;
+        .nav-cart-link {
+            color: var(--text-dark);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            padding: 8px;
+            border-radius: 50%;
             transition: all 0.3s ease;
         }
 
-        .cart-status:hover .cart-count {
-            background-color: var(--white);
-            color: #d35400;
+        .nav-cart-link:hover {
+            background-color: rgba(0, 0, 0, 0.05);
+            transform: translateY(-2px);
         }
 
-        .cart-status i {
-            font-size: 1.2rem;
-        }
-
-        .cart-label {
-            font-weight: 500;
-            margin-right: 5px;
-        }
-
-        @keyframes cartBounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-5px); }
-        }
-
-        .cart-status.updating {
-            animation: cartBounce 0.5s ease;
-        }
-
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes slideInBottom {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .menu-section {
-            padding: 2rem 0;
-        }
-
-        .menu-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 2rem;
-            padding: 2rem 0;
+        .nav-cart-count {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background-color: var(--primary-color);
+            color: var(--white);
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 600;
+            border: 2px solid var(--white);
         }
 
         @media (max-width: 768px) {
@@ -287,18 +235,82 @@ while ($row = $categoryResult->fetch(PDO::FETCH_ASSOC)) {
                 grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
                 gap: 1.5rem;
             }
+        }
 
-            .cart-status {
-                bottom: 20px;
-                right: 20px;
-                padding: 0.8rem 1.2rem;
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
             }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideInBottom {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .menu-section {
+            padding: 2rem 0;
+        }
+
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 2rem;
+            padding: 2rem 0;
+        }
+
+        /* Add success notification */
+        .notification {
+            position: fixed;
+            top: 25%;
+            right: 20px;
+            padding: 15px 25px;
+            background-color: #2ecc71;
+            color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 100000;
+            transform: translateY(-100px);
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .notification.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .notification i {
+            font-size: 1.2rem;
         }
     </style>
 </head>
 
 <body>
-    <?php require '../includes/navbar.php'; ?>
+    <!-- Include navbar only once -->
+    <?php include '../includes/navbar.php'; ?>
+
+    <!-- Add notification element -->
+    <div class="notification" id="notification">
+        <i class="fas fa-check-circle"></i>
+        <span>Item added to cart!</span>
+    </div>
 
     <div class="menu-header text-center">
         <div class="container">
@@ -313,22 +325,16 @@ while ($row = $categoryResult->fetch(PDO::FETCH_ASSOC)) {
                 <i class="fas fa-utensils"></i> All Menu
             </a>
             <?php foreach ($categories as $categoryID => $categoryName) { ?>
-                <a href="?category=<?= urlencode($categoryID) ?>" 
-                   class="<?= $selectedCategory == $categoryID ? 'active' : '' ?>">
-                    <i class="fas fa-<?= $categoryID == 1 ? 'drumstick-bite' : 
-                                    ($categoryID == 2 ? 'fish' : 
-                                    ($categoryID == 3 ? 'ice-cream' : 
-                                    ($categoryID == 4 ? 'glass-martini-alt' : 'utensils'))) ?>"></i>
+                <a href="?category=<?= urlencode($categoryID) ?>"
+                    class="<?= $selectedCategory == $categoryID ? 'active' : '' ?>">
+                    <i class="fas fa-<?= $categoryID == 1 ? 'drumstick-bite' :
+                        ($categoryID == 2 ? 'fish' :
+                            ($categoryID == 3 ? 'ice-cream' :
+                                ($categoryID == 4 ? 'glass-martini-alt' : 'utensils'))) ?>"></i>
                     <?= htmlspecialchars($categoryName) ?>
                 </a>
             <?php } ?>
         </div>
-    </div>
-
-    <div class="cart-status" onclick="window.location.href='cart.php'">
-        <i class="fas fa-shopping-cart"></i>
-        <span class="cart-label">Cart</span>
-        <span class="cart-count" id="cart-count"><?= $cart_count; ?></span>
     </div>
 
     <section class="menu-section">
@@ -340,19 +346,21 @@ while ($row = $categoryResult->fetch(PDO::FETCH_ASSOC)) {
                         continue;
                     }
 
-
                     $stmt = $conn->prepare("SELECT ItemID, ItemName, Price, ImageURL FROM MenuItem WHERE CategoryID = ? AND Availability = 1");
                     $stmt->execute([$categoryID]);
                     $result = $stmt;
 
-                while ($item = $result->fetch()) {
-                    echo "
-                    <div class='col'>
+                    while ($item = $result->fetch()) {
+                        // Fix the image URL path
+                        $imageUrl = '../../../static/uploads/Menu-item/' . basename($item['ImageURL']);
+
+                        echo "
                         <div class='menu-card'>
-                          <div class='card-img-wrapper'>
-                                <img src='../../../../src/static/uploads/Menu-item/" . htmlspecialchars($item['ImageURL']) . "' class='card-img-top' alt='" . htmlspecialchars($item['ItemName']) . "'>
+                            <div class='card-img-wrapper'>
+                                <img src='" . htmlspecialchars($imageUrl) . "' 
+                                     class='card-img-top' 
+                                     alt='" . htmlspecialchars($item['ItemName']) . "'>
                             </div>
-                            
                             <div class='card-body'>
                                 <h5 class='card-title'>" . htmlspecialchars($item['ItemName']) . "</h5>
                                 <div class='price'>$" . number_format($item['Price'], 2) . "</div>
@@ -372,40 +380,54 @@ while ($row = $categoryResult->fetch(PDO::FETCH_ASSOC)) {
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script>
+        // Add notification function
+        function showNotification() {
+            const notification = document.getElementById('notification');
+            notification.classList.add('show');
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+
+        function updateCartCount(count) {
+            const cartCount = document.getElementById('cart-count');
+            if (cartCount) {
+                cartCount.style.transform = 'scale(1.2)';
+                cartCount.textContent = count;
+                setTimeout(() => {
+                    cartCount.style.transform = 'scale(1)';
+                }, 200);
+            }
+        }
+
         document.querySelectorAll('.add-to-cart').forEach(button => {
-            button.addEventListener('click', function() {
+            button.addEventListener('click', function () {
                 const btn = this;
-                const cartStatus = document.querySelector('.cart-status');
                 btn.disabled = true;
                 btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Adding...';
-                
+
                 let itemID = this.getAttribute('data-id');
                 fetch('add_to_cart.php', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                     body: `id=${itemID}`
                 })
-                .then(response => response.text())
-                .then(data => {
-                    document.getElementById('cart-count').innerText = data;
-                    btn.innerHTML = '<i class="fas fa-check"></i> Added!';
-                    
-                    // Add bounce animation to cart
-                    cartStatus.classList.add('updating');
-                    setTimeout(() => {
-                        cartStatus.classList.remove('updating');
-                    }, 500);
-                    
-                    setTimeout(() => {
+                    .then(response => response.text())
+                    .then(data => {
+                        updateCartCount(data);
+                        btn.innerHTML = '<i class="fas fa-check"></i> Added!';
+                        showNotification();
+
+                        setTimeout(() => {
+                            btn.disabled = false;
+                            btn.innerHTML = '<i class="fas fa-cart-plus"></i> Add to Cart';
+                        }, 2000);
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
                         btn.disabled = false;
                         btn.innerHTML = '<i class="fas fa-cart-plus"></i> Add to Cart';
-                    }, 2000);
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    btn.disabled = false;
-                    btn.innerHTML = '<i class="fas fa-cart-plus"></i> Add to Cart';
-                });
+                    });
             });
         });
 

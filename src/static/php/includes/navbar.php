@@ -1,14 +1,25 @@
 <?php
-// session_start(); // Ensure session starts before using session variables
+// session_start();
 
-$isLoggedIn = isset($_SESSION['user']);
-$userProfileImage = "/src/assets/images/users/profile_pictures/default-profile.png";
+$isLoggedIn = isset($_SESSION['user_id']);
+$userProfileImage = "/src/assets/images/users/profile_pictures/default-profile.png"; // Default profile picture
 
 if ($isLoggedIn) {
-    $userProfileImage = $_SESSION['user']['profile_image'];
+    // Fetch user data from session or database
+    require '../../connection/db.php';
+    require '../../php/user/user.php';
+
+    $user = new User($conn);
+    $userData = $user->getUserById($_SESSION['user_id']);
+
+    if ($userData && !empty($userData['ProfilePictureURL'])) {
+        $userProfileImage = $userData['ProfilePictureURL'];
+    }
 }
 
-$cartItemCount = isset($_SESSION['cart']) ? count($_SESSION['cart']) : 0;
+$cartItemCount = isset($_SESSION['cart']) ? array_sum(array_map(function ($item) {
+    return $item['quantity'];
+}, $_SESSION['cart'])) : 0;
 ?>
 
 <!DOCTYPE html>
@@ -55,7 +66,6 @@ $cartItemCount = isset($_SESSION['cart']) ? count($_SESSION['cart']) : 0;
             border-radius: 50%;
             cursor: pointer;
             object-fit: cover;
-            /* Ensure the image fills the circle */
         }
 
         .icon-container {
@@ -63,17 +73,64 @@ $cartItemCount = isset($_SESSION['cart']) ? count($_SESSION['cart']) : 0;
             cursor: pointer;
             color: white;
             position: relative;
+            transition: transform 0.3s ease;
+            padding: 8px;
+            border-radius: 50%;
+        }
+
+        .icon-container:hover {
+            transform: translateY(-2px);
+            background-color: rgba(255, 255, 255, 0.1);
         }
 
         .badge {
             position: absolute;
             top: -5px;
             right: -5px;
-            background: red;
+            background: #e67e22;
             color: white;
-            font-size: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
             border-radius: 50%;
-            padding: 3px 6px;
+            padding: 0.25rem 0.5rem;
+            min-width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid #fff;
+            transition: transform 0.3s ease;
+        }
+
+        .icon-container:hover .badge {
+            transform: scale(1.1);
+        }
+
+        .cart-link {
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            align-items: center;
+        }
+
+        .cart-link:hover {
+            color: inherit;
+        }
+
+        @keyframes cartBounce {
+
+            0%,
+            100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.2);
+            }
+        }
+
+        .cart-updated {
+            animation: cartBounce 0.5s ease;
         }
     </style>
 </head>
@@ -81,7 +138,7 @@ $cartItemCount = isset($_SESSION['cart']) ? count($_SESSION['cart']) : 0;
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-dark sticky-top shadow-sm">
         <div class="container-fluid">
-            <a class="navbar-brand text-white" href="../../../../index.html">THE CHEF</a>
+            <a class="navbar-brand text-white" href="../../../../index.php">THE CHEF</a>
 
             <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar"
                 aria-controls="offcanvasNavbar">
@@ -96,27 +153,33 @@ $cartItemCount = isset($_SESSION['cart']) ? count($_SESSION['cart']) : 0;
                 </div>
                 <div class="offcanvas-body">
                     <ul class="navbar-nav mx-auto mb-3 mb-lg-0">
-                        <li class="nav-item"><a class="nav-link text-white" href="../../../../index.html">Home</a></li>
+                        <li class="nav-item"><a class="nav-link text-white" href="../../../../index.php">Home</a></li>
                         <li class="nav-item"><a class="nav-link text-white"
                                 href="../../../static/php/menu/menu.php">Menu</a>
                         </li>
-                        <li class="nav-item"><a class="nav-link text-white" href="#">Offers</a></li>
-                        <li class="nav-item"><a class="nav-link text-white" href="#">About Us</a></li>
-                        <li class="nav-item"><a class="nav-link text-white" href="#">Contact</a></li>
+                        <li class="nav-item"><a class="nav-link text-white"
+                                href="../../../static/php/menu/specialOrder.php">Offers</a></li>
+                        <li class="nav-item"><a class="nav-link text-white"
+                                href="../../../static/php/table-reservation/book_table.php">Book a
+                                Table</a>
+                        </li>
                     </ul>
 
                     <div class="d-flex align-items-center gap-3">
-
-                        <div class="icon-container position-relative">
-                            <a href="cart.php" class="text-white"><i class="bi bi-cart"></i></a>
-                            <?php if ($cartItemCount > 0): ?>
-                                <span class="badge"><?= $cartItemCount ?></span>
-                            <?php endif; ?>
+                        <div class="icon-container">
+                            <a href="../menu/cart.php" class="cart-link">
+                                <i class="bi bi-cart"></i>
+                                <?php if ($cartItemCount > 0): ?>
+                                    <span class="badge" id="cart-count"><?= $cartItemCount ?></span>
+                                <?php endif; ?>
+                            </a>
                         </div>
 
-                        <div class="icon-container position-relative">
-                            <a href="notifications.php" class="text-white"><i class="bi bi-bell"></i></a>
-                            <span class="badge"></span>
+                        <div class="icon-container">
+                            <a href="../../../static/html/user/customer_notifications.php" class="cart-link">
+                                <i class="bi bi-bell"></i>
+                                <span class="badge"></span>
+                            </a>
                         </div>
 
                         <?php if (!$isLoggedIn): ?>

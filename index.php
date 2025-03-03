@@ -39,7 +39,8 @@
             <li class="nav-item"><a class="nav-link active" href="#">Home</a></li>
             <li class="nav-item"><a class="nav-link" href="#chef-res">Our Chefs</a></li>
             <li class="nav-item"><a class="nav-link" href="src/static/php/menu/menu.php">Menu</a></li>
-            <li class="nav-item"><a class="nav-link" href="#menu-offers">Special Offers</a></li>
+            <li class="nav-item"><a class="nav-link" href="#menu-offers ">Special
+                Offers</a></li>
             <li class="nav-item"><a class="nav-link" href="#about-us">About Us</a></li>
             <li class="nav-item"><a class="nav-link" href="src/static/php/table-reservation/book_table.php">Book a
                 Table</a></li>
@@ -256,7 +257,7 @@
         </div>
       </div>
       <div class="text-center mt-5">
-        <a href="#menu-offers" class="btn btn-primary btn-lg">
+        <a href="src/static/php/menu/specialOrder.php" class="btn btn-primary btn-lg">
           <i class="fas fa-tag me-2"></i>View All Offers
         </a>
       </div>

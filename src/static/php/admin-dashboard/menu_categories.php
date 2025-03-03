@@ -74,6 +74,8 @@ try {
             <span>Orders</span>
           </a>
         </li>
+        <li><a href="special_offers.php"><i class="fas fa-tags"></i> Special Offers</a></li>
+
         <li>
           <a href="reservations.php">
             <i class="fas fa-calendar-alt"></i>
@@ -165,8 +167,8 @@ try {
                           <i class="fas fa-edit"></i>
                         </a>
                         <?php if ($category['item_count'] > 0): ?>
-                          <button type="button" class="btn btn-danger btn-sm"
-                            title="Cannot delete: Category has items" disabled>
+                          <button type="button" class="btn btn-danger btn-sm" title="Cannot delete: Category has items"
+                            disabled>
                             <i class="fas fa-trash"></i>
                           </button>
                         <?php else: ?>

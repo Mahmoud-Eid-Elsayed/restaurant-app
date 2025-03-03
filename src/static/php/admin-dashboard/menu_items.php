@@ -76,6 +76,7 @@ try {
                         <span>Orders</span>
                     </a>
                 </li>
+                <li><a href="special_offers.php"><i class="fas fa-tags"></i> Special Offers</a></li>
                 <li>
                     <a href="reservations.php">
                         <i class="fas fa-calendar-alt"></i>
@@ -179,14 +180,16 @@ try {
                                             <?php echo htmlspecialchars($item['Description'] ?? 'No description'); ?>
                                         </td>
                                         <td>
-                                            <span class="badge <?php echo $item['Availability'] ? 'bg-success' : 'bg-danger'; ?>">
-                                                <i class="fas <?php echo $item['Availability'] ? 'fa-check-circle' : 'fa-times-circle'; ?> me-1"></i>
-                                            <?php if (!empty($item['ImageURL'])): ?>
-                                                <img src="<?php echo htmlspecialchars($item['ImageURL']); ?>" width="50" height="50"
-                                                    alt="Item">
-                                            <?php else: ?>
-                                                <span>No Image</span>
-                                            <?php endif; ?>
+                                            <span
+                                                class="badge <?php echo $item['Availability'] ? 'bg-success' : 'bg-danger'; ?>">
+                                                <i
+                                                    class="fas <?php echo $item['Availability'] ? 'fa-check-circle' : 'fa-times-circle'; ?> me-1"></i>
+                                                <?php if (!empty($item['ImageURL'])): ?>
+                                                    <img src="<?php echo htmlspecialchars($item['ImageURL']); ?>" width="50"
+                                                        height="50" alt="Item">
+                                                <?php else: ?>
+                                                    <span>No Image</span>
+                                                <?php endif; ?>
                                         </td>
                                         <td>
                                             <span

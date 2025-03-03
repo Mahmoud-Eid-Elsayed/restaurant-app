@@ -10,8 +10,8 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
     }
 
     // Sanitize input
-    $date = filter_input(INPUT_GET, 'date', FILTER_SANITIZE_STRING);
-    $time = filter_input(INPUT_GET, 'time', FILTER_SANITIZE_STRING);
+    $date = filter_input(INPUT_GET, 'date');
+    $time = filter_input(INPUT_GET, 'time');
     $guests = filter_input(INPUT_GET, 'guests', FILTER_SANITIZE_NUMBER_INT);
 
     // Validate date and time

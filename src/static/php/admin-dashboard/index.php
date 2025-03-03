@@ -44,6 +44,47 @@ $total_reservations = $stmt->fetch(PDO::FETCH_ASSOC)['total_reservations'];
 
 $stmt = $conn->query("SELECT COUNT(*) as total_menu_items FROM MenuItem");
 $total_menu_items = $stmt->fetch(PDO::FETCH_ASSOC)['total_menu_items'];
+
+// Fetch daily, weekly, and monthly reports //
+$stmt = $conn->query("
+    SELECT 
+        COALESCE(COUNT(*), 0) as order_count,
+        COALESCE(SUM(TotalAmount), 0) as total_revenue,
+        DATE_FORMAT(CURRENT_DATE, '%M %d, %Y') as report_date
+    FROM `Order`
+    WHERE DATE(OrderDate) = CURRENT_DATE
+    AND OrderStatus = 'Completed'
+");
+$daily_report = $stmt->fetch(PDO::FETCH_ASSOC);
+
+$stmt = $conn->query("
+    SELECT 
+        COALESCE(COUNT(*), 0) as order_count,
+        COALESCE(SUM(TotalAmount), 0) as total_revenue,
+        DATE_FORMAT(DATE_SUB(CURRENT_DATE, INTERVAL 7 DAY), '%M %d') as start_date,
+        DATE_FORMAT(CURRENT_DATE, '%M %d') as end_date
+    FROM `Order`
+    WHERE OrderDate >= DATE_SUB(CURRENT_DATE, INTERVAL 7 DAY)
+    AND OrderStatus = 'Completed'
+");
+$weekly_report = $stmt->fetch(PDO::FETCH_ASSOC);
+
+$stmt = $conn->query("
+    SELECT 
+        COALESCE(COUNT(*), 0) as order_count,
+        COALESCE(SUM(TotalAmount), 0) as total_revenue,
+        DATE_FORMAT(DATE_SUB(CURRENT_DATE, INTERVAL 30 DAY), '%M %d') as start_date,
+        DATE_FORMAT(CURRENT_DATE, '%M %d') as end_date
+    FROM `Order`
+    WHERE OrderDate >= DATE_SUB(CURRENT_DATE, INTERVAL 30 DAY)
+    AND OrderStatus = 'Completed'
+");
+$monthly_report = $stmt->fetch(PDO::FETCH_ASSOC);
+
+// Calculate average order values
+$daily_avg = $daily_report['order_count'] > 0 ? $daily_report['total_revenue'] / $daily_report['order_count'] : 0;
+$weekly_avg = $weekly_report['order_count'] > 0 ? $weekly_report['total_revenue'] / $weekly_report['order_count'] : 0;
+$monthly_avg = $monthly_report['order_count'] > 0 ? $monthly_report['total_revenue'] / $monthly_report['order_count'] : 0;
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -134,35 +175,47 @@ $total_menu_items = $stmt->fetch(PDO::FETCH_ASSOC)['total_menu_items'];
             font-size: 2.5rem;
             margin-bottom: 1rem;
             opacity: 0.9;
+            color: rgba(255, 255, 255, 0.9);
         }
 
         .stat-value {
             font-size: 2.5rem;
             font-weight: 700;
             margin-bottom: 0.5rem;
+            color: #ffffff;
         }
 
         .stat-label {
             font-size: 1.1rem;
             opacity: 0.9;
             margin: 0;
+            color: #ffffff;
         }
 
         .quick-actions {
-            margin-top: 2rem;
+            margin-top: 4rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .quick-actions h4 {
+            margin-bottom: 2rem;
+            color: #2c3e50;
+            font-weight: 600;
         }
 
         .quick-action-btn {
             display: flex;
             align-items: center;
-            gap: 0.5rem;
-            padding: 1rem;
-            border-radius: 0.5rem;
-            background: #f8f9fa;
+            gap: 1rem;
+            padding: 1.25rem;
+            border-radius: 12px;
+            background: #ffffff;
             border: 1px solid #e9ecef;
             color: #495057;
             text-decoration: none;
             transition: all 0.3s ease;
+            height: 100%;
         }
 
         .quick-action-btn:hover {
@@ -186,6 +239,113 @@ $total_menu_items = $stmt->fetch(PDO::FETCH_ASSOC)['total_menu_items'];
 
             .stat-value {
                 font-size: 2rem;
+            }
+        }
+
+        /* Reports Section Styles */
+        .reports-section {
+            margin-top: 3rem;
+            padding: 2rem 0;
+            background-color: #f8f9fa;
+            border-radius: 15px;
+            margin-bottom: 3rem;
+        }
+
+        .report-card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            background: #ffffff;
+            margin-top: 1.5rem;
+        }
+
+        .report-card .card-body {
+            padding: 1.5rem;
+        }
+
+        .report-stats {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-item:last-child {
+            border-bottom: none;
+        }
+
+        .stat-item .stat-label {
+            color: #6c757d;
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        .stat-item .stat-value {
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: #2c3e50;
+        }
+
+        /* Card Title Colors */
+        .report-card .text-primary {
+            color: #3498db !important;
+        }
+
+        .report-card .text-success {
+            color: #2ecc71 !important;
+        }
+
+        .report-card .text-warning {
+            color: #f1c40f !important;
+        }
+
+        /* Reports Title Spacing */
+        .reports-section h4 {
+            margin-bottom: 2rem;
+            color: #2c3e50;
+            font-weight: 600;
+            padding-left: 1rem;
+        }
+
+        /* Report Cards Row Spacing */
+        .reports-section .row {
+            margin-top: 1rem;
+            padding: 0 1rem;
+        }
+
+        /* Individual Report Card Spacing */
+        .reports-section .col-md-4 {
+            margin-bottom: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .reports-section {
+                margin-top: 2rem;
+                padding: 1.5rem 0;
+                margin-bottom: 2rem;
+            }
+
+            .quick-actions {
+                margin-top: 2rem;
+                padding-top: 1.5rem;
+            }
+
+            .report-card {
+                margin-bottom: 1.5rem;
+            }
+
+            .welcome-section {
+                padding: 1.5rem;
+                margin-bottom: 2rem;
             }
         }
     </style>
@@ -274,12 +434,9 @@ $total_menu_items = $stmt->fetch(PDO::FETCH_ASSOC)['total_menu_items'];
                 <div class="welcome-section">
                     <div class="d-flex justify-content-between align-items-start">
                         <div>
-                            <h2>Welcome back, <?php echo htmlspecialchars($user['FirstName'] ?: $user['Username']); ?>!
-                            </h2>
+                            <h2>Welcome back, <?php echo htmlspecialchars($user['FirstName'] ?: $user['Username']); ?>!</h2>
                             <?php if ($user['LastLoginFormatted']): ?>
-                                <p><i class="fas fa-clock me-2"></i>Last login:
-                                    <?php echo htmlspecialchars($user['LastLoginFormatted']); ?>
-                                </p>
+                                <p><i class="fas fa-clock me-2"></i>Last login: <?php echo htmlspecialchars($user['LastLoginFormatted']); ?></p>
                             <?php endif; ?>
                         </div>
                     </div>
@@ -319,6 +476,90 @@ $total_menu_items = $stmt->fetch(PDO::FETCH_ASSOC)['total_menu_items'];
                                 <i class="fas fa-utensils stat-icon"></i>
                                 <h3 class="stat-value"><?php echo $total_menu_items; ?></h3>
                                 <p class="stat-label">Menu Items</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Reports Section -->
+                <div class="reports-section mt-4">
+                    <h4 class="mb-3"><i class="fas fa-chart-line me-2"></i>Performance Reports</h4>
+                    <div class="row">
+                        <!-- Daily Report -->
+                        <div class="col-md-4">
+                            <div class="card report-card h-100">
+                                <div class="card-body">
+                                    <h5 class="card-title text-primary">
+                                        <i class="fas fa-calendar-day me-2"></i>Daily Report
+                                        <small class="text-muted d-block mt-1" style="font-size: 0.8rem;"><?php echo $daily_report['report_date']; ?></small>
+                                    </h5>
+                                    <div class="report-stats">
+                                        <div class="stat-item">
+                                            <span class="stat-label">Orders</span>
+                                            <span class="stat-value"><?php echo $daily_report['order_count']; ?></span>
+                                        </div>
+                                        <div class="stat-item">
+                                            <span class="stat-label">Revenue</span>
+                                            <span class="stat-value">$<?php echo number_format($daily_report['total_revenue'], 2); ?></span>
+                                        </div>
+                                        <div class="stat-item">
+                                            <span class="stat-label">Average Order</span>
+                                            <span class="stat-value">$<?php echo number_format($daily_avg, 2); ?></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Weekly Report -->
+                        <div class="col-md-4">
+                            <div class="card report-card h-100">
+                                <div class="card-body">
+                                    <h5 class="card-title text-success">
+                                        <i class="fas fa-calendar-week me-2"></i>Weekly Report
+                                        <small class="text-muted d-block mt-1" style="font-size: 0.8rem;"><?php echo $weekly_report['start_date']; ?> - <?php echo $weekly_report['end_date']; ?></small>
+                                    </h5>
+                                    <div class="report-stats">
+                                        <div class="stat-item">
+                                            <span class="stat-label">Orders</span>
+                                            <span class="stat-value"><?php echo $weekly_report['order_count']; ?></span>
+                                        </div>
+                                        <div class="stat-item">
+                                            <span class="stat-label">Revenue</span>
+                                            <span class="stat-value">$<?php echo number_format($weekly_report['total_revenue'], 2); ?></span>
+                                        </div>
+                                        <div class="stat-item">
+                                            <span class="stat-label">Average Order</span>
+                                            <span class="stat-value">$<?php echo number_format($weekly_avg, 2); ?></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Monthly Report -->
+                        <div class="col-md-4">
+                            <div class="card report-card h-100">
+                                <div class="card-body">
+                                    <h5 class="card-title text-warning">
+                                        <i class="fas fa-calendar-alt me-2"></i>Monthly Report
+                                        <small class="text-muted d-block mt-1" style="font-size: 0.8rem;"><?php echo $monthly_report['start_date']; ?> - <?php echo $monthly_report['end_date']; ?></small>
+                                    </h5>
+                                    <div class="report-stats">
+                                        <div class="stat-item">
+                                            <span class="stat-label">Orders</span>
+                                            <span class="stat-value"><?php echo $monthly_report['order_count']; ?></span>
+                                        </div>
+                                        <div class="stat-item">
+                                            <span class="stat-label">Revenue</span>
+                                            <span class="stat-value">$<?php echo number_format($monthly_report['total_revenue'], 2); ?></span>
+                                        </div>
+                                        <div class="stat-item">
+                                            <span class="stat-label">Average Order</span>
+                                            <span class="stat-value">$<?php echo number_format($monthly_avg, 2); ?></span>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>

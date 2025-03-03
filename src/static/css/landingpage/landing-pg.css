@@ -611,7 +611,7 @@ footer .social-links a:hover {
 }
 
 #menu-preview .card-img-top {
-    width: 100%;
+  width: 100%;
     height: 100%;
     object-fit: cover;
     transition: transform 0.5s ease;
@@ -623,7 +623,7 @@ footer .social-links a:hover {
 
 #menu-preview .card-body {
     padding: 2rem;
-    text-align: center;
+  text-align: center;
 }
 
 #menu-preview .card-title {

@@ -41,6 +41,13 @@ if (isset($_SESSION['form_errors'])) {
                     <div class="error"> <?= $formErrors['password'] ?? '' ?> </div>
                 </div>
                 <button type="submit" class="btn btn-primary btn-block my-3">Login</button>
+                <div class="text-center">
+                    <a href="signup.php">Don't have an account? Register</a>
+                </div>
+                <div class="text-center">
+                    <a href="forgot_password.php">Forget your password?</a>
+                </div>
+
             </form>
         </div>
     </div>

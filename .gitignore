@@ -15,3 +15,6 @@ src/static/connection/*
 src/static/connection/db.php
 
 src/assets/images/users/uploads
+
+# Ignore vendor directory
+vendor
